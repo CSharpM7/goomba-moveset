@@ -1,0 +1,20 @@
+**/target
+**/*.pyc
+Cargo.lock
+**/blender
+**/release
+**/custom-var
+*.nuhlpb
+*.dds
+*.pdn
+*.pdn
+*.png
+*.ps1
+*.lnk
+romf/config_gdorf.json
+romf/config-c00.json
+romf/Goomba.zip
+*.7z
+*.prc
+romf/config - Copy.json
+*.bin
