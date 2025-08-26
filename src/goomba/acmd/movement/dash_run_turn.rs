@@ -31,16 +31,16 @@ unsafe extern "C" fn effect_dash(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_dash(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_pikachu_dash_start"));
-        macros::SET_PLAY_INHIVIT(agent, Hash40::new("se_pikachu_dash_start"), 20);
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_dash_start"));
+        macros::SET_PLAY_INHIVIT(agent, Hash40::new("se_pichu_dash_start"), 20);
     }
     wait(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
-        macros::PLAY_STEP(agent, Hash40::new("se_pikachu_step_right_m"));
+        macros::PLAY_STEP(agent, Hash40::new("se_pichu_step_right_m"));
     }
     wait(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
-        macros::PLAY_STEP(agent, Hash40::new("se_pikachu_step_left_m"));
+        macros::PLAY_STEP(agent, Hash40::new("se_pichu_step_left_m"));
     }
 }
 
@@ -80,11 +80,11 @@ unsafe extern "C" fn sound_run(agent: &mut L2CAgentBase) {
     loop {
         frame(agent.lua_state_agent, 3.0);
         if macros::is_excute(agent) {
-            macros::PLAY_STEP(agent, Hash40::new("se_pikachu_step_right_m"));
+            macros::PLAY_STEP(agent, Hash40::new("se_pichu_step_right_m"));
         }
         wait(agent.lua_state_agent, 10.0);
         if macros::is_excute(agent) {
-            macros::PLAY_STEP(agent, Hash40::new("se_pikachu_step_left_m"));
+            macros::PLAY_STEP(agent, Hash40::new("se_pichu_step_left_m"));
         }
                 
         agent.clear_lua_stack();
@@ -128,8 +128,8 @@ unsafe extern "C" fn effect_runbrake(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_runbrake(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_pikachu_dash_stop"));
-        macros::SET_PLAY_INHIVIT(agent, Hash40::new("se_pikachu_dash_stop"), 30);
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_dash_stop"));
+        macros::SET_PLAY_INHIVIT(agent, Hash40::new("se_pichu_dash_stop"), 30);
     }
 }
 
@@ -162,8 +162,8 @@ unsafe extern "C" fn effect_turnrun(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_turnrun(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_pikachu_dash_stop"));
-        macros::SET_PLAY_INHIVIT(agent, Hash40::new("se_pikachu_dash_stop"), 30);
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_dash_stop"));
+        macros::SET_PLAY_INHIVIT(agent, Hash40::new("se_pichu_dash_stop"), 30);
     }
 }
 

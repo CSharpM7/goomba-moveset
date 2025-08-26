@@ -30,7 +30,7 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
             //WorkModule::off_flag(fighter.module_accessor,FIGHTER_RASH_INSTANCE_DISABLE_SPECIAL_N);
         }
         if !is_special_s {
-            //WorkModule::off_flag(fighter.module_accessor,FIGHTER_RASH_INSTANCE_DISABLE_SPECIAL_S);
+            WorkModule::off_flag(fighter.module_accessor,FIGHTER_GOOMBA_INSTANCE_FLAG_SPECIAL_S_DISABLE_HOP);
         }
         if !is_special_hi {
             WorkModule::off_flag(fighter.module_accessor,*FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_SPECIAL_HI_CONTINUOUS);
@@ -98,8 +98,12 @@ unsafe extern "C" fn set_hurtbox(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe extern "C" fn on_rebirth(fighter: &mut L2CFighterCommon) {
+    WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SUPERLEAF_VISIBLE);
+}
 unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     set_hurtbox(fighter);
+    on_rebirth(fighter);
 
 	fighter.global_table[STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));
 	fighter.global_table[CHECK_SPECIAL_N_UNIQ].assign(&L2CValue::Ptr(should_use_special_n as *const () as _));
@@ -109,7 +113,12 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     //let status_func: &mut skyline::libc::c_void = std::mem::transmute(fighter.sv_get_status_func(&L2CValue::I32(*FIGHTER_STATUS_KIND_ENTRY),&L2CValue::I32(*LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)).get_ptr());
     //fighter.sv_set_status_func(L2CValue::I32(*FIGHTER_STATUS_KIND_APPEAL),L2CValue::I32(*LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN),status_func);
 }
+unsafe extern "C" fn rebirth_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    on_rebirth(fighter);
+    fighter.status_pre_Rebirth()
+}
 
 pub fn install(agent: &mut smashline::Agent) {
     agent.on_start(on_start);
+    agent.status(Pre, *FIGHTER_STATUS_KIND_REBIRTH, rebirth_pre);
 }

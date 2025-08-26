@@ -58,11 +58,11 @@ pub fn install(agent: &mut smashline::Agent) {
 	agent.status(Pre, 0, accessories_pre);
 	agent.status(Init, 0, accessories_init);
 	agent.status(Main, 0, accessories_main);
-	agent.status(End, *WEAPON_PIKACHU_DENGEKI_STATUS_KIND_REGULAR, empty_status);
-	agent.status(MapCorrection, *WEAPON_PIKACHU_DENGEKI_STATUS_KIND_REGULAR, empty_status);
-	agent.status(FixCamera, *WEAPON_PIKACHU_DENGEKI_STATUS_KIND_REGULAR, empty_status);
-	agent.status(Exit, *WEAPON_PIKACHU_DENGEKI_STATUS_KIND_REGULAR, empty_status);
-	agent.status(Exec, *WEAPON_PIKACHU_DENGEKI_STATUS_KIND_REGULAR, empty_status);
-	agent.status(ExecStop, *WEAPON_PIKACHU_DENGEKI_STATUS_KIND_REGULAR, empty_status); 
+	agent.status(End, *WEAPON_PICHU_DENGEKI_STATUS_KIND_REGULAR, empty_status);
+	agent.status(MapCorrection, *WEAPON_PICHU_DENGEKI_STATUS_KIND_REGULAR, empty_status);
+	agent.status(FixCamera, *WEAPON_PICHU_DENGEKI_STATUS_KIND_REGULAR, empty_status);
+	agent.status(Exit, *WEAPON_PICHU_DENGEKI_STATUS_KIND_REGULAR, empty_status);
+	agent.status(Exec, *WEAPON_PICHU_DENGEKI_STATUS_KIND_REGULAR, empty_status);
+	agent.status(ExecStop, *WEAPON_PICHU_DENGEKI_STATUS_KIND_REGULAR, empty_status); 
     */
 }

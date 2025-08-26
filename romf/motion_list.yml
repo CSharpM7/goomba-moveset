@@ -2621,7 +2621,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 0
+      cancel_frame: 61
       no_stop_intp: false
   special_s_end:
     game_script: game_specialsend
@@ -2648,7 +2648,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 45
+      cancel_frame: 61
       no_stop_intp: false
   special_air_s_start:
     game_script: game_specialairsstart
@@ -2756,7 +2756,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 27
+      cancel_frame: 61
       no_stop_intp: false
   special_air_s_miss_end:
     game_script: game_specialairsmissend

@@ -7,11 +7,11 @@ pub fn install_hook(hookstatus: bool) {
     unsafe {
         FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES += FIGHTER_GOOMBA_GENERATE_ARTICLE_LAST +
          smashline::clone_weapon("murabito", *smash::lib::lua_const::WEAPON_KIND_MURABITO_UMBRELLA, 
-    "pikachu", "accessories",true);
+    "pichu", "accessories",true);
     }
 
     if !hookstatus {return;}
-    let agent = &mut smashline::Agent::new("pikachu_accessories");
+    let agent = &mut smashline::Agent::new("pichu_accessories");
     let slots = (*MOD_SLOTS.read().unwrap()).to_vec();
     agent.set_costume(slots);
     status::install(agent);
@@ -25,7 +25,7 @@ pub fn install(hookstatus: bool) {
         }
     }
 
-    let agent = &mut smashline::Agent::new("pikachu_accessories");
+    let agent = &mut smashline::Agent::new("pichu_accessories");
     let slots = (*MOD_SLOTS.read().unwrap()).to_vec();
     agent.set_costume(slots);
 

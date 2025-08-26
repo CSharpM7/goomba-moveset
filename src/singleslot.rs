@@ -89,7 +89,7 @@ pub fn install_by_finding_markers() {
         (*MOD_SLOTS.write().unwrap()).clear();
 
         println!("[smashline_kuribo::ssm] Finding marker files...");
-        const FIGHTER_NAME: &str = "pikachu";
+        const FIGHTER_NAME: &str = "pichu";
         const MARKER_FILE: &str = "kuribo.marker";
         let mut lowest_color: i32 = -1;
         let mut marked_slots: Vec<i32> = Vec::with_capacity(256);
@@ -126,7 +126,7 @@ pub fn install_continue() {
 
 fn params() {
     println!("[smashline_kuribo::singleslot]: Installing Goomba Params...");
-    param_config::set_article_use_type(-(*WEAPON_KIND_PIKACHU_MONSTERBALL), *ARTICLE_USETYPE_FINAL);
+    param_config::set_article_use_type(-(*WEAPON_KIND_PICHU_MONSTERBALL), *ARTICLE_USETYPE_FINAL);
     //return;
 
     let slot = (*MOD_SLOTS.read().unwrap()).to_vec();
@@ -139,42 +139,42 @@ fn params() {
     let mut param_floats: Vec<(u64,u64,f32)> = Vec::new();
     let mut param_attributes: Vec<(u64,u64,f32)> = Vec::new();
 
-    param_config::disable_kirby_copy(*FIGHTER_KIND_PIKACHU, slots.clone());
+    param_config::disable_kirby_copy(*FIGHTER_KIND_PICHU, slots.clone());
 
     param_ints.push((hash40("s4_combo_max"),0 as u64, 2));
 
-    param_attributes.push((hash40("walk_accel_mul"),0 as u64, 0.05 / 0.158));
+    param_attributes.push((hash40("walk_accel_mul"),0 as u64, 0.05 / 0.1575));
     param_floats.push((hash40("walk_accel_add"),0 as u64, 0.05 / 0.105));
     
     param_attributes.push((hash40("walk_speed_max"),0 as u64, 0.72 / 1.302));
     param_attributes.push((hash40("walk_middle_ratio"),0 as u64, 0.5 / 0.38));
     param_attributes.push((hash40("walk_fast_ratio"),0 as u64, 0.75 / 0.75));
 
-    param_attributes.push((hash40("ground_brake"),0 as u64, 0.132 / 0.132));
+    param_attributes.push((hash40("ground_brake"),0 as u64, 0.132 / 0.11));
     param_attributes.push((hash40("dash_speed"),0 as u64, 1.85 / 1.98));
-    param_attributes.push((hash40("run_speed_max"),0 as u64, 1.75 / 2.039));
+    param_attributes.push((hash40("run_speed_max"),0 as u64, 1.75 / 1.892));
 
-    param_attributes.push((hash40("jump_speed_x"),0 as u64, 0.9 / 0.78)); 
+    param_attributes.push((hash40("jump_speed_x"),0 as u64, 0.9 / 0.8)); 
     param_attributes.push((hash40("jump_speed_x_mul"),0 as u64, 0.8 / 0.8)); 
     param_attributes.push((hash40("jump_speed_x_max"),0 as u64, 1.0 / 1.8)); 
-    param_attributes.push((hash40("jump_aerial_speed_x_mul"),0 as u64, 0.9 / 0.8)); 
+    param_attributes.push((hash40("jump_aerial_speed_x_mul"),0 as u64, 0.9 / 0.9)); 
     
-    param_attributes.push((hash40("jump_initial_y"),0 as u64, 18.0 / 19.525)); 
-    param_attributes.push((hash40("jump_y"),0 as u64, 34.0 / 35.5)); 
-    param_attributes.push((hash40("mini_jump_y"),0 as u64, 15.0 / 17.12)); 
-    param_attributes.push((hash40("jump_aerial_y"),0 as u64, 34.0 / 35.5)); 
+    param_attributes.push((hash40("jump_initial_y"),0 as u64, 18.0 / 20.2125)); 
+    param_attributes.push((hash40("jump_y"),0 as u64, 34.0 / 36.75)); 
+    param_attributes.push((hash40("mini_jump_y"),0 as u64, 15.0 / 17.43)); 
+    param_attributes.push((hash40("jump_aerial_y"),0 as u64, 34.0 / 36.02)); 
 
     param_attributes.push((hash40("air_accel_x_mul"),0 as u64, 0.09 / 0.09)); 
     //param_floats.push((hash40("air_accel_x_add"),0 as u64, 0.01 / 0.01));
-    param_attributes.push((hash40("air_speed_x_stable"),0 as u64, 1.0 / 0.957)); 
+    param_attributes.push((hash40("air_speed_x_stable"),0 as u64, 1.0 / 1.029)); 
     param_attributes.push((hash40("air_brake_x"),0 as u64, 0.008 / 0.0075)); 
 
-    param_attributes.push((hash40("air_accel_y"),0 as u64, 0.095 / 0.095));
-    param_attributes.push((hash40("air_speed_y_stable"),0 as u64, 1.55 / 1.55));
+    param_attributes.push((hash40("air_accel_y"),0 as u64, 0.095 / 0.14));
+    param_attributes.push((hash40("air_speed_y_stable"),0 as u64, 1.55 / 1.9));
     param_attributes.push((hash40("air_brake_y"),0 as u64, 0.008 / 0.008));
-    param_attributes.push((hash40("dive_speed_y"),0 as u64, 2.48 / 2.48));
+    param_attributes.push((hash40("dive_speed_y"),0 as u64, 2.48 / 2.5));
 
-    param_attributes.push((hash40("weight"),0 as u64, 82.0 / 79.0));
+    param_attributes.push((hash40("weight"),0 as u64, 82.0 / 62.0));
 
     //param_floats.push((hash40("landing_attack_air_frame_n"),0 as u64, 14.0));
     //param_floats.push((hash40("landing_attack_air_frame_f"),0 as u64, 10.0));
@@ -182,27 +182,29 @@ fn params() {
     //param_floats.push((hash40("landing_attack_air_frame_hi"),0 as u64, 11.0));
     //param_floats.push((hash40("landing_attack_air_frame_lw"),0 as u64, 16.0));
 
-    param_floats.push((hash40("shield_radius"),0 as u64, 9.0));
-    param_floats.push((hash40("shield_break_y"),0 as u64, 47.0));
+    //param_floats.push((hash40("shield_radius"),0 as u64, 9.0));
+    //param_floats.push((hash40("shield_break_y"),0 as u64, 47.0));
 
-    param_attributes.push((hash40("cliff_jump_x_speed"),0 as u64, 0.6 / 0.6));
+    //param_attributes.push((hash40("cliff_jump_x_speed"),0 as u64, 0.6 / 0.6));
 
     param_ints.push((hash40("wall_jump_type"),0 as u64, 0));
     param_ints.push((hash40("squat_walk_type"),0 as u64, 0));
-    param_attributes.push((hash40("height"),0 as u64, 8.5 / 10.0));
-    param_attributes.push((hash40("expand_height"),0 as u64, 12.5 / 14.0));
-    param_floats.push((hash40("passive_wall_jump_y_speed"),0 as u64, 2.7));
+    //param_attributes.push((hash40("height"),0 as u64, 8.5 / 10.0));
+    //param_attributes.push((hash40("expand_height"),0 as u64, 12.5 / 14.0));
+    param_attributes.push((hash40("passive_wall_jump_y_speed"),0 as u64, 2.3 / 2.6));
 
+    //param_floats.push((hash40("superleaftail_scale"),0 as u64, 1.1));
+    //param_ints.push((hash40("size"),0 as u64, *FIGHTER_SIZE_S as i32));
     //param_floats.push((hash40("star_scale"),0 as u64, 2.4));
     //param_ints.push((hash40("star_attack_power"),0 as u64, 14));
     for p in param_ints {
-        param_config::update_int_2(*FIGHTER_KIND_PIKACHU, slots.clone(), p);
+        param_config::update_int_2(*FIGHTER_KIND_PICHU, slots.clone(), p);
     }
     for p in param_floats {
-        param_config::update_float_2(*FIGHTER_KIND_PIKACHU, slots.clone(), p);
+        param_config::update_float_2(*FIGHTER_KIND_PICHU, slots.clone(), p);
     }
     for p in param_attributes {
-        param_config::update_attribute_mul_2(*FIGHTER_KIND_PIKACHU, slots.clone(), p);
+        param_config::update_attribute_mul_2(*FIGHTER_KIND_PICHU, slots.clone(), p);
     }
     println!("[smashline_kuribo::ssm]: Installed Params");
 }
@@ -276,7 +278,7 @@ fn csk_database(chara_hash: u64) {
     //DATABASE ENTRY//
     let disp = 71; //Plant
     let save_no = 71; //Save no for Plant
-    let kind_hash = smash::hash40("fighter_kind_pikachu");
+    let kind_hash = smash::hash40("fighter_kind_pichu");
     the_csk_collection_api::add_chara_db_entry_info(
         the_csk_collection_api::CharacterDatabaseEntry {
             ui_chara_id: chara_hash, 
@@ -332,7 +334,7 @@ fn csk_database(chara_hash: u64) {
                 (0x1BFB79118F /* Hash40 of characall_label_article_c05 */, the_csk_collection_api::Hash40Type::Optional(Some(0x2302D482A /* Hash40 of -1 */))), 
                 (0x1B62704035 /* Hash40 of characall_label_article_c06 */, the_csk_collection_api::Hash40Type::Optional(Some(0x2302D482A /* Hash40 of -1 */))), 
                 (0x1B157770A3 /* Hash40 of characall_label_article_c07 */, the_csk_collection_api::Hash40Type::Optional(Some(0x2302D482A /* Hash40 of -1 */))), 
-                (0x160ab9eb98, the_csk_collection_api::Hash40Type::Optional(Some(smash::hash40("ui_chara_pikachu"))) /* Hash40 of ui_chara_pikachu */),
+                (0x160ab9eb98, the_csk_collection_api::Hash40Type::Optional(Some(smash::hash40("ui_chara_pichu"))) /* Hash40 of ui_chara_pichu */),
                             ])), 
             extra_index_maps: the_csk_collection_api::UnsignedByteMap::Overwrite(HashMap::from([
                 (0x915C075DE /* Hash40 of c00_index */, the_csk_collection_api::UnsignedByteType::Optional(Some(0))), 

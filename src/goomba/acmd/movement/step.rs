@@ -22,7 +22,7 @@ unsafe extern "C" fn effect_steppose(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn sound_steppose(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_pikachu_appear02"));
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_appear02"));
     }
 }
 

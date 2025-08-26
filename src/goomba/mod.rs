@@ -2,7 +2,7 @@ use smash::{lib::lua_const::*, hash40};
 
 mod acmd;
 mod agent_init;
-//mod frame;
+mod frame;
 mod status;
 //mod vtable;
 //pub mod common;
@@ -47,12 +47,12 @@ pub fn install() {
     println!("[smashline_kuribo::kuribo] Installing Under Slots:");
     crate::singleslot::print_slots();
     let mut hookstatus = true;
-    let agent = &mut smashline::Agent::new("pikachu");
+    let agent = &mut smashline::Agent::new("pichu");
     let slots = (*MOD_SLOTS.read().unwrap()).to_vec();
     agent.set_costume(slots);
 
     acmd::install(agent);
-    //frame::install(agent);
+    frame::install(agent);
     temp::install(agent);
     #[cfg(not(feature = "hookstatus"))]
     {

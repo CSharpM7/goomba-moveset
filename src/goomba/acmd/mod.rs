@@ -4,7 +4,7 @@ mod smashes;
 //mod dashattack;
 //mod aerials;
 //mod throws;
-//mod specials;
+mod specials;
 //mod finalsmash;
 
 //mod entry_results_appeal;
@@ -21,7 +21,7 @@ pub fn install(agent: &mut smashline::Agent) {
     //dashattack::install(agent); 
     //aerials::install(agent);
     //throws::install(agent);
-    //specials::install(agent);
+    specials::install(agent);
     //finalsmash::install(agent);
 
     //entry_results_appeal::install(agent);
