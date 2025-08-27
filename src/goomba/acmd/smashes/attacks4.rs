@@ -40,7 +40,7 @@ unsafe extern "C" fn effect_attacks4(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 18.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 2, 4, 4, 0, 0, 13, 1, true, *EF_FLIP_YZ);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 2, 4, 4, 0, 0, 16, 1, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_COLOR(agent,2.8,0.1,0.1);
     }
     frame(agent.lua_state_agent, 19.0);

@@ -12,6 +12,7 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_HOP);
+        WorkModule::off_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_GRAVITY);
     }
     frame(agent.lua_state_agent, 17.0);
     FT_MOTION_RATE(agent,1.0);
@@ -24,8 +25,14 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 18.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 110, 100, 80, 0, 7.5, 0.0, 6.7, 9.7, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_turn"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MARIO_MANT, *ATTACK_REGION_OBJECT);
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 7.0, 110, 100, 80, 0, 5.0, 0.0, 6.7, 5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_turn"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MARIO_MANT, *ATTACK_REGION_OBJECT);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 80, 20, 0, 82, 7.5, 0.0, 6.7, 9.7, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.3, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_OBJECT);
+        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 7.0, 80, 20, 0, 82, 5.0, 0.0, 6.7, 5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.3, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_OBJECT); 
+        AttackModule::set_add_reaction_frame_revised(agent.module_accessor, 0, 4.0, false);
+        AttackModule::set_add_reaction_frame_revised(agent.module_accessor, 1, 4.0, false);
+        /*
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 110, 100, 80, 0, 7.5, 0.0, 6.7, 9.7, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_turn"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_OBJECT);
+        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 7.0, 110, 100, 80, 0, 5.0, 0.0, 6.7, 5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_turn"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_OBJECT); 
+        */
     }
     wait(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
@@ -35,17 +42,17 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 27.0);
     if macros::is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-        //WorkModule::off_flag(agent.module_accessor, *FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_SPECIAL_FALL);
         WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_CONTROL);
     }
     frame(agent.lua_state_agent, 29.0);
-    FT_MOTION_RATE_RANGE(agent,29.0,49.0,15.0);
+    FT_MOTION_RATE_RANGE(agent,29.0,49.0,10.0);
     frame(agent.lua_state_agent, 49.0);
+    FT_MOTION_RATE_RANGE(agent,49.0,65.0,5.0);
     if macros::is_excute(agent) {
-        //WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_CONTROL);
+        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_GRAVITY);
     }
-    FT_MOTION_RATE(agent,1.0);
     frame(agent.lua_state_agent, 65.0);
+    FT_MOTION_RATE(agent,1.0);
     if macros::is_excute(agent) {
         WorkModule::off_flag(agent.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SUPERLEAF_VISIBLE);
     }
@@ -60,7 +67,7 @@ unsafe extern "C" fn effect_specialsend(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 17.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 0, 4, 2, 0, -10, 15, 0.8, true, *EF_FLIP_YZ);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 0, 4, 2, 0, -10, 0, 1.1, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_COLOR(agent,0.4,0.1,0.0);
     }
 }
