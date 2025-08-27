@@ -1,15 +1,20 @@
 use crate::imports::imports_acmd::*;
 use crate::imports::imports_agent::*;
 
-unsafe extern "C" fn game_attack11(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn spawn_article(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
         println!("Gen?");
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, false, -1);
-        if ArticleModule::is_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES) {
-            println!("Gened");
-            ArticleModule::change_motion(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, Hash40::new("s"), false, -1.0);
-        }
+        ArticleModule::generate_article(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, false, -1);
+    }
+    wait(agent.lua_state_agent, 1.0);
+    if ArticleModule::is_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL) {
+        println!("Gened");
+    }
+    wait(agent.lua_state_agent, 5.0);
+    if macros::is_excute(agent) {
+        //ArticleModule::shoot(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
+        ArticleModule::change_status_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, REDSHELL_STATUS_KIND_SHOOT);
     }
 }
 
@@ -43,6 +48,5 @@ pub unsafe extern "C" fn landing_air_main(fighter: &mut smashline::L2CFighterCom
 
 pub fn install(agent: &mut smashline::Agent) {
     agent.status(Main,*FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR,landing_air_main);
-    //agent.acmd("game_attack11", game_attack11,Priority::Default);
-    //agent.acmd("game_attackairn", game_attack11,Priority::Default);
+    agent.acmd("game_attackairn", spawn_article,Priority::Default);
 }

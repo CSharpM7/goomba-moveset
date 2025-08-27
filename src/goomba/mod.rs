@@ -9,17 +9,13 @@ mod status;
 
 mod temp;
 
-//pub mod speeder;
-//pub mod surfboard;
 pub mod accessories;
-//pub mod tongue;
+pub mod redshell;
 
 pub mod articles {
     pub use {
-        //super::speeder::*,
-        //super::surfboard::*,
         super::accessories::*,
-        //super::tongue::*,
+        super::redshell::*,
     };
 }
 use crate::singleslot::MOD_SLOTS;
@@ -32,7 +28,7 @@ pub fn install_hook() {
         println!("[smashline_kuribo::kuribo] Installing Status Scripts in Hook");
         hookstatus=true;
         
-        let agent = &mut smashline::Agent::new("dedede");
+        let agent = &mut smashline::Agent::new("pichu");
         let slots = (*MOD_SLOTS.read().unwrap()).to_vec();
         agent.set_costume(slots);
 
@@ -41,6 +37,7 @@ pub fn install_hook() {
         agent.install();
     }
     accessories::install_hook(hookstatus);
+    redshell::install_hook(hookstatus);
     println!("[smashline_kuribo::kuribo] ");
 }
 pub fn install() {
@@ -63,7 +60,7 @@ pub fn install() {
     }
     agent.install();
 
-    //speeder::install(hookstatus);
     accessories::install(hookstatus);
+    redshell::install(hookstatus);
     println!("[smashline_kuribo::kuribo] ");
 }
