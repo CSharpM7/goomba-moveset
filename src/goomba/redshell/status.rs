@@ -2,6 +2,8 @@ use crate::imports::imports_agent::*;
 
 pub const LIFE: i32 = 300;
 pub const BRAKE_X_INIT: f32 = 0.001;
+pub const GRAVITY: f32 = 0.2;
+pub const SPEED_X: f32 = 1.25;
 
 pub unsafe extern "C" fn redshell_haved_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
     StatusModule::init_settings(
@@ -66,52 +68,50 @@ pub unsafe extern "C" fn redshell_fly_pre(weapon: &mut L2CWeaponCommon) -> L2CVa
     );
     0.into()
 }
+unsafe extern "C" fn redshell_reset_attack(weapon: &mut smashline::L2CWeaponCommon) {
+    let motion = MotionModule::motion_kind(weapon.module_accessor);
+    let new_motion = Hash40::new("fly");
+    if motion == hash40("fly") {
+        let new_motion = Hash40::new("turn");
+        WorkModule::set_int(weapon.module_accessor, 10, REDSHELL_INSTANCE_INT_RESPAWN_ATTACK_COUNTDOWN);
+    }
+    MotionModule::change_motion_force_inherit_frame(weapon.module_accessor, new_motion, 0.0, 1.0, 1.0);
+}
 unsafe extern "C" fn redshell_set_situation(weapon: &mut smashline::L2CWeaponCommon) {
     let is_ground = false;//GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32);
     let situation = if is_ground {*SITUATION_KIND_GROUND} else {*SITUATION_KIND_AIR};
     StatusModule::set_situation_kind(weapon.module_accessor, SituationKind(situation), false);
 }
-unsafe extern "C" fn redshell_set_kinetics(weapon: &mut smashline::L2CWeaponCommon) {
+unsafe extern "C" fn redshell_set_correct_kinetics(weapon: &mut smashline::L2CWeaponCommon) {
     let lr = PostureModule::lr(weapon.module_accessor);
     let situation = StatusModule::situation_kind(weapon.module_accessor);
     let is_ground = situation == *SITUATION_KIND_GROUND;
     let correct = if is_ground {*GROUND_CORRECT_KIND_GROUND} else {*GROUND_CORRECT_KIND_AIR};
     GroundModule::set_correct(weapon.module_accessor, GroundCorrectKind(correct));
+    redshell_update_brake(weapon,1.0);
+}
+unsafe extern "C" fn redshell_update_brake(weapon: &mut smashline::L2CWeaponCommon, mul_brake: f32) {
+    let lr = PostureModule::lr(weapon.module_accessor);
+    let situation = StatusModule::situation_kind(weapon.module_accessor);
+    let status = StatusModule::status_kind(weapon.module_accessor);
+    let is_ground = situation == *SITUATION_KIND_GROUND;
 
-    let speed_x = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let speed_y = KineticModule::get_sum_speed_y(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let mut brake_x = WorkModule::get_float(weapon.module_accessor, REDSHELL_INSTANCE_FLOAT_BRAKE_X);
-    let mut accel_y = 0.0;
-    println!("Is ground? {is_ground}");
-    if is_ground {
-        sv_kinetic_energy!(
-            set_speed,
-            weapon,
-            WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL,
-            speed_x,
-            0.0
-        );
-        sv_kinetic_energy!(
-            set_accel,
-            weapon,
-            WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL,
-            0.0,
-            0.0
-        );
-    }
-    else {
-        println!("GRAVITY PLEASE");
-        accel_y = -0.2;
-        brake_x = 0.0;
-    }
+    let mut brake_x_var = WorkModule::get_float(weapon.module_accessor, REDSHELL_INSTANCE_FLOAT_BRAKE_X);
+    if is_ground {brake_x_var *= mul_brake;}
+
+    WorkModule::set_float(weapon.module_accessor,brake_x_var, REDSHELL_INSTANCE_FLOAT_BRAKE_X);
+
+    let applied_brake_x = if !is_ground && status == REDSHELL_STATUS_KIND_SHOOT {0.0} else {brake_x_var};
+
     sv_kinetic_energy!(
         set_accel,
         weapon,
         WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL,
-        brake_x*-lr,
-        accel_y
+        applied_brake_x*-lr,
+        -GRAVITY
     );
 }
+
 pub unsafe extern "C" fn redshell_fly_init(weapon: &mut smashline::L2CWeaponCommon) -> L2CValue {
     snap_to_owner(weapon,Hash40::new("have"),Hash40::new("haver"));
     0.into()
@@ -124,14 +124,17 @@ pub unsafe extern "C" fn redshell_fly_main(weapon: &mut smashline::L2CWeaponComm
     if !has_link {
         LinkModule::unlink(weapon.module_accessor, *WEAPON_LINK_NO_CONSTRAINT);
     }
-    //Set Motion
     let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
     let owner = sv_battle_object::module_accessor(owner_id);
     let owner_pos = *PostureModule::pos(owner);
     let lr = PostureModule::lr(owner);
     PostureModule::set_lr(weapon.module_accessor, lr);
-    //PostureModule::set_pos(weapon.module_accessor, &Vector3f{x:owner_pos.x, y:owner_pos.y, z:owner_pos.z});
+    let rot_y = PostureModule::rot_y(owner, 0);
+    ModelModule::clear_joint_srt(weapon.module_accessor, Hash40::new("have"));
+    ModelModule::clear_joint_srt(weapon.module_accessor, Hash40::new("rot"));
+    PostureModule::set_rot(weapon.module_accessor, &Vector3f{x: 0.0, y: rot_y, z: 0.0}, 0);
 
+    //Set Motion
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("fly"), 0.0, 1.0, false, 0.0, false, false);
     ModelModule::set_visibility(weapon.module_accessor, true);
 
@@ -139,6 +142,8 @@ pub unsafe extern "C" fn redshell_fly_main(weapon: &mut smashline::L2CWeaponComm
     WorkModule::set_int(weapon.module_accessor, LIFE, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     WorkModule::set_float(weapon.module_accessor, BRAKE_X_INIT, REDSHELL_INSTANCE_FLOAT_BRAKE_X);
     WorkModule::off_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_BIG_BRAKE);
+    WorkModule::set_int(weapon.module_accessor, 0, REDSHELL_INSTANCE_INT_RESPAWN_ATTACK_COUNTDOWN);
+    WorkModule::off_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE);
     
     let speed_x = 1.0*lr;//KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let speed_y = -0.1;//KineticModule::get_sum_speed_y(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
@@ -149,9 +154,6 @@ pub unsafe extern "C" fn redshell_fly_main(weapon: &mut smashline::L2CWeaponComm
         speed_x,
         speed_y
     );
-    redshell_set_situation(weapon);
-    redshell_set_kinetics(weapon);
-
     sv_kinetic_energy!(
         set_limit_speed,
         weapon,
@@ -166,38 +168,91 @@ pub unsafe extern "C" fn redshell_fly_main(weapon: &mut smashline::L2CWeaponComm
         -1.0,
         -1.0
     );
+    redshell_set_situation(weapon);
+    redshell_set_correct_kinetics(weapon);
+
     weapon.fastshift(L2CValue::Ptr(redshell_fly_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCommon) {
+    let situation = StatusModule::situation_kind(weapon.module_accessor);
+    let lr = PostureModule::lr(weapon.module_accessor);
+    let is_ottotto = situation == *SITUATION_KIND_GROUND && GroundModule::is_ottotto(weapon.module_accessor, 1.5);
+
+    if is_ottotto  || GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_SIDE as u32) {
+        PostureModule::reverse_lr(weapon.module_accessor);
+        KineticModule::mul_speed(weapon.module_accessor, &Vector3f{x: -0.9, y: 1.0, z: 1.0}, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+
+        redshell_update_brake(weapon,2.0);
+        WorkModule::on_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE);
+        HitModule::set_no_team(weapon.module_accessor, true);
+        let frame = MotionModule::frame(weapon.module_accessor);
+        MotionModule::change_motion(weapon.module_accessor, Hash40::new("fly"), frame, 1.0, false, 0.0, false, false);
+    }
+}
+unsafe extern "C" fn redshell_check_for_rebound(weapon: &mut smashline::L2CWeaponCommon) {
+    let situation = StatusModule::situation_kind(weapon.module_accessor);
+    let lr = PostureModule::lr(weapon.module_accessor);
+    let is_cooldown = WorkModule::get_int(weapon.module_accessor, REDSHELL_INSTANCE_INT_RESPAWN_ATTACK_COUNTDOWN) > 0;
+    let has_attack = is_cooldown || AttackModule::is_attack(weapon.module_accessor, 0, false);
+    let reflect = !is_cooldown && AttackModule::is_infliction(weapon.module_accessor, *COLLISION_KIND_MASK_REFLECTOR);
+    if !has_attack || reflect {
+        AttackModule::clear_all(weapon.module_accessor);
+        let frame = MotionModule::frame(weapon.module_accessor);
+        MotionModule::change_motion(weapon.module_accessor, Hash40::new("turn"), frame, 1.0, false, 0.0, false, false);
+        HitModule::set_no_team(weapon.module_accessor, true);
+
+        PostureModule::reverse_lr(weapon.module_accessor);
+        KineticModule::mul_speed(weapon.module_accessor, &Vector3f{x: -0.9, y: 1.0, z: 1.0}, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        redshell_update_brake(weapon,2.0);
+        WorkModule::on_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE);
+        if reflect {
+            println!("REFLECTED");
+            WorkModule::set_int(weapon.module_accessor, 12, REDSHELL_INSTANCE_INT_RESPAWN_ATTACK_COUNTDOWN);
+            let speed_y = KineticModule::get_sum_speed_y(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            sv_kinetic_energy!(
+                set_speed,
+                weapon,
+                WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL,
+                SPEED_X*lr*1.5,
+                speed_y
+            );
+        }
+        else {
+            WorkModule::set_int(weapon.module_accessor, 10, REDSHELL_INSTANCE_INT_RESPAWN_ATTACK_COUNTDOWN);
+            println!("NO ATTACK");
+        }
+    }
 }
 
 unsafe extern "C" fn redshell_fly_main_loop(weapon: &mut smashline::L2CWeaponCommon) -> smashline::L2CValue {
     let situation = StatusModule::situation_kind(weapon.module_accessor);
     let mut life = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
 
+    if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+        weapon.change_status(REDSHELL_STATUS_KIND_FURAFURA.into(), false.into());
+        return 1.into();
+    }
+    let cooldown = WorkModule::get_int(weapon.module_accessor, REDSHELL_INSTANCE_INT_RESPAWN_ATTACK_COUNTDOWN);
+    if cooldown > 0 {println!("Cool: {cooldown}")};
+    if !StopModule::is_stop(weapon.module_accessor) {
+        if WorkModule::count_down_int(weapon.module_accessor,REDSHELL_INSTANCE_INT_RESPAWN_ATTACK_COUNTDOWN, 0) {
+            println!("RESET!");
+            MotionModule::change_motion(weapon.module_accessor, Hash40::new("fly"), 0.0, 1.0, false, 0.0, false, false);
+        }
+    }
+        
     if !StatusModule::is_changing(weapon.module_accessor)
     && StatusModule::is_situation_changed(weapon.module_accessor) {
         let prev_situation = StatusModule::prev_situation_kind(weapon.module_accessor);
         println!("New situation: {prev_situation} > {situation}");
-        redshell_set_kinetics(weapon);
+        redshell_set_correct_kinetics(weapon);
     }
-    if situation == *SITUATION_KIND_GROUND {
-        let mut lr = PostureModule::lr(weapon.module_accessor);
-        if GroundModule::is_ottotto(weapon.module_accessor, 1.5)
-        || GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_SIDE as u32) {
-            lr *= -1.0;
-            PostureModule::reverse_lr(weapon.module_accessor);
-            //PostureModule::update_rot_y_lr(weapon.module_accessor);
-            KineticModule::mul_speed(weapon.module_accessor, &Vector3f{x: -0.9, y: 1.0, z: 1.0}, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    if situation == *SITUATION_KIND_GROUND || true {
+        redshell_check_for_turn(weapon);
+        //redshell_check_for_rebound(weapon);
 
-            let brake_x = 2.0 * WorkModule::get_float(weapon.module_accessor, REDSHELL_INSTANCE_FLOAT_BRAKE_X);
-            WorkModule::set_float(weapon.module_accessor,brake_x, REDSHELL_INSTANCE_FLOAT_BRAKE_X);
-            sv_kinetic_energy!(
-                set_accel,
-                weapon,
-                WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL,
-                brake_x*-lr,
-                0.0
-            );
-        }
+        let lr = PostureModule::lr(weapon.module_accessor);
         let speed_x = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         if speed_x.abs() < 0.05
         || speed_x.signum() != lr {
@@ -206,32 +261,19 @@ unsafe extern "C" fn redshell_fly_main_loop(weapon: &mut smashline::L2CWeaponCom
         else if speed_x.abs() < 0.5 && life > 0 {
             life = -1;
             WorkModule::set_int(weapon.module_accessor, life,*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-            println!("Asshole");
         }
-        let brake_x = WorkModule::get_float(weapon.module_accessor, REDSHELL_INSTANCE_FLOAT_BRAKE_X);
-        println!("Life: {life} Speed: {speed_x} Brake: {brake_x}");
-        sv_kinetic_energy!(
-            set_accel,
-            weapon,
-            WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL,
-            brake_x*-lr,
-            0.0
-        );
     }
-
     if life <= 0 {
         if situation == *SITUATION_KIND_AIR {
             return redshell_kill(weapon);
         }
         let can_brake = !WorkModule::is_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_BIG_BRAKE);
-        println!("Has brake: {can_brake}");
         if can_brake {
             println!("BIG BRAKE");
             WorkModule::on_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_BIG_BRAKE);
-            let mut brake_x = 10.0 * WorkModule::get_float(weapon.module_accessor, REDSHELL_INSTANCE_FLOAT_BRAKE_X);
-            WorkModule::set_float(weapon.module_accessor,brake_x, REDSHELL_INSTANCE_FLOAT_BRAKE_X);
-            EffectModule::kill_kind(weapon.module_accessor, Hash40::new("sys_greenshell_trace"), false, false);
-            AttackModule::clear_all(weapon.module_accessor);
+            redshell_update_brake(weapon,5.0);
+            weapon.change_status(REDSHELL_STATUS_KIND_FURAFURA.into(), false.into());
+            return 1.into();
         }
     }
     0.into()
@@ -248,9 +290,9 @@ unsafe extern "C" fn redshell_kill(weapon: &mut smashline::L2CWeaponCommon) -> s
     EffectModule::req(
         weapon.module_accessor,
         Hash40::new("sys_erace_smoke"),
-        &Vector3f{x:pos.x,y:pos.y+2.0,z:pos.z},
+        &Vector3f{x:pos.x,y:pos.y+0.0,z:pos.z},
         &Vector3f{x:0.0,y:0.0,z:0.0},
-        0.625,
+        0.95,
         0,
         -1,
         false,
@@ -259,21 +301,80 @@ unsafe extern "C" fn redshell_kill(weapon: &mut smashline::L2CWeaponCommon) -> s
     0.into()
 }
 
+pub unsafe extern "C" fn redshell_furafura_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    StatusModule::init_settings(
+        weapon.module_accessor,
+        SituationKind(*SITUATION_KIND_NONE),
+        *WEAPON_KINETIC_TYPE_NORMAL,
+        *GROUND_CORRECT_KIND_KEEP as u32,
+        GroundCliffCheckKind(0),
+        false,
+        0,
+        0,
+        0,
+        0
+    );
+    0.into()
+}
+pub unsafe extern "C" fn redshell_furafura_main(weapon: &mut smashline::L2CWeaponCommon) -> L2CValue {
+    let lr = PostureModule::lr(weapon.module_accessor);
+    let mut speed_x = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let speed_y = KineticModule::get_sum_speed_y(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let from_slow = WorkModule::is_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_BIG_BRAKE);
+    let start_frame = if (from_slow) {0.0} else {89.0};
 
+    println!("Furafura ({from_slow})");
+    if WorkModule::is_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_BIG_BRAKE) && false {
+
+    }
+    else {
+        PostureModule::reverse_lr(weapon.module_accessor);
+        speed_x = (speed_x.abs()).min(0.25);
+        sv_kinetic_energy!(
+            set_speed,
+            weapon,
+            WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL,
+            (-lr*speed_x),
+            speed_y
+        );
+        let brake_x = (0.1f32).max(WorkModule::get_float(weapon.module_accessor, REDSHELL_INSTANCE_FLOAT_BRAKE_X));
+        WorkModule::set_float(weapon.module_accessor,brake_x, REDSHELL_INSTANCE_FLOAT_BRAKE_X);
+        redshell_update_brake(weapon,1.0);
+    }
+
+    MotionModule::change_motion(weapon.module_accessor, Hash40::new("furafura"), start_frame, 1.0, false, 0.0, false, false);
+
+    weapon.fastshift(L2CValue::Ptr(redshell_furafura_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn redshell_furafura_main_loop(weapon: &mut smashline::L2CWeaponCommon) -> smashline::L2CValue {
+    if MotionModule::is_end(weapon.module_accessor) {
+        return redshell_kill(weapon);
+    }
+    redshell_check_for_turn(weapon);
+
+    0.into()
+}
+unsafe extern "C" fn redshell_frame(weapon: &mut smashline::L2CWeaponCommon) {
+    let status = StatusModule::status_kind(weapon.module_accessor);
+    println!("STATUS: {status}");
+}
 pub fn install(agent: &mut smashline::Agent) {
+    //agent.on_line(Main, redshell_frame);
+
 	agent.status(Init, 0, empty_status);
 	agent.status(Pre, 0, redshell_haved_pre);
 	agent.status(Main, 0, redshell_haved_main);
 	agent.status(End, 0, empty_status);
-
-	agent.status(Init, 1, empty_status);
-	agent.status(Pre, 1, redshell_haved_pre);
-	agent.status(Main, 1, empty_status);
-	agent.status(End, 1, empty_status);
 
 	agent.status(Pre, REDSHELL_STATUS_KIND_SHOOT, redshell_fly_pre);
 	agent.status(Init, REDSHELL_STATUS_KIND_SHOOT, redshell_fly_init);
 	agent.status(Main, REDSHELL_STATUS_KIND_SHOOT, redshell_fly_main);
 	agent.status(Exec, REDSHELL_STATUS_KIND_SHOOT, redshell_fly_exec);
 	agent.status(End, REDSHELL_STATUS_KIND_SHOOT, empty_status);
+
+	agent.status(Pre, REDSHELL_STATUS_KIND_FURAFURA, redshell_fly_pre);
+	agent.status(Init, REDSHELL_STATUS_KIND_FURAFURA, empty_status);
+	agent.status(Main, REDSHELL_STATUS_KIND_FURAFURA, redshell_furafura_main);
+	agent.status(End, REDSHELL_STATUS_KIND_FURAFURA, empty_status);
 }

@@ -1,8 +1,140 @@
 ---
-motion_path: "0x0000000000"
+motion_path: fighter/wiifit/motion/hulahoop/c00
 list:
-  haved:
-    game_script: game_haved
+  wait:
+    game_script: game_wait
+    flags:
+      turn: false
+      loop: true
+      move: false
+      fix_trans: false
+      fix_rot: false
+      fix_scale: false
+      unk_40: false
+      unk_80: false
+      unk_100: false
+      unk_200: false
+      unk_400: false
+    blend_frames: 0
+    animations:
+      - name: d02specialhijump_hoop.nuanmb
+        unk: 0
+    scripts:
+      - sound_wait
+      - effect_wait
+    extra: ~
+  wait_2:
+    game_script: game_wait
+    flags:
+      turn: false
+      loop: true
+      move: false
+      fix_trans: false
+      fix_rot: false
+      fix_scale: false
+      unk_40: false
+      unk_80: false
+      unk_100: false
+      unk_200: false
+      unk_400: false
+    blend_frames: 0
+    animations:
+      - name: d02specialhijump_hoop2.nuanmb
+        unk: 0
+    scripts:
+      - sound_wait
+      - effect_wait
+    extra: ~
+  wait_3:
+    game_script: game_wait
+    flags:
+      turn: false
+      loop: true
+      move: false
+      fix_trans: false
+      fix_rot: false
+      fix_scale: false
+      unk_40: false
+      unk_80: false
+      unk_100: false
+      unk_200: false
+      unk_400: false
+    blend_frames: 0
+    animations:
+      - name: d02specialhijump_hoop3.nuanmb
+        unk: 0
+    scripts:
+      - sound_wait
+      - effect_wait
+    extra: ~
+  shoot:
+    game_script: game_shoot
+    flags:
+      turn: false
+      loop: false
+      move: false
+      fix_trans: false
+      fix_rot: false
+      fix_scale: false
+      unk_40: false
+      unk_80: false
+      unk_100: false
+      unk_200: false
+      unk_400: false
+    blend_frames: 0
+    animations:
+      - name: d02specialhiend_hoop.nuanmb
+        unk: 0
+    scripts:
+      - sound_shoot
+      - effect_shoot
+    extra: ~
+  shoot_2:
+    game_script: game_shoot
+    flags:
+      turn: false
+      loop: false
+      move: false
+      fix_trans: false
+      fix_rot: false
+      fix_scale: false
+      unk_40: false
+      unk_80: false
+      unk_100: false
+      unk_200: false
+      unk_400: false
+    blend_frames: 0
+    animations:
+      - name: d02specialhiend_hoop2.nuanmb
+        unk: 0
+    scripts:
+      - sound_shoot
+      - effect_shoot
+    extra: ~
+  shoot_3:
+    game_script: game_shoot
+    flags:
+      turn: false
+      loop: false
+      move: false
+      fix_trans: false
+      fix_rot: false
+      fix_scale: false
+      unk_40: false
+      unk_80: false
+      unk_100: false
+      unk_200: false
+      unk_400: false
+    blend_frames: 0
+    animations:
+      - name: d02specialhiend_hoop3.nuanmb
+        unk: 0
+    scripts:
+      - sound_shoot
+      - effect_shoot
+    extra: ~
+  break:
+    game_script: game_break
     flags:
       turn: false
       loop: false
@@ -18,14 +150,14 @@ list:
     blend_frames: 0
     animations: []
     scripts:
-      - sound_haved
-      - effect_haved
+      - sound_break
+      - effect_break
     extra: ~
   fly:
     game_script: game_fly
     flags:
       turn: false
-      loop: false
+      loop: true
       move: false
       fix_trans: false
       fix_rot: false
@@ -36,18 +168,18 @@ list:
       unk_200: false
       unk_400: false
     blend_frames: 0
-    animations: 
+    animations:
       - name: loop.nuanmb
         unk: 0
     scripts:
       - sound_fly
       - effect_fly
     extra: ~
-  stick:
-    game_script: game_stick
+  turn:
+    game_script: game_turn
     flags:
       turn: false
-      loop: false
+      loop: true
       move: false
       fix_trans: false
       fix_rot: false
@@ -58,13 +190,15 @@ list:
       unk_200: false
       unk_400: false
     blend_frames: 0
-    animations: []
+    animations:
+      - name: loop.nuanmb
+        unk: 0
     scripts:
-      - sound_stick
-      - effect_stick
+      - sound_turn
+      - effect_turn
     extra: ~
-  hit_stick:
-    game_script: game_hitstick
+  furafura:
+    game_script: game_furafura
     flags:
       turn: false
       loop: false
@@ -78,8 +212,10 @@ list:
       unk_200: false
       unk_400: false
     blend_frames: 0
-    animations: []
+    animations:
+      - name: furafura.nuanmb
+        unk: 0
     scripts:
-      - sound_hitstick
-      - effect_hitstick
+      - sound_furafura
+      - effect_furafura
     extra: ~
