@@ -3,8 +3,8 @@ use super::*;
 
 pub const HOP_SPEED_Y: f32 = 0.5;
 pub const HOP_GRAVITY_CHANGE_THRESHOLD: f32 = 0.625;
-pub const HOP_GRAVITY_ACCEL_FACTOR: f32 = 0.25;
-pub const HOP_GRAVITY_LIMIT_FACTOR: f32 = 0.25;
+pub const HOP_GRAVITY_ACCEL_FACTOR: f32 = 0.75;
+pub const HOP_GRAVITY_LIMIT_FACTOR: f32 = 0.5;
 pub const HOP_CONTROL_ACCEL_FACTOR: f32 = 0.25;
 pub const HOP_CONTROL_LIMIT_FACTOR: f32 = 0.25;
 pub const BRAKE_FACTOR: f32 = 0.5;
@@ -95,7 +95,7 @@ unsafe extern "C" fn specials_gravity(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe extern "C" fn specials_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let has_hop = WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SPECIAL_S_DISABLE_HOP);
+    let has_hop = !WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SPECIAL_S_DISABLE_HOP);
     WorkModule::set_flag(fighter.module_accessor, has_hop, FIGHTER_GOOMBA_SPECIAL_S_HAS_HOP);
     WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_GRAVITY);
     WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_REFLECT_SFX);
