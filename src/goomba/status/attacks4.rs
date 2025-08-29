@@ -16,7 +16,7 @@ pub unsafe extern "C" fn attacks4_end(fighter: &mut smashline::L2CFighterCommon)
     fighter.status_end_AttackS4()
 }
 
-
+//Why do i gotta do this
 unsafe extern "C" fn  attacks4_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_AttackS4(true.into());
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK);
@@ -29,7 +29,6 @@ unsafe extern "C" fn  attacks4_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
         if combo < s4_combo_max
         && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N != 0
         && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) {
-            println!("Next anim");
             attack_s4_mtrans(fighter);
         }
     }
@@ -61,12 +60,10 @@ unsafe extern "C" fn attack_s4_mtrans(fighter: &mut L2CFighterCommon) {
     //println!("Combo B: {combo}");
     if combo != 0 {
         if combo == 1 { //2?
-            println!("S2");
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_s4_s2"), 0.0, 1.0, false, 0.0, false, false);
         }
     }
     else {
-        println!("S1 reset");
         let motion = WorkModule::get_int64(fighter.module_accessor,*FIGHTER_STATUS_ATTACK_WORK_INT_MOTION_KIND) as u64;
         let restart_frame = WorkModule::get_float(fighter.module_accessor,*FIGHTER_STATUS_ATTACK_WORK_FLOAT_SMASH_RESTART_FRAME);
         MotionModule::change_motion_force_inherit_frame(fighter.module_accessor, Hash40::new_raw(motion), restart_frame, 1.0, 0.0);

@@ -1,0 +1,27 @@
+Jab: Bite (Catch Attack?)
+FTilt: Puff
+DTilt: Pichu Jab
+Uptilt: Pichu UpSmash
+Dash Attack: Smash 4 Kirby
+UpSmash: Maybe use Puff FThrow?
+FSmash: X
+Down Smash: Wing down smash that leaves you in the air?
+
+Nair: Kirby
+Fair: Pac
+Bair: Kirby
+UpAir: Kirby?
+Dair: Pichu. I mean Puff dair also works?
+
+FThrow: Pichu Dash Attack? (Use squirte fthrow for thrown anims)
+BThrow: Squirtle
+UThrow: Pichu
+DThrow: Pichu but use head instead (so maybe mix puff or pichu dair)
+
+NSpecial: Uhhh Maybe some mix into Squirtle Jab 2?  Or MK Forward Throw?
+SSpiecal: x
+USPecial: Wario
+DSpecial: Uhhhh maybe Pichu Dthrow?
+
+GetupAttacks: Kirby/Puff
+Final Smash: Goomba Storm; just vanilla with fire effects

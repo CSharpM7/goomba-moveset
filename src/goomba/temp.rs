@@ -48,5 +48,5 @@ pub unsafe extern "C" fn landing_air_main(fighter: &mut smashline::L2CFighterCom
 
 pub fn install(agent: &mut smashline::Agent) {
     agent.status(Main,*FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR,landing_air_main);
-    agent.acmd("game_attackairn", spawn_article,Priority::Default);
+    //agent.acmd("game_attackairn", spawn_article,Priority::Default);
 }
