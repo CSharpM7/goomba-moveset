@@ -5,6 +5,7 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_CAN_GEN) {
             ArticleModule::generate_article(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, false, -1);
+            ArticleModule::change_status_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, REDSHELL_STATUS_KIND_HAVED);
         }
     }
     frame(agent.lua_state_agent, 21.0);

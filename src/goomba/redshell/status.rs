@@ -1,9 +1,9 @@
 use crate::imports::imports_agent::*;
 
-pub const LIFE: i32 = 120;
+pub const LIFE: i32 = 180;
 pub const BRAKE_X_INIT: f32 = 0.001;
 pub const GRAVITY: f32 = 0.2;
-pub const SPEED_X: f32 = 1.5;
+pub const SPEED_X: f32 = 1.75;
 
 pub unsafe extern "C" fn redshell_haved_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
     StatusModule::init_settings(
@@ -278,11 +278,7 @@ unsafe extern "C" fn redshell_fly_main_loop(weapon: &mut smashline::L2CWeaponCom
 
         let lr = PostureModule::lr(weapon.module_accessor);
         let speed_x = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        if speed_x.abs() < 0.05
-        || speed_x.signum() != lr {
-            return redshell_kill(weapon);
-        }
-        else if speed_x.abs() < 0.5 && life > 0 {
+        if speed_x.abs() < 0.5 && life > 0 {
             life = -1;
             WorkModule::set_int(weapon.module_accessor, life,*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
             WorkModule::on_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_BIG_BRAKE);
@@ -392,6 +388,7 @@ unsafe extern "C" fn redshell_furafura_main_loop(weapon: &mut smashline::L2CWeap
 unsafe extern "C" fn redshell_frame(weapon: &mut smashline::L2CWeaponCommon) {
     let pos = *PostureModule::pos(weapon.module_accessor);
     if is_out_of_bounds(weapon.module_accessor,weapon.lua_state_agent) {
+        println!("OUT OF BOUNDS");
         redshell_kill(weapon);
     }
 }
@@ -399,10 +396,10 @@ unsafe extern "C" fn redshell_frame(weapon: &mut smashline::L2CWeaponCommon) {
 pub fn install(agent: &mut smashline::Agent) {
     agent.on_line(Main, redshell_frame);
 
-	agent.status(Init, 0, empty_status);
-	agent.status(Pre, 0, redshell_haved_pre);
-	agent.status(Main, 0, redshell_haved_main);
-	agent.status(End, 0, empty_status);
+	agent.status(Init, REDSHELL_STATUS_KIND_HAVED, empty_status);
+	agent.status(Pre, REDSHELL_STATUS_KIND_HAVED, redshell_haved_pre);
+	agent.status(Main, REDSHELL_STATUS_KIND_HAVED, redshell_haved_main);
+	agent.status(End, REDSHELL_STATUS_KIND_HAVED, empty_status);
 
 	agent.status(Pre, REDSHELL_STATUS_KIND_SHOOT, redshell_fly_pre);
 	agent.status(Init, REDSHELL_STATUS_KIND_SHOOT, redshell_fly_init);
