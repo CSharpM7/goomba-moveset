@@ -2812,12 +2812,12 @@ list:
       xlu_end: 0
       cancel_frame: 0
       no_stop_intp: false
-  special_air_hi1:
-    game_script: game_specialairhi1
+  special_air_hi:
+    game_script: game_specialairhi
     flags:
       turn: false
       loop: false
-      move: false
+      move: true
       fix_trans: false
       fix_rot: false
       fix_scale: false
@@ -2831,36 +2831,9 @@ list:
       - name: d02specialairhi.nuanmb
         unk: 0
     scripts:
-      - expression_specialairhi1
-      - sound_specialairhi1
-      - effect_specialairhi1
-    extra:
-      xlu_start: 0
-      xlu_end: 0
-      cancel_frame: 0
-      no_stop_intp: true
-  special_air_hi2:
-    game_script: game_specialairhi2
-    flags:
-      turn: false
-      loop: false
-      move: false
-      fix_trans: false
-      fix_rot: false
-      fix_scale: false
-      unk_40: false
-      unk_80: true
-      unk_100: false
-      unk_200: false
-      unk_400: false
-    blend_frames: 0
-    animations:
-      - name: d02specialairhi.nuanmb
-        unk: 0
-    scripts:
-      - expression_specialairhi2
-      - sound_specialairhi2
-      - effect_specialairhi2
+      - expression_specialairhi
+      - sound_specialairhi
+      - effect_specialairhi
     extra:
       xlu_start: 0
       xlu_end: 0

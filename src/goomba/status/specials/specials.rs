@@ -47,8 +47,8 @@ unsafe extern "C" fn specials_gravity(fighter: &mut L2CFighterCommon) {
         let air_speed_x_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_x_stable"), 0);
         let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
 
-        let normal_gravity_hop = !WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_HAS_HOP)
-        || WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_GRAVITY);
+        let normal_gravity_hop = !WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HAS_HOP)
+        || WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
 
         let normal_gravity_speed = speed_y > HOP_GRAVITY_CHANGE_THRESHOLD;
         if normal_gravity_hop || normal_gravity_speed {
@@ -96,9 +96,9 @@ unsafe extern "C" fn specials_gravity(fighter: &mut L2CFighterCommon) {
 
 unsafe extern "C" fn specials_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let has_hop = !WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SPECIAL_S_DISABLE_HOP);
-    WorkModule::set_flag(fighter.module_accessor, has_hop, FIGHTER_GOOMBA_SPECIAL_S_HAS_HOP);
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_GRAVITY);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_REFLECT_SFX);
+    WorkModule::set_flag(fighter.module_accessor, has_hop, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HAS_HOP);
+    WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
+    WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_SFX);
 
     let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
 
@@ -168,9 +168,9 @@ unsafe extern "C" fn specials_main_loop(fighter: &mut L2CFighterCommon) -> L2CVa
 }
 
 pub unsafe extern "C" fn specials_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_HOP) {
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HOP) {
         if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SPECIAL_S_DISABLE_HOP) {
-            WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_HOP);
+            WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HOP);
             WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SPECIAL_S_DISABLE_HOP);
             let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
@@ -184,8 +184,8 @@ pub unsafe extern "C" fn specials_exec(fighter: &mut L2CFighterCommon) -> L2CVal
         }
     }
     
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_CONTROL) {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_CONTROL);
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_CONTROL) {
+        WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_CONTROL);
         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
             KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         }

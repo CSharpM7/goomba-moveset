@@ -11,8 +11,8 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent,11.0,16.0,3.0);
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_HOP);
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_GRAVITY);
+        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HOP);
+        WorkModule::off_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
     }
     frame(agent.lua_state_agent, 17.0);
     FT_MOTION_RATE(agent,1.0);
@@ -40,14 +40,14 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 27.0);
     if macros::is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_CONTROL);
+        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_CONTROL);
     }
     frame(agent.lua_state_agent, 29.0);
     FT_MOTION_RATE_RANGE(agent,29.0,49.0,10.0);
     frame(agent.lua_state_agent, 49.0);
     FT_MOTION_RATE_RANGE(agent,49.0,65.0,5.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_GRAVITY);
+        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
     }
     frame(agent.lua_state_agent, 65.0);
     FT_MOTION_RATE(agent,1.0);

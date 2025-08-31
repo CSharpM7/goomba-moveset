@@ -3,7 +3,7 @@ use crate::imports::imports_acmd::*;
 unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_CAN_GEN) {
+        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {
             ArticleModule::generate_article(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, false, -1);
             ArticleModule::change_status_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, REDSHELL_STATUS_KIND_HAVED);
         }
@@ -13,10 +13,10 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
         macros::HIT_NODE(agent, Hash40::new("toer"), *HIT_STATUS_XLU);
         macros::ATTACK(agent, 0, 0, Hash40::new("footr"), 10.0, 75, 99, 0, 38, 4.0, 0.0, -2.5, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
 
-        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_CAN_GEN) {
+        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {
             //ArticleModule::shoot(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
             ArticleModule::change_status_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, REDSHELL_STATUS_KIND_SHOOT);
-            WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_N_SHOOT);
+            WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_N_FLAG_SHOOT);
             println!("Req shoot");
         }
         if agent.is_grounded() {
@@ -50,19 +50,19 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn effect_specialn(agent: &mut L2CAgentBase) {    
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_CAN_GEN) {
+        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {
             macros::EFFECT_FOLLOW(agent, Hash40::new("sys_erace_smoke"), Hash40::new("throw"), 0.0, 2.0, 0.0, 0, 0, 0, 1.0, true);
         }
     }
     frame(agent.lua_state_agent, 19.0);
     if macros::is_excute(agent) {
-        if !WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_CAN_GEN) {
+        if !WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {
             macros::FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         }
     }
     frame(agent.lua_state_agent, 20.0);
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_CAN_GEN) {
+        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {
             macros::FOOT_EFFECT(agent, Hash40::new("sys_action_smoke_h"), Hash40::new("top"), -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         }
     }
@@ -88,7 +88,7 @@ unsafe extern "C" fn sound_specialn(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 20.0);
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_CAN_GEN) {
+        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {
             macros::PLAY_SE(agent, Hash40::new("se_item_greenshell_hit"));
         }
     }
@@ -101,7 +101,7 @@ unsafe extern "C" fn sound_specialn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn expression_specialn(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 21.0);
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_CAN_GEN) {
+        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {
             ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_attackm"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
         }
         else {
