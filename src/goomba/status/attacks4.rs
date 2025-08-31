@@ -52,12 +52,9 @@ unsafe extern "C" fn  attacks4_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn attack_s4_mtrans(fighter: &mut L2CFighterCommon) {
     let combo = ComboModule::count(fighter.module_accessor);
-    println!("Combo A: {combo}");
     ControlModule::reset_trigger(fighter.module_accessor);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
     ComboModule::set(fighter.module_accessor, *FIGHTER_COMBO_KIND_S4);
-    //let combo = ComboModule::count(fighter.module_accessor);
-    //println!("Combo B: {combo}");
     if combo != 0 {
         if combo == 1 { //2?
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_s4_s2"), 0.0, 1.0, false, 0.0, false, false);

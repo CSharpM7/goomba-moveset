@@ -1,5 +1,7 @@
 use crate::imports::imports_status::*;
 
+const DECIDE_DIRECTION_SETS_LR: bool = true;
+
 pub unsafe extern "C" fn specialhi_start_init(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
     0.into()
 }
@@ -20,7 +22,8 @@ unsafe extern "C" fn specialhi_start_main_loop(fighter: &mut L2CFighterCommon) -
         return 0.into();
     }
 
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_REVERSE_LR) {
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_REVERSE_LR) 
+    && !DECIDE_DIRECTION_SETS_LR {
         WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_REVERSE_LR);
         let stick_x = fighter.global_table[STICK_X].get_f32().abs();
         let lr_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("status_start_turn_stick_x"));
@@ -149,15 +152,32 @@ unsafe extern "C" fn specialhi_exec(fighter: &mut L2CFighterCommon) -> L2CValue 
         WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_DECIDE_DIRECTION);
         let stick_min = 0.25;
         let stick_mul = 30.0;
-        let stick_x = ControlModule::get_stick_x(fighter.module_accessor);
-        if stick_x.abs() >= 0.25 {
-            PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
-            //Set posture module where x is stick_mul*stick?
-            let mut angle = -stick_mul*stick_x;
-            angle = angle.to_radians();
-            WorkModule::set_float(fighter.module_accessor, angle,FIGHTER_GOOMBA_SPECIAL_HI_FLOAT_ANGLE);
-            specialhi_apply_angle(fighter);
+        let mut stick_x = ControlModule::get_stick_x(fighter.module_accessor);
+        let mut is_reverse = stick_x.signum() != PostureModule::lr(fighter.module_accessor);
+        if stick_x.abs() <= 0.25 {
+            stick_x = 0.0;
+            is_reverse = false;
         }
+        let mut angle = -stick_mul*stick_x;
+        if DECIDE_DIRECTION_SETS_LR {
+            PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
+        }
+        else {
+            let angle_forward = 30.0;
+            let angle_back = 15.0;
+            //Set posture module where x is stick_mul*stick?
+            angle = if is_reverse {
+                angle.clamp(-angle_back, angle_back)
+            }
+            else {
+                angle.clamp(-angle_forward, angle_forward)
+            };
+        }
+        
+        //println!("Stick X: {stick_x} Rev: {is_reverse} Angle: {angle}");
+        angle = angle.to_radians();
+        WorkModule::set_float(fighter.module_accessor, angle,FIGHTER_GOOMBA_SPECIAL_HI_FLOAT_ANGLE);
+        specialhi_apply_angle(fighter);
     }
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_DISABLE_MOTION_ANGLE) {
         WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_DISABLE_MOTION_ANGLE);
