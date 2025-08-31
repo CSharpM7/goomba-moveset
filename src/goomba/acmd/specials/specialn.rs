@@ -11,7 +11,7 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 21.0);
     if macros::is_excute(agent) {
         macros::HIT_NODE(agent, Hash40::new("toer"), *HIT_STATUS_XLU);
-        macros::ATTACK(agent, 0, 0, Hash40::new("footr"), 10.0, 75, 99, 0, 38, 5.0, 0.0, -2.5, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(agent, 0, 0, Hash40::new("footr"), 10.0, 75, 99, 0, 38, 4.0, 0.0, -2.5, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
 
         if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_CAN_GEN) {
             //ArticleModule::shoot(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
@@ -54,16 +54,23 @@ unsafe extern "C" fn effect_specialn(agent: &mut L2CAgentBase) {
             macros::EFFECT_FOLLOW(agent, Hash40::new("sys_erace_smoke"), Hash40::new("throw"), 0.0, 2.0, 0.0, 0, 0, 0, 1.0, true);
         }
     }
+    frame(agent.lua_state_agent, 19.0);
+    if macros::is_excute(agent) {
+        if !WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_CAN_GEN) {
+            macros::FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
     frame(agent.lua_state_agent, 20.0);
     if macros::is_excute(agent) {
-        let eff = if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_CAN_GEN) 
-        {Hash40::new("sys_action_smoke_h")} else {Hash40::new("sys_run_smoke")};
-
-        if agent.is_grounded() {
-            macros::FOOT_EFFECT(agent, eff, Hash40::new("top"), -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_CAN_GEN) {
+            macros::FOOT_EFFECT(agent, Hash40::new("sys_action_smoke_h"), Hash40::new("top"), -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         }
-        macros::EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc"), Hash40::new("top"), 0, 8, 0, 0, 81, 90, 0.85, true);
+    }
+    frame(agent.lua_state_agent, 21.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc"), Hash40::new("top"), 0, 6, 0, 0, 81, 90, 0.75, true);
         common_effect_color(agent);
+        LAST_EFFECT_SET_RATE(agent,0.8);
     }
     frame(agent.lua_state_agent, 40.0);
     if macros::is_excute(agent) {

@@ -203,11 +203,18 @@ unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCo
         redshell_update_brake(weapon,2.0);
         
         let status = StatusModule::status_kind(weapon.module_accessor);
-        if status == REDSHELL_STATUS_KIND_SHOOT {
+        if status != REDSHELL_STATUS_KIND_FURAFURA {
+            println!("Needs attack");
             WorkModule::on_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE);
+
             HitModule::set_no_team(weapon.module_accessor, true);
-            let frame = MotionModule::frame(weapon.module_accessor);
-            MotionModule::change_motion(weapon.module_accessor, Hash40::new("fly"), frame, 1.0, false, 0.0, false, false);
+            ReflectorModule::clean(weapon.module_accessor);
+            ReflectorModule::set_no_team(weapon.module_accessor, true);
+            ReflectModule::set_team_no(weapon.module_accessor, *TEAM_NONE);
+            ReflectModule::reset_info(weapon.module_accessor);
+
+            //let frame = MotionModule::frame(weapon.module_accessor);
+            //MotionModule::change_motion(weapon.module_accessor, Hash40::new("fly"), frame, 1.0, false, 0.0, false, false);
         }
     }
 }
@@ -279,9 +286,12 @@ unsafe extern "C" fn redshell_fly_main_loop(weapon: &mut smashline::L2CWeaponCom
         let lr = PostureModule::lr(weapon.module_accessor);
         let speed_x = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         if speed_x.abs() < 0.5 && life > 0 {
+            println!("Req die");
             life = -1;
             WorkModule::set_int(weapon.module_accessor, life,*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
             WorkModule::on_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_BIG_BRAKE);
+            weapon.change_status(REDSHELL_STATUS_KIND_FURAFURA.into(), false.into());
+            return 1.into();
         }
     }
     if life <= 1 {
@@ -337,7 +347,7 @@ pub unsafe extern "C" fn redshell_furafura_pre(weapon: &mut L2CWeaponCommon) -> 
     );
     0.into()
 }
-pub unsafe extern "C" fn redshell_furafura_shield_main(weapon: &mut smashline::L2CWeaponCommon) -> L2CValue {
+pub unsafe extern "C" fn redshell_furafura_main(weapon: &mut smashline::L2CWeaponCommon) -> L2CValue {
     //redshell_set_correct_kinetics(weapon);
     let correct = if weapon.is_grounded() {*GROUND_CORRECT_KIND_GROUND} else {*GROUND_CORRECT_KIND_AIR};
     GroundModule::set_correct(weapon.module_accessor, GroundCorrectKind(correct));
@@ -409,6 +419,6 @@ pub fn install(agent: &mut smashline::Agent) {
 
 	agent.status(Pre, REDSHELL_STATUS_KIND_FURAFURA, redshell_furafura_pre);
 	agent.status(Init, REDSHELL_STATUS_KIND_FURAFURA, empty_status);
-	agent.status(Main, REDSHELL_STATUS_KIND_FURAFURA, redshell_furafura_shield_main);
+	agent.status(Main, REDSHELL_STATUS_KIND_FURAFURA, redshell_furafura_main);
 	agent.status(End, REDSHELL_STATUS_KIND_FURAFURA, empty_status);
 }
