@@ -2925,7 +2925,7 @@ list:
     flags:
       turn: false
       loop: false
-      move: false
+      move: true
       fix_trans: false
       fix_rot: false
       fix_scale: false
@@ -2974,12 +2974,39 @@ list:
       xlu_end: 11
       cancel_frame: 42
       no_stop_intp: false
+  special_lw_landing:
+    game_script: game_speciallwlanding
+    flags:
+      turn: false
+      loop: false
+      move: false
+      fix_trans: false
+      fix_rot: false
+      fix_scale: false
+      unk_40: false
+      unk_80: true
+      unk_100: false
+      unk_200: false
+      unk_400: false
+    blend_frames: 0
+    animations:
+      - name: d03speciallwlanding.nuanmb
+        unk: 0
+    scripts:
+      - expression_speciallwlanding
+      - sound_speciallwlanding
+      - effect_speciallwlanding
+    extra:
+      xlu_start: 0
+      xlu_end: 0
+      cancel_frame: 87
+      no_stop_intp: false
   special_air_lw:
     game_script: game_specialairlw
     flags:
       turn: false
       loop: false
-      move: false
+      move: true
       fix_trans: false
       fix_rot: false
       fix_scale: false

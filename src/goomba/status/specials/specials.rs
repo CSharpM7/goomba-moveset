@@ -31,8 +31,8 @@ pub unsafe extern "C" fn specials_pre(fighter: &mut L2CFighterCommon) -> L2CValu
         false,
         false,
         (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64,
-        0,
-        (*FIGHTER_STATUS_ATTR_START_TURN | *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S) as u32,
+        (*FIGHTER_STATUS_ATTR_START_TURN as u32),
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32,
         0
     );
     0.into()
@@ -138,6 +138,9 @@ unsafe extern "C" fn specials_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn specials_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {

@@ -2,7 +2,7 @@ use crate::imports::imports_acmd::*;
 
 unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+        //notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SUPERLEAF_VISIBLE);
     }
     frame(agent.lua_state_agent, 1.0);

@@ -100,7 +100,7 @@ pub unsafe extern "C" fn specialhi_pre(fighter: &mut L2CFighterCommon) -> L2CVal
         false,
         (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI) as u64,
         0,
-        (*FIGHTER_STATUS_ATTR_START_TURN | *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S) as u32,
+        (*FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI) as u32,
         0
     );
     0.into()

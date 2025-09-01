@@ -1,13 +1,13 @@
 mod specialn;
 mod specials;
 mod specialhi;
-//mod speciallw;
+mod speciallw;
 
 pub fn install(agent: &mut smashline::Agent) {
     specialn::install(agent);
     specials::install(agent);
     specialhi::install(agent);
-    //speciallw::install(agent);
+    speciallw::install(agent);
 }
 
 use crate::imports::imports_status::*;
@@ -25,7 +25,7 @@ unsafe extern "C" fn status_update_motion(fighter: &mut L2CFighterCommon, is_loo
 }
 unsafe extern "C" fn status_kinetic_correct(fighter: &mut L2CFighterCommon, ground_kinetic: i32, air_kinetic: i32, walk_off: bool) {
     fighter.sub_change_kinetic_type_by_situation(ground_kinetic.into(), air_kinetic.into());
-    fighter.sub_set_ground_correct_by_situation(walk_off.into());
+    fighter.sub_set_ground_correct_by_situation((!walk_off).into());
 }
 unsafe extern "C" fn status_on_situation_update(fighter: &mut L2CFighterCommon, 
     is_loop: bool, ground_kinetic: i32, air_kinetic: i32, walk_off: bool) 
