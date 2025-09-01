@@ -48,10 +48,10 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn effect_specialn(agent: &mut L2CAgentBase) {    
+unsafe extern "C" fn effect_specialn(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {
-            macros::EFFECT_FOLLOW(agent, Hash40::new("sys_erace_smoke"), Hash40::new("throw"), 0.0, 2.0, 0.0, 0, 0, 0, 1.0, true);
+        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) || true {
+            macros::EFFECT_FOLLOW(agent, Hash40::new("sys_misfire"), Hash40::new("throw"), 0.0, 2.0, 0.0, 0, 0, 0, 2.0, true);
         }
     }
     frame(agent.lua_state_agent, 19.0);

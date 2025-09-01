@@ -1,6 +1,7 @@
 use crate::imports::imports_acmd::*;
 
 unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
         ArticleModule::generate_article(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, false, -1);
         let shoe = get_article_boma(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
@@ -27,6 +28,7 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW(agent, Hash40::new("sys_erace_smoke"), Hash40::new("top"), 0.0, 5.0, 0.0, 0, 0, 0, 1.1, true);
         macros::EFFECT_FOLLOW(agent, Hash40::new("sys_jump_smoke"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 1, true);
     }
     frame(agent.lua_state_agent, 2.0);
@@ -71,6 +73,7 @@ unsafe extern "C" fn expression_speciallw(agent: &mut L2CAgentBase) {
     }
 }
 unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
         if !ArticleModule::is_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES) {
             ArticleModule::generate_article(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, false, -1);
@@ -95,6 +98,11 @@ unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn effect_specialairlw(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        if !WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FROM_GROUND) {
+            macros::EFFECT_FOLLOW(agent, Hash40::new("sys_erace_smoke"), Hash40::new("top"), 0.0, 2.0, 0.0, 0, 0, 0, 1.25, true);
+        }
+    }
     frame(agent.lua_state_agent, 20.0);
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW(agent, Hash40::new("yoshi_hip_drop"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 1, true);
@@ -123,15 +131,20 @@ unsafe extern "C" fn expression_specialairlw(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn game_speciallwlanding(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 15.0);
+    frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
         ArticleModule::remove_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
 }
+
 unsafe extern "C" fn effect_speciallwlanding(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::LANDING_EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         macros::LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(agent.lua_state_agent, 12.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW(agent, Hash40::new("sys_erace_smoke"), Hash40::new("top"), 0.0, 5.0, 0.0, 0, 0, 0, 1.25, true);
     }
 }
 
@@ -152,17 +165,62 @@ unsafe extern "C" fn expression_speciallwlanding(agent: &mut L2CAgentBase) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 3);
     }
 }
+
+unsafe extern "C" fn game_specialairlwhit(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 2.0);
+    if macros::is_excute(agent) {
+        //ArticleModule::remove_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+
+        let shoe = get_article_boma(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
+        LinkModule::remove_model_constraint(shoe, true);
+        KineticModule::change_kinetic(shoe, *WEAPON_KINETIC_TYPE_DEDEDE_GORDO_HOP);
+
+        KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL);
+        macros::SET_SPEED_EX(agent, 0, 2.7, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    }
+    frame(agent.lua_state_agent, 30.0);
+    if macros::is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_LANDING_ENABLE);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+    }
+}
+unsafe extern "C" fn effect_specialairlwhit(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, false);
+    }
+}
+
+unsafe extern "C" fn sound_specialairlwhit(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_yoshi_special_l02"));
+    }
+}
+
+unsafe extern "C" fn expression_specialairlwhit(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_impact"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
 pub fn install(agent: &mut smashline::Agent) {
 	agent.acmd("game_speciallw", game_speciallw, Priority::Default);
-	agent.acmd("game_specialairlw", game_specialairlw, Priority::Default);
-	agent.acmd("game_speciallwlanding", game_speciallwlanding, Priority::Default);
 	agent.acmd("effect_speciallw", effect_speciallw, Priority::Default);
-	agent.acmd("effect_specialairlw", effect_specialairlw, Priority::Default);
-	agent.acmd("effect_speciallwlanding", effect_speciallwlanding, Priority::Default);
 	agent.acmd("sound_speciallw", sound_speciallw, Priority::Default);
-	agent.acmd("sound_specialairlw", sound_specialairlw, Priority::Default);
-	agent.acmd("sound_speciallwlanding", sound_speciallwlanding, Priority::Default);
 	agent.acmd("expression_speciallw", expression_speciallw, Priority::Default);
+
+	agent.acmd("game_specialairlw", game_specialairlw, Priority::Default);
+	agent.acmd("effect_specialairlw", effect_specialairlw, Priority::Default);
+	agent.acmd("sound_specialairlw", sound_specialairlw, Priority::Default);
 	agent.acmd("expression_specialairlw", expression_specialairlw, Priority::Default);
+
+	agent.acmd("game_speciallwlanding", game_speciallwlanding, Priority::Default);
+	agent.acmd("effect_speciallwlanding", effect_speciallwlanding, Priority::Default);
+	agent.acmd("sound_speciallwlanding", sound_speciallwlanding, Priority::Default);
 	agent.acmd("expression_speciallwlanding", expression_speciallwlanding, Priority::Default);
+
+	agent.acmd("game_specialairlwhit", game_specialairlwhit, Priority::Default);
+	agent.acmd("effect_specialairlwhit", effect_specialairlwhit, Priority::Default);
+	agent.acmd("sound_specialairlwhit", sound_specialairlwhit, Priority::Default);
+	agent.acmd("expression_specialairlwhit", expression_specialairlwhit, Priority::Default);
 }

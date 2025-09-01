@@ -68,7 +68,7 @@ unsafe extern "C" fn speciallw_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 pub unsafe extern "C" fn speciallw_end_common(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
     let status_interupt = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
     let status_next = StatusModule::status_kind_next(fighter.module_accessor);
-    if !([FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING].contains(&status_next)) {
+    if !([FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT].contains(&status_next)) {
         ArticleModule::remove_exist(fighter.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
     0.into()
@@ -112,6 +112,7 @@ unsafe extern "C" fn speciallw_pound_main(fighter: &mut L2CFighterCommon) -> L2C
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FROM_GROUND) {
         let end_frame = MotionModule::end_frame(fighter.module_accessor);
         MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, end_frame, true, true, false);
+        WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE);
     }
     
     if fighter.global_table[IS_STOP].get_bool() {
@@ -126,6 +127,7 @@ unsafe extern "C" fn speciallw_pound_main_loop(fighter: &mut L2CFighterCommon) -
     }
     if MotionModule::is_end(fighter.module_accessor) {
         WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FALL);
+        WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE);
     }
     let count = fighter.global_table[STATUS_FRAME].get_i32();//WorkModule::get_int(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_INT_COUNT);
     let pass_frame = 5;
@@ -159,6 +161,25 @@ unsafe extern "C" fn speciallw_pound_exec(fighter: &mut L2CFighterCommon) -> L2C
     }
 
     0.into()
+}
+unsafe extern "C" fn speciallw_pound_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+    if (&param_3["object_category_"]).get_i32() == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+        println!("Hit a dude");
+        if (&param_3["kind_"]).get_i32() == *COLLISION_KIND_HIT {
+            println!("Hit a dude not shielding");
+            let object_id = (&param_3["object_id_"]).get_u32();
+            let opponent_boma = sv_battle_object::module_accessor(object_id);
+        }
+    }
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE) {
+        println!("Bounce on it");
+        //if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+            println!("CHANGE");
+            fighter.change_status(FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT.into(), false.into());
+            return 1.into();
+        //}
+    }
+    return 0.into();
 }
 
 pub unsafe extern "C" fn speciallw_landing_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -230,6 +251,72 @@ unsafe extern "C" fn speciallw_landing_end(fighter: &mut L2CFighterCommon) -> L2
     speciallw_end_common(fighter)
 }
 
+pub unsafe extern "C" fn speciallw_hit_init(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
+    StatusModule::set_keep_situation_air(fighter.module_accessor, true);
+    KineticModule::clear_speed_all(fighter.module_accessor);
+    0.into()
+}
+pub unsafe extern "C" fn speciallw_hit_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(
+        fighter.module_accessor,
+        SituationKind(*SITUATION_KIND_AIR),
+        *FIGHTER_KINETIC_TYPE_NONE,
+        *GROUND_CORRECT_KIND_AIR as u32,
+        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+        true,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
+        0
+    );
+
+    FighterStatusModuleImpl::set_fighter_status_data(
+        fighter.module_accessor,
+        false,
+        *FIGHTER_TREADED_KIND_NO_REAC,
+        false,
+        false,
+        false,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW |
+            *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64,
+        0,
+        (*FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW) as u32,
+        0
+    );
+    0.into()
+}
+unsafe extern "C" fn speciallw_hit_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_lw_hit"), 0.0, 1.0, false, 0.0, false, false);
+    fighter.sub_change_kinetic_type_by_situation(FIGHTER_KINETIC_TYPE_GROUND_STOP.into(), FIGHTER_KINETIC_TYPE_AIR_STOP.into());
+    fighter.sub_set_ground_correct_by_situation(false.into());
+	fighter.sub_shift_status_main(L2CValue::Ptr( speciallw_hit_main_loop as *const () as _)) 
+}
+unsafe extern "C" fn speciallw_hit_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool()
+        || fighter.sub_air_check_fall_common().get_bool() {
+            return 1.into();
+        }
+    } 
+	if !StatusModule::is_changing(fighter.module_accessor)
+	&& StatusModule::is_situation_changed(fighter.module_accessor) {
+        if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+        }
+	}
+    if MotionModule::is_end(fighter.module_accessor) {
+        fighter.change_status_by_situation(FIGHTER_STATUS_KIND_WAIT.into(), FIGHTER_STATUS_KIND_FALL.into(), false.into());
+    }
+
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_LANDING_ENABLE) {
+        StatusModule::set_keep_situation_air(fighter.module_accessor, false);
+    }
+    0.into()
+}
+
 pub fn install(agent: &mut smashline::Agent) {
 	agent.status(Init, *FIGHTER_STATUS_KIND_SPECIAL_LW, speciallw_init);
 	agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_LW, speciallw_pre);
@@ -242,10 +329,17 @@ pub fn install(agent: &mut smashline::Agent) {
 	agent.status(Main, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, speciallw_pound_main);
 	agent.status(Exec, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, speciallw_pound_exec);
 	agent.status(End, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, speciallw_end_common);
+	agent.status(CheckAttack, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, speciallw_pound_attack);
     
 	agent.status(Init, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING, empty_status);
 	agent.status(Pre, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING, speciallw_landing_pre);
 	agent.status(Main, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING, speciallw_landing_main);
 	agent.status(Exec, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING, empty_status);
 	agent.status(End, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING, speciallw_landing_end);
+    
+	agent.status(Init, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT, speciallw_hit_init);
+	agent.status(Pre, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT, speciallw_hit_pre);
+	agent.status(Main, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT, speciallw_hit_main);
+	agent.status(Exec, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT, empty_status);
+	agent.status(End, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT, speciallw_end_common);
 }
