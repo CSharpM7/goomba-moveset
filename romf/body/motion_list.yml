@@ -2999,7 +2999,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 87
+      cancel_frame: 40
       no_stop_intp: false
   special_air_lw:
     game_script: game_specialairlw
@@ -7048,8 +7048,8 @@ list:
       - effect_downattackd
     extra:
       xlu_start: 1
-      xlu_end: 23
-      cancel_frame: 46
+      xlu_end: 22
+      cancel_frame: 43
       no_stop_intp: false
   down_forward_d:
     game_script: game_downforwardd

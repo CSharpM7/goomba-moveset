@@ -8,7 +8,7 @@ mod cliff;
 mod down;
 mod escape_passive_slip;
 
-//mod attacks;
+mod attacks;
 
 pub fn install(agent: &mut smashline::Agent) {
     //walk::install(agent);
@@ -20,5 +20,5 @@ pub fn install(agent: &mut smashline::Agent) {
 
     //down::install(agent);
     //escape_passive_slip::install(agent);
-    //attacks::install(agent);
+    attacks::install(agent);
 }

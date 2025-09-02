@@ -1,13 +1,22 @@
+//mod acmd;
+mod status;
 use crate::singleslot::MOD_SLOTS;
 use crate::vars::*;
 
 pub fn install_hook(hookstatus: bool) {
     unsafe {
         FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES += FIGHTER_GOOMBA_GENERATE_ARTICLE_LAST +
-         smashline::clone_weapon("murabito", *smash::lib::lua_const::WEAPON_KIND_MURABITO_UMBRELLA, 
-    "pichu", "accessories",true);
+         smashline::clone_weapon("dolly", *smash::lib::lua_const::WEAPON_KIND_DOLLY_CAP, 
+    "pichu", "accessories",false);
     println!("[smashline_kuribo::kuribo] (HOOK) Accessories assigned to {}",FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
     }
+
+    if !hookstatus {return;}
+    let agent = &mut smashline::Agent::new("pichu_accessories");
+    let slots = (*MOD_SLOTS.read().unwrap()).to_vec();
+    agent.set_costume(slots);
+    status::install(agent);
+    agent.install();
 }
 
 pub fn install(hookstatus: bool) {
@@ -17,6 +26,16 @@ pub fn install(hookstatus: bool) {
             println!("[smashline_kuribo::kuribo] (DEV) Accessories assigned to {}",FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
         }
     }
+
+    let agent = &mut smashline::Agent::new("pichu_accessories");
+    let slots = (*MOD_SLOTS.read().unwrap()).to_vec();
+    agent.set_costume(slots);
+
+    //acmd::install(agent);
+    if !hookstatus {
+        status::install(agent);
+    }
+    agent.install();
 }
 
 use crate::imports::imports_status::*;

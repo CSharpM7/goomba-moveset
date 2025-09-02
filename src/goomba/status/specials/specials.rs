@@ -153,12 +153,14 @@ unsafe extern "C" fn specials_main_loop(fighter: &mut L2CFighterCommon) -> L2CVa
         status_on_situation_update(fighter,true,*FIGHTER_KINETIC_TYPE_GROUND_STOP,*FIGHTER_KINETIC_TYPE_AIR_STOP,false);
         let brake_param = if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND
         {hash40("ground_brake")} else {hash40("air_brake_x")};
+        let brake_mul = if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND
+        {1.5} else {1.0};
         let brake = WorkModule::get_param_float(fighter.module_accessor, brake_param, 0);
         sv_kinetic_energy!(
             set_brake,
             fighter,
             FIGHTER_KINETIC_ENERGY_ID_STOP,
-            brake
+            brake*brake_mul
         );
         specials_gravity(fighter);
     }

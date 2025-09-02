@@ -2,6 +2,7 @@ use crate::imports::imports_status::*;
 
 pub unsafe extern "C" fn speciallw_init(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
     StatusModule::set_keep_situation_air(fighter.module_accessor, true);
+    ArticleModule::remove_exist(fighter.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     0.into()
 }
 
@@ -66,6 +67,7 @@ unsafe extern "C" fn speciallw_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 pub unsafe extern "C" fn speciallw_end_common(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
+    let status = StatusModule::status_kind(fighter.module_accessor);
     let status_interupt = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
     let status_next = StatusModule::status_kind_next(fighter.module_accessor);
     if !([FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT].contains(&status_next)) {
@@ -163,21 +165,25 @@ unsafe extern "C" fn speciallw_pound_exec(fighter: &mut L2CFighterCommon) -> L2C
     0.into()
 }
 unsafe extern "C" fn speciallw_pound_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+    let mut can_bounce = false;
     if (&param_3["object_category_"]).get_i32() == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-        println!("Hit a dude");
+        //println!("Hit a dude");
         if (&param_3["kind_"]).get_i32() == *COLLISION_KIND_HIT {
-            println!("Hit a dude not shielding");
+            //println!("Hit a dude not shielding");
+            can_bounce = true;
+            /* 
             let object_id = (&param_3["object_id_"]).get_u32();
             let opponent_boma = sv_battle_object::module_accessor(object_id);
+            */
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE) {
-        println!("Bounce on it");
-        //if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-            println!("CHANGE");
-            fighter.change_status(FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT.into(), false.into());
-            return 1.into();
-        //}
+    else {
+        can_bounce = true;
+    }
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE) 
+    && can_bounce {
+        fighter.change_status(FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT.into(), false.into());
+        return 1.into();
     }
     return 0.into();
 }
@@ -323,6 +329,7 @@ pub fn install(agent: &mut smashline::Agent) {
 	agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, speciallw_main);
 	agent.status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_LW, empty_status);
 	agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_N, speciallw_end_common);
+	agent.status(CheckAttack, *FIGHTER_STATUS_KIND_SPECIAL_N, speciallw_pound_attack);
     
 	agent.status(Init, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, empty_status);
 	agent.status(Pre, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, speciallw_pound_pre);
