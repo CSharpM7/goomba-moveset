@@ -124,7 +124,6 @@ unsafe extern "C" fn expression_catchturn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_catchattack(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
-        macros::FT_ADD_DAMAGE(agent, 0.1);
         macros::ATTACK(agent, 0, 0, Hash40::new("top"), 1.4, 80, 100, 30, 0, 4.7, 0.0, 8.2, 8.6, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
         AttackModule::set_catch_only_all(agent.module_accessor, true, false);
     }
