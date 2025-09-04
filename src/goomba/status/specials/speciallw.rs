@@ -112,7 +112,7 @@ unsafe extern "C" fn speciallw_pound_main(fighter: &mut L2CFighterCommon) -> L2C
     WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_CLIFF);
     WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_GOOMBA_SPECIAL_LW_INT_COUNT);
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FROM_GROUND) {
-        let end_frame = MotionModule::end_frame(fighter.module_accessor);
+        let end_frame = FIGHTER_GOOMBA_SPECIAL_LW_SPIKE_FRAME;//MotionModule::end_frame(fighter.module_accessor);
         MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, end_frame, true, true, false);
         WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE);
     }
