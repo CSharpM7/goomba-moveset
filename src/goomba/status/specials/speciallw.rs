@@ -84,7 +84,7 @@ pub unsafe extern "C" fn speciallw_pound_pre(fighter: &mut L2CFighterCommon) -> 
         SituationKind(*SITUATION_KIND_AIR),
         *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE,
         *GROUND_CORRECT_KIND_AIR as u32,
-        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES),
+        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT,
@@ -152,7 +152,7 @@ unsafe extern "C" fn speciallw_pound_main_loop(fighter: &mut L2CFighterCommon) -
 }
 
 unsafe extern "C" fn speciallw_pound_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES.into()); //?
+    //fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES.into()); //?
     let param_speed_y = -4.8;
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FALL) {
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
