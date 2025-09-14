@@ -1,5 +1,24 @@
 use crate::imports::imports_status::*;
 
+unsafe extern "C" fn attacklw3_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.status_AttackLw3_common();
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW3);
+	fighter.sub_shift_status_main(L2CValue::Ptr( attacklw3_main_loop as *const () as _)) 
+}
+unsafe extern "C" fn attacklw3_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.status_AttackLw3_Main().get_bool() {
+        return 1.into();
+    }
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {return 0.into();}
+    if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW3) {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO_INPUT) 
+        && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 != 0 {
+            fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_LW3.into(), true.into());
+        }
+    }
+    0.into()
+}
+
 pub unsafe extern "C" fn attacks4_start_end(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
     let param = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
     fighter.sub_remove_exist_article_at_status_end(param.into(), FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES.into());
@@ -17,12 +36,12 @@ pub unsafe extern "C" fn attacks4_end(fighter: &mut smashline::L2CFighterCommon)
 }
 
 //Why do i gotta do this
-unsafe extern "C" fn  attacks4_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn attacks4_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_AttackS4(true.into());
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK);
 	fighter.sub_shift_status_main(L2CValue::Ptr( attacks4_main_loop as *const () as _)) 
 }
-unsafe extern "C" fn  attacks4_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn attacks4_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if !StatusModule::is_changing(fighter.module_accessor) {
         let combo = ComboModule::count(fighter.module_accessor) as i32;
         let s4_combo_max = WorkModule::get_param_int(fighter.module_accessor, hash40("s4_combo_max"), 0);
@@ -67,9 +86,10 @@ unsafe extern "C" fn attack_s4_mtrans(fighter: &mut L2CFighterCommon) {
     }
 }
 pub fn install(agent: &mut smashline::Agent) {
+	agent.status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW3, attacklw3_main);
+
 	agent.status(End, *FIGHTER_STATUS_KIND_ATTACK_S4_START, attacks4_start_end);
 	agent.status(End, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, attacks4_hold_end);
 	agent.status(End, *FIGHTER_STATUS_KIND_ATTACK_S4, attacks4_end);
-
 	agent.status(Main, *FIGHTER_STATUS_KIND_ATTACK_S4, attacks4_main);
 }

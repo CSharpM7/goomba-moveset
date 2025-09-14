@@ -1,5 +1,5 @@
 //mod jabs;
-//mod tilts;
+mod tilts;
 mod smashes;
 //mod dashattack;
 //mod aerials;
@@ -14,9 +14,8 @@ mod movement;
 
 pub fn install(agent: &mut smashline::Agent) {
 
-    //movement_attacks::install(agent);
     //jabs::install(agent);
-    //tilts::install(agent);
+    tilts::install(agent);
     smashes::install(agent);
     //dashattack::install(agent); 
     //aerials::install(agent);

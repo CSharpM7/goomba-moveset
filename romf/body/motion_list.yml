@@ -1835,7 +1835,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 17
+      cancel_frame: 21
       no_stop_intp: true
   attack_dash:
     game_script: game_attackdash
@@ -1997,7 +1997,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 19
+      cancel_frame: 16
       no_stop_intp: false
   attack_s4_s:
     game_script: game_attacks4

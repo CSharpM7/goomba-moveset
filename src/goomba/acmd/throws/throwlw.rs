@@ -44,7 +44,7 @@ unsafe extern "C" fn sound_throwlw(agent: &mut L2CAgentBase) {
     }
     wait(agent.lua_state_agent, 11.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_common_throw_03"));
+        macros::PLAY_SE(agent, Hash40::new("se_common_punch_hit_m"));
     }
 }
 

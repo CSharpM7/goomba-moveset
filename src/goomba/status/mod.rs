@@ -1,9 +1,9 @@
-mod attacks4;
+mod attack;
 
 mod specials;
 
 pub fn install(agent: &mut smashline::Agent) {
-    attacks4::install(agent);
+    attack::install(agent);
 
 	specials::install(agent);
 }
