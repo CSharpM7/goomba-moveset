@@ -151,7 +151,7 @@ unsafe extern "C" fn specialhi_exec(fighter: &mut L2CFighterCommon) -> L2CValue 
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_DECIDE_DIRECTION) {
         WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_DECIDE_DIRECTION);
         let stick_min = 0.25;
-        let stick_mul = 30.0;
+        let stick_mul = 40.0;
         let mut stick_x = ControlModule::get_stick_x(fighter.module_accessor);
         let mut is_reverse = stick_x.signum() != PostureModule::lr(fighter.module_accessor);
         if stick_x.abs() <= 0.25 {

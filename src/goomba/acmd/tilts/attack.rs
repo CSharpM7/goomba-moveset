@@ -1,12 +1,10 @@
 use crate::imports::imports_acmd::*;
 
 unsafe extern "C" fn game_attack11(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
-    FT_MOTION_RATE_RANGE(agent,1.0,6.0,4.0);
-    frame(agent.lua_state_agent, 6.0);
+    frame(agent.lua_state_agent, 5.0);
     FT_MOTION_RATE(agent,1.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.5, 361, 70, 0, 50, 6.3, 0.0, 5.0, 4.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 3, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.5, 361, 70, 0, 50, 5.8, 0.0, 4.75, 4.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
     }
     wait(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
@@ -24,9 +22,10 @@ unsafe extern "C" fn effect_attack11(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("goomba_bite_s"), Hash40::new("goomba_bite_s"), Hash40::new("top"), 1, 4, 2, 0, -90, 10, 0.5, true, *EF_FLIP_YZ);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("goomba_bite_s"), Hash40::new("goomba_bite_s"), Hash40::new("top"), -8, 4, 4, 0, -90, 20, 0.5, true, *EF_FLIP_YZ);
+        LAST_EFFECT_SET_ALPHA(agent,0.4);
     }
-    frame(agent.lua_state_agent, 6.0);
+    frame(agent.lua_state_agent, 5.0);
     if macros::is_excute(agent) {
         macros::EFFECT(agent, Hash40::new("goomba_bite_line2"), Hash40::new("mouth"), 1, -1, 0, -20, 0, 0, 0.5, 0, 1, 0, 0, 0, 0, true);
         macros::EFFECT_DETACH_KIND(agent, Hash40::new("goomba_bite_s"), -1);
