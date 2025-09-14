@@ -48,8 +48,8 @@ unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_speciallw(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_yoshi_special_l01"));
-        macros::SET_PLAY_INHIVIT(agent, Hash40::new("se_yoshi_special_l01"), 30);
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_special_l01"));
+        macros::SET_PLAY_INHIVIT(agent, Hash40::new("se_pichu_special_l01"), 30);
     }
 }
 
@@ -96,12 +96,13 @@ unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE);
         macros::HIT_NODE(agent, Hash40::new("hip"), *HIT_STATUS_INVINCIBLE);
 
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 275, 68, 0, 15, 6.4, 0.0, 3.0, 2.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HIP);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 275, 68, 0, 15, 6.4, 0.0, 3.0, 2.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_HIP);
         AttackModule::set_attack_height_all(agent.module_accessor, AttackHeight(*ATTACK_HEIGHT_HIGH), false);
     }
     wait(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 80, 68, 0, 70, 6.4, 0.0, 4.7, 2.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HIP);
+        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_WEAK_SFX);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 80, 68, 0, 70, 6.4, 0.0, 4.7, 2.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_HIP);
         AttackModule::set_attack_height_all(agent.module_accessor, AttackHeight(*ATTACK_HEIGHT_HIGH), false);
     }
 }
@@ -121,11 +122,15 @@ unsafe extern "C" fn effect_specialairlw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_specialairlw(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 0.0);
     if macros::is_excute(agent) {
-        macros::STOP_SE(agent, Hash40::new("vc_yoshi_jump02"));
+        //macros::STOP_SE(agent, Hash40::new("vc_yoshi_jump02"));
     }
-    frame(agent.lua_state_agent, 11.0);
+    frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_yoshi_special_l01"));
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_special_l01"));
+    }
+    frame(agent.lua_state_agent, FIGHTER_GOOMBA_SPECIAL_LW_SPIKE_FRAME);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_common_throw_01"));
     }
 }
 
@@ -156,9 +161,8 @@ unsafe extern "C" fn effect_speciallwlanding(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn sound_speciallwlanding(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 0.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_yoshi_special_l02"));
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_special_l03"));
     }
 }
 
@@ -194,9 +198,6 @@ unsafe extern "C" fn effect_specialairlwhit(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn sound_specialairlwhit(agent: &mut L2CAgentBase) {
-    if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_yoshi_special_l02"));
-    }
 }
 
 unsafe extern "C" fn expression_specialairlwhit(agent: &mut L2CAgentBase) {

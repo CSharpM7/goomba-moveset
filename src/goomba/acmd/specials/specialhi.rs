@@ -29,6 +29,10 @@ unsafe extern "C" fn effect_specialhistart(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn sound_specialhistart(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 2.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_special_s02_m"));
+    }
 }
 
 unsafe extern "C" fn expression_specialhistart(agent: &mut L2CAgentBase) {
@@ -92,14 +96,17 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn sound_specialhi(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
-        macros::PLAY_STATUS(agent, Hash40::new("se_goomba_special_h01"));
-        macros::PLAY_STATUS(agent, Hash40::new("vc_goomba_008"));
+        //macros::PLAY_SE(agent, Hash40::new("se_pichu_special_s02_l"));
     }
-    wait(agent.lua_state_agent, 20.0);
+    //frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_goomba_swing_l"));
+        macros::PLAY_STATUS(agent, Hash40::new("se_pichu_special_h01"));
+        //macros::PLAY_STATUS(agent, Hash40::new("vc_pichu_008"));
+    }
+    frame(agent.lua_state_agent, 34.0);
+    if macros::is_excute(agent) {
+        //macros::PLAY_SE(agent, Hash40::new("se_pichu_special_s02_s"));
     }
 }
 

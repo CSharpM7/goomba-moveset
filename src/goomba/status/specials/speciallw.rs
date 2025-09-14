@@ -167,9 +167,7 @@ unsafe extern "C" fn speciallw_pound_exec(fighter: &mut L2CFighterCommon) -> L2C
 unsafe extern "C" fn speciallw_pound_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
     let mut can_bounce = false;
     if (&param_3["object_category_"]).get_i32() == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-        //println!("Hit a dude");
         if (&param_3["kind_"]).get_i32() == *COLLISION_KIND_HIT {
-            //println!("Hit a dude not shielding");
             can_bounce = true;
             /* 
             let object_id = (&param_3["object_id_"]).get_u32();
@@ -182,6 +180,10 @@ unsafe extern "C" fn speciallw_pound_attack(fighter: &mut L2CFighterCommon, para
     }
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE) 
     && can_bounce {
+        let sfx = if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_WEAK_SFX) 
+        {Hash40::new("se_pichu_special_s01_charge")} else {Hash40::new("se_common_kick_hit_l")};
+        SoundModule::play_se(fighter.module_accessor, sfx, true, false, false, false, enSEType(0));
+
         fighter.change_status(FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT.into(), false.into());
         return 1.into();
     }
@@ -270,7 +272,7 @@ pub unsafe extern "C" fn speciallw_hit_pre(fighter: &mut L2CFighterCommon) -> L2
         *GROUND_CORRECT_KIND_AIR as u32,
         GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         true,
-        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
         0

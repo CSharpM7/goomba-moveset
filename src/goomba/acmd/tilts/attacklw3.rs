@@ -31,7 +31,7 @@ unsafe extern "C" fn effect_attacklw3(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_attacklw3(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_pichu_swing_s"));
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_attackhard_l01"));
     }
 }
 

@@ -134,16 +134,11 @@ unsafe extern "C" fn game_catchattack(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn effect_catchattack(agent: &mut L2CAgentBase) {
-    if macros::is_excute(agent) {
-        //macros::EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_elec_impact"), Hash40::new("top"), 0, 9, 9, 0, 90, 0, 0.7, true);
-        //wario_kamitsuki_bite
-    }
 }
 
 unsafe extern "C" fn sound_catchattack(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_yoshi_catch"));
+        //macros::PLAY_SE(agent, Hash40::new("se_pichu_swing_s"));
     }
 }
 
