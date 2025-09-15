@@ -1,4 +1,3 @@
-
 use crate::imports::imports_acmd::*;
 /*
 unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {

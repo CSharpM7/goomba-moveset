@@ -150,31 +150,31 @@ fn params() {
     param_attributes.push((hash40("walk_middle_ratio"),0 as u64, 0.5 / 0.38));
     param_attributes.push((hash40("walk_fast_ratio"),0 as u64, 0.75 / 0.75));
 
-    param_attributes.push((hash40("ground_brake"),0 as u64, 0.132 / 0.11));
+    param_attributes.push((hash40("ground_brake"),0 as u64, 0.1 / 0.11));
     param_attributes.push((hash40("dash_speed"),0 as u64, 1.85 / 1.98));
     param_attributes.push((hash40("run_speed_max"),0 as u64, 1.75 / 1.892));
 
     param_attributes.push((hash40("jump_speed_x"),0 as u64, 0.9 / 0.8)); 
     param_attributes.push((hash40("jump_speed_x_mul"),0 as u64, 0.8 / 0.8)); 
-    param_attributes.push((hash40("jump_speed_x_max"),0 as u64, 1.0 / 1.8)); 
+    param_attributes.push((hash40("jump_speed_x_max"),0 as u64, 1.3 / 1.8)); 
     param_attributes.push((hash40("jump_aerial_speed_x_mul"),0 as u64, 0.9 / 0.9)); 
     
-    param_attributes.push((hash40("jump_initial_y"),0 as u64, 18.0 / 20.2125)); 
-    param_attributes.push((hash40("jump_y"),0 as u64, 34.0 / 36.75)); 
-    param_attributes.push((hash40("mini_jump_y"),0 as u64, 15.0 / 17.43)); 
-    param_attributes.push((hash40("jump_aerial_y"),0 as u64, 34.0 / 36.02)); 
+    param_attributes.push((hash40("jump_initial_y"),0 as u64, 16.0 / 20.2125)); 
+    param_attributes.push((hash40("jump_y"),0 as u64, 30.0 / 36.75)); 
+    param_attributes.push((hash40("mini_jump_y"),0 as u64, 11.0 / 17.43)); 
+    param_attributes.push((hash40("jump_aerial_y"),0 as u64, 27.0 / 36.02)); 
 
     param_attributes.push((hash40("air_accel_x_mul"),0 as u64, 0.09 / 0.09)); 
     //param_floats.push((hash40("air_accel_x_add"),0 as u64, 0.01 / 0.01));
-    param_attributes.push((hash40("air_speed_x_stable"),0 as u64, 1.0 / 1.029)); 
+    param_attributes.push((hash40("air_speed_x_stable"),0 as u64, 1.06 / 1.029)); 
     param_attributes.push((hash40("air_brake_x"),0 as u64, 0.008 / 0.0075)); 
 
     param_attributes.push((hash40("air_accel_y"),0 as u64, 0.095 / 0.14));
-    param_attributes.push((hash40("air_speed_y_stable"),0 as u64, 1.55 / 1.9));
+    param_attributes.push((hash40("air_speed_y_stable"),0 as u64, 1.75 / 1.9));
     param_attributes.push((hash40("air_brake_y"),0 as u64, 0.008 / 0.008));
-    param_attributes.push((hash40("dive_speed_y"),0 as u64, 2.48 / 2.5));
+    param_attributes.push((hash40("dive_speed_y"),0 as u64, 2.8 / 2.5));
 
-    param_attributes.push((hash40("weight"),0 as u64, 82.0 / 62.0));
+    param_attributes.push((hash40("weight"),0 as u64, 81.0 / 62.0));
 
     //param_floats.push((hash40("landing_attack_air_frame_n"),0 as u64, 14.0));
     //param_floats.push((hash40("landing_attack_air_frame_f"),0 as u64, 10.0));
