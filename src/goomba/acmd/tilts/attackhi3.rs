@@ -6,16 +6,16 @@ unsafe extern "C" fn game_attackhi3(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 9.0);
     FT_MOTION_RATE(agent,1.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("neck"), 9.0, 83, 110, 0, 40, 5.8, 4.9, 0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
-        macros::ATTACK(agent, 1, 0, Hash40::new("hip"), 9.0, 83, 110, 0, 40, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
+        macros::ATTACK(agent, 0, 0, Hash40::new("neck"), 9.0, 83, 110, 0, 30, 5.9, 4.9, 0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
+        macros::ATTACK(agent, 1, 0, Hash40::new("hip"), 9.0, 83, 110, 0, 30, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
     }
-    wait(agent.lua_state_agent, 3.0);
+    wait(agent.lua_state_agent, 5.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
         HitModule::set_status_all(agent.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
     frame(agent.lua_state_agent, 15.0);
-    FT_MOTION_RATE_RANGE(agent,15.0,31.0,8.0);
+    FT_MOTION_RATE_RANGE(agent,15.0,31.0,7.0);
     frame(agent.lua_state_agent, 31.0);
     FT_MOTION_RATE(agent,1.0);
 }
@@ -23,16 +23,13 @@ unsafe extern "C" fn game_attackhi3(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attackhi3(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 9.0);
     if macros::is_excute(agent) {
-        //macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("pichu_tail_arc3"), Hash40::new("pichu_tail_arc3"), Hash40::new("top"), 1, 5, 0, 10, -40, -110, 1, true, *EF_FLIP_YZ);
-        //macros::LAST_EFFECT_SET_RATE(agent, 0.8);
-        macros::LAST_EFFECT_SET_ALPHA(agent, 0.8);
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 1, 6, -0.5, 32, -75, -138, 1.1, true, *EF_FLIP_YZ);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 1, 6, -0.5, 32, -75, -138, 1.25, true, *EF_FLIP_YZ);
         macros::LAST_EFFECT_SET_RATE(agent, 0.8);
         common_effect_color(agent);
     }
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
-        macros::LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 3, 0, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, false);
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 3, 0, -2, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, false);
     }
 }
 
