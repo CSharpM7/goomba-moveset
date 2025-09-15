@@ -32,7 +32,7 @@ pub unsafe extern "C" fn landing_air_main(fighter: &mut smashline::L2CFighterCom
     };
     let landing_frame = match mot {
         0xc3a4e2597 => 7.0,//n
-        0xc3495ada5 => 12.0,//f
+        0xc3495ada5 => 9.0,//f
         0xc33f869bc => 18.0,//b
         0xdde67d935 => 11.0,//hi
         0xd40042152 => 22.0,//lw
