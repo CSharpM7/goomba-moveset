@@ -24,7 +24,7 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FLIP_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("sys_attack_impact"), Hash40::new("rot0"), 0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_YZ, 0.5);
+        macros::EFFECT_FOLLOW_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 1.7, true, 0.6);
     }
     frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {

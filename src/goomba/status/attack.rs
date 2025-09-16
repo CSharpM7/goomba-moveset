@@ -85,6 +85,90 @@ unsafe extern "C" fn attack_s4_mtrans(fighter: &mut L2CFighterCommon) {
         MotionModule::change_motion_force_inherit_frame(fighter.module_accessor, Hash40::new_raw(motion), restart_frame, 1.0, 0.0);
     }
 }
+pub unsafe extern "C" fn attackair_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_attack_air();
+    fighter.main_shift(attackair_main_loop)
+}
+unsafe extern "C" fn attackair_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_motion(Hash40::new("attack_air_lw")) {
+        if CancelModule::is_enable_cancel(fighter.module_accessor) {
+            GroundModule::select_cliff_hangdata(fighter.module_accessor, *FIGHTER_CLIFF_HANG_DATA_DEFAULT as u32);
+        }
+        if fighter.sub_transition_group_check_air_cliff().get_bool() {
+            return 1.into();
+        }
+        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_RESUME_CONTROL) {
+            WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_RESUME_CONTROL);
+            
+            let sum_speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            let sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            let stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
+            let stop_speed = Vector2f{x: lua_bind::KineticEnergy::get_speed_x(stop_energy), y: lua_bind::KineticEnergy::get_speed_y(stop_energy)};
+            macros::SET_SPEED_EX(fighter, 0.0, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            sv_kinetic_energy!(
+                set_speed,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_STOP,
+                0.0,
+                0.0
+            );
+            KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+            sv_kinetic_energy!(
+                reset_energy,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_CONTROL,
+                ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST,
+                sum_speed_x,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            );
+            //Do I really gotta do all this?
+            let ACCEL_MUL = 0.625;
+            let air_accel_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_mul"), 0);
+            let air_accel_x_add = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_add"), 0);
+            let air_speed_x_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_x_stable"), 0);
+            sv_kinetic_energy!(
+                controller_set_accel_x_mul,
+                fighter,
+                air_accel_x_mul * ACCEL_MUL
+            );
+            sv_kinetic_energy!(
+                controller_set_accel_x_add,
+                fighter,
+                air_accel_x_add * ACCEL_MUL
+            );
+            sv_kinetic_energy!(
+                set_limit_speed,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_CONTROL,
+                air_speed_x_stable,
+                0.0
+            );
+            sv_kinetic_energy!(
+                set_stable_speed,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_CONTROL,
+                air_speed_x_stable,
+                0.0
+            );
+        }
+    }
+    fighter.status_AttackAir_Main()
+}
+
+unsafe extern "C" fn attackair_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_attack_air_uniq_process_exec();
+    if fighter.is_motion(Hash40::new("attack_air_lw")) {
+        if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING)
+        && MotionModule::frame(fighter.module_accessor) > 10.0 {
+            fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES.into());
+        }
+    }
+    0.into()
+}
+
 pub fn install(agent: &mut smashline::Agent) {
 	agent.status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW3, attacklw3_main);
 
@@ -92,4 +176,6 @@ pub fn install(agent: &mut smashline::Agent) {
 	agent.status(End, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, attacks4_hold_end);
 	agent.status(End, *FIGHTER_STATUS_KIND_ATTACK_S4, attacks4_end);
 	agent.status(Main, *FIGHTER_STATUS_KIND_ATTACK_S4, attacks4_main);
+
+	agent.status(Main, *FIGHTER_STATUS_KIND_ATTACK_AIR, attackair_main);
 }

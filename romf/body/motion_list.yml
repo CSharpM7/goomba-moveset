@@ -2324,7 +2324,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 48
+      cancel_frame: 65
       no_stop_intp: false
   landing_air_n:
     game_script: game_landingairn
