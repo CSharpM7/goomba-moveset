@@ -38,11 +38,11 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 29.0);
     FT_MOTION_RATE_RANGE(agent,29.0,49.0,10.0);
     frame(agent.lua_state_agent, 49.0);
-    FT_MOTION_RATE_RANGE(agent,49.0,65.0,5.0);
+    FT_MOTION_RATE_RANGE(agent,49.0,67.0,7.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
     }
-    frame(agent.lua_state_agent, 65.0);
+    frame(agent.lua_state_agent, 67.0);
     FT_MOTION_RATE(agent,1.0);
     if macros::is_excute(agent) {
         WorkModule::off_flag(agent.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SUPERLEAF_VISIBLE);

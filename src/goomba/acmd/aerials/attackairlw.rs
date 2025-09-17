@@ -59,7 +59,11 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
         else {
+            let speed_x = KineticModule::get_sum_speed_x(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            let speed_y = KineticModule::get_sum_speed_y(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            macros::SET_SPEED_EX(agent, speed_x, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE);
+            KineticModule::unable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
         }
     }
     frame(agent.lua_state_agent, 57.0);
@@ -101,6 +105,10 @@ unsafe extern "C" fn effect_attackairlw(agent: &mut L2CAgentBase) {
         if !WorkModule::is_flag(agent.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_IS_DIVING) {
             EFFECT_OFF_KIND(agent,Hash40::new("goomba_air_lw"),false,false);
         }
+    }
+    frame(agent.lua_state_agent, 58.0);
+    if macros::is_excute(agent) {
+        EFFECT_OFF_KIND(agent,Hash40::new("goomba_air_lw"),false,false);
     }
     frame(agent.lua_state_agent, 63.0);
     if macros::is_excute(agent) {

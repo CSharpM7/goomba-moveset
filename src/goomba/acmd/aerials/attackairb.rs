@@ -1,5 +1,6 @@
 use crate::imports::imports_acmd::*;
 
+/* HIT 1 */
 const DAMAGE: f32 = 3.5;
 const ANGLE_G: u64 = 70;
 const ANGLE_A: u64 = 367;
@@ -36,9 +37,9 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 6.2, 58, 136, 0, 48, 3.5, 0.0, 3.0, -4.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
-        macros::ATTACK(agent, 1, 0, Hash40::new("btail2"), 6.5, 58, 136, 0, 48, 3.5, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
-        macros::ATTACK(agent, 2, 0, Hash40::new("btail3"), 6.5, 58, 136, 0, 48, 3.5, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 6.5, 48, 135, 0, 32, 3.5, 0.0, 3.0, -4.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        macros::ATTACK(agent, 1, 0, Hash40::new("btail2"), 6.5, 48, 135, 0, 32, 3.5, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        macros::ATTACK(agent, 2, 0, Hash40::new("btail3"), 6.5, 48, 135, 0, 32, 3.5, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
     }
     wait(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
@@ -76,11 +77,11 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_attackairb(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_pichu_tailswing"));
+        macros::PLAY_STATUS(agent, Hash40::new("se_pichu_tailswing"));
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_pichu_tailswing"));
+        macros::PLAY_STATUS(agent, Hash40::new("se_pichu_tailswing"));
     }
 }
 
@@ -103,9 +104,31 @@ unsafe extern "C" fn expression_attackairb(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_landingairb(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SUPERLEAF_VISIBLE);
+    }
+    frame(agent.lua_state_agent, 7.0);
+    if macros::is_excute(agent) {
+        WorkModule::off_flag(agent.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SUPERLEAF_VISIBLE);
+    }
+}
+unsafe extern "C" fn sound_landingairb(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::STOP_SE(agent, Hash40::new("se_pichu_tailswing"));
+    }
+    frame(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_LANDING_SE(agent, Hash40::new("se_pichu_landing02"));
+    }
+}
+
 pub fn install(agent: &mut smashline::Agent) {
 	agent.acmd("game_attackairb", game_attackairb, Priority::Default);
 	agent.acmd("effect_attackairb", effect_attackairb, Priority::Default);
 	agent.acmd("sound_attackairb", sound_attackairb, Priority::Default);
 	agent.acmd("expression_attackairb", expression_attackairb, Priority::Default);
+
+	agent.acmd("game_landingairb", game_landingairb, Priority::Default);
+	agent.acmd("sound_landingairb", sound_landingairb, Priority::Default);
 }

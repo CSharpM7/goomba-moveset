@@ -193,7 +193,7 @@ fn params() {
     //param_attributes.push((hash40("expand_height"),0 as u64, 12.5 / 14.0));
     param_attributes.push((hash40("passive_wall_jump_y_speed"),0 as u64, 2.3 / 2.6));
 
-    //param_floats.push((hash40("superleaftail_scale"),0 as u64, 1.1));
+    param_floats.push((hash40("superleaftail_scale"),0 as u64, 1.0));
     //param_ints.push((hash40("size"),0 as u64, *FIGHTER_SIZE_S as i32));
     //param_floats.push((hash40("star_scale"),0 as u64, 2.4));
     //param_ints.push((hash40("star_attack_power"),0 as u64, 14));
