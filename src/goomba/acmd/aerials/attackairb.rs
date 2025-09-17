@@ -36,9 +36,9 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 6.2, 41, 136, 0, 48, 3.5, 0.0, 3.0, -4.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
-        macros::ATTACK(agent, 1, 0, Hash40::new("btail2"), 6.5, 41, 136, 0, 48, 3.5, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
-        macros::ATTACK(agent, 2, 0, Hash40::new("btail3"), 6.5, 41, 136, 0, 48, 3.5, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 6.2, 58, 136, 0, 48, 3.5, 0.0, 3.0, -4.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        macros::ATTACK(agent, 1, 0, Hash40::new("btail2"), 6.5, 58, 136, 0, 48, 3.5, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        macros::ATTACK(agent, 2, 0, Hash40::new("btail3"), 6.5, 58, 136, 0, 48, 3.5, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
     }
     wait(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
@@ -58,7 +58,7 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
         let flip_z_rot = 0.0;//if PostureModule::lr(agent.module_accessor) > 0.0 {0.0} else {180.0};
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("pichu_tail_arc3"), Hash40::new("pichu_tail_arc3"), Hash40::new("top"), 0, 4.5, -2, 5, 195, 40.0+flip_z_rot, 0.9, true, *EF_FLIP_YZ);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("pichu_tail_arc3"), Hash40::new("pichu_tail_arc3"), Hash40::new("top"), 0, 4.3, -2, 5, 195, 35.0+flip_z_rot, 0.9, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent,1.5);
     }
     frame(agent.lua_state_agent, 12.0);
@@ -68,7 +68,7 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
         let flip_z_rot = 0.0;
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("pichu_tail_arc3"), Hash40::new("pichu_tail_arc3"), Hash40::new("top"), 0, 4.5, -2, 5, 230, 40.0+180.0, 0.9, true, *EF_FLIP_YZ);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("pichu_tail_arc3"), Hash40::new("pichu_tail_arc3"), Hash40::new("top"), 0, 2.5, -2, 5, 230, 25.0+180.0, 0.9, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent,1.5);
     }
 }
