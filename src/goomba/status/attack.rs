@@ -92,24 +92,39 @@ pub unsafe extern "C" fn attackair_main(fighter: &mut L2CFighterCommon) -> L2CVa
 unsafe extern "C" fn attackair_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if !fighter.is_motion(Hash40::new("attack_air_lw")) {return fighter.status_AttackAir_Main();}
     
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_CHECK_FOR_DIVE) {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_CHECK_FOR_DIVE);
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_DIVE_DECIDE) {
+        WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_DIVE_DECIDE);
 
         let stick_y = fighter.global_table[STICK_Y].get_f32();
         let dive_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("pass_stick_y"));
-        if fighter.global_table[STICK_Y].get_f32() > dive_stick_y {
-            attackair_lw_swoop(fighter);
+        let should_dive = fighter.global_table[STICK_Y].get_f32() <= dive_stick_y;
+        WorkModule::set_flag(fighter.module_accessor, should_dive, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_IS_DIVING);
+    }
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_SWOOP) {
+        WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_SWOOP);
+        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_IS_DIVING) {
+            attackair_lw_dive(fighter);
         }
         else {
-            attackair_lw_dive(fighter);
+            attackair_lw_swoop(fighter);
         }
     }
     fighter.status_AttackAir_Main()
 }
 
 unsafe extern "C" fn attackair_lw_dive(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_DIVE);
-
+    WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_IS_DIVING);
+    /*
+    let fx = EffectModule::req_follow(fighter.module_accessor, 
+        Hash40::new("sys_smash_flash"), 
+        Hash40::new("head"), 
+        &Vector3f::new(4.0, 4.0, 0.0), 
+        &VECTOR_ZERO,
+        0.6, 
+        true, 0, 0, 0, 0, 0, true, true
+    ) as u32;
+    EffectModule::set_rgb(fighter.module_accessor, fx, 1.0, 1.0, 0.0);
+    */
     let frame = MotionModule::frame(fighter.module_accessor);
     MotionModule::change_motion_force_inherit_frame(fighter.module_accessor, Hash40::new("attack_air_lw2"), frame, 1.0, 1.0);
     fighter.main_shift(attackair_lw_dive_loop)
@@ -124,9 +139,8 @@ unsafe extern "C" fn attackair_lw_dive_loop(fighter: &mut L2CFighterCommon) -> L
 }
 
 unsafe extern "C" fn attackair_lw_swoop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_DIVE);
-    
-    KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+    WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_IS_DIVING);
+
     let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE);
 
@@ -185,10 +199,25 @@ unsafe extern "C" fn attackair_lw_swoop_loop(fighter: &mut L2CFighterCommon) -> 
             set_speed,
             fighter,
             FIGHTER_KINETIC_ENERGY_ID_STOP,
+            sum_speed_x,
+            0.0
+        );
+        sv_kinetic_energy!(
+            set_stable_speed,
+            fighter,
+            FIGHTER_KINETIC_ENERGY_ID_STOP,
             0.0,
             0.0
         );
-        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        sv_kinetic_energy!(
+            set_brake,
+            fighter,
+            FIGHTER_KINETIC_ENERGY_ID_STOP,
+            1.2,
+            0.0
+        );
+        KineticModule::resume_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        //KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         sv_kinetic_energy!(
             reset_energy,
             fighter,
