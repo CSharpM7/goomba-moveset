@@ -56,13 +56,16 @@ unsafe extern "C" fn effect_specialsend(agent: &mut L2CAgentBase) {
             macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_whirlwind_r"), Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, true, *EF_FLIP_NONE);
         }
     }
+    
+    frame(agent.lua_state_agent, 17.0);
+    if macros::is_excute(agent) {
+        //macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("pichu_tail_arc"), Hash40::new("pichu_tail_arc"), Hash40::new("top"), 0, 3, 2, 0, 360, 15, 0.9, true, *EF_FLIP_YZ);
+        //LAST_EFFECT_SET_RATE(agent,1.9);
+    }
     frame(agent.lua_state_agent, 18.0); //17.0
     if macros::is_excute(agent) {
-        //macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 0, 4, 2, 0, -10, 0, 1.1, true, *EF_FLIP_YZ);
-        //LAST_EFFECT_SET_COLOR(agent,0.4,0.1,0.0);
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("pichu_tail_arc"), Hash40::new("pichu_tail_arc"), Hash40::new("top"), 0, 3, 2, 0, 360, 15, 0.9, true, *EF_FLIP_YZ);
-        LAST_EFFECT_SET_RATE(agent,1.9);
-        macros::LAST_EFFECT_SET_ALPHA(agent, 0.6);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 0, 4, -3, 0, 30, 0, 1.7, true, *EF_FLIP_YZ);
+        LAST_EFFECT_SET_COLOR(agent,0.4,0.1,0.0);
     }
 }
 

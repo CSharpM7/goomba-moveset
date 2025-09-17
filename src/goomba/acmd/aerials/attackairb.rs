@@ -1,5 +1,15 @@
 use crate::imports::imports_acmd::*;
 
+const DAMAGE: f32 = 3.5;
+const ANGLE_G: u64 = 70;
+const ANGLE_A: u64 = 367;
+const KBG_G: i32 = 40;
+const KBG_A: i32 = 25;
+const FKB_G: i32 = 0;
+const FKB_A: i32 = 0;
+const BKB_G: i32 = 50;
+const BKB_A: i32 = 50;
+
 unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SUPERLEAF_VISIBLE);
@@ -7,12 +17,17 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 3.5, 367, 90, 60, 0, 3.5, 0.0, 3.0, -4.5, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
-        macros::ATTACK(agent, 1, 0, Hash40::new("btail2"), 3.5, 367, 90, 60, 0, 3.5, 1.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
-        macros::ATTACK(agent, 2, 0, Hash40::new("btail3"), 3.5, 367, 90, 60, 0, 3.5, 1.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
-        AttackModule::set_add_reaction_frame_revised(agent.module_accessor, 0, 4.0, false);
-        AttackModule::set_add_reaction_frame_revised(agent.module_accessor, 1, 4.0, false);
-        AttackModule::set_add_reaction_frame_revised(agent.module_accessor, 2, 4.0, false);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), DAMAGE, ANGLE_A, KBG_A, FKB_A, BKB_A, 3.5, 0.0, 3.0, -4.5, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        macros::ATTACK(agent, 1, 0, Hash40::new("btail2"), DAMAGE, ANGLE_A, KBG_A, FKB_A, BKB_A, 3.5, 1.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        macros::ATTACK(agent, 2, 0, Hash40::new("btail3"), DAMAGE, ANGLE_A, KBG_A, FKB_A, BKB_A, 3.5, 1.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        
+        macros::ATTACK(agent, 3, 0, Hash40::new("top"), DAMAGE, ANGLE_G, KBG_G, FKB_G, BKB_G, 3.5, 0.0, 3.0, -4.5, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        macros::ATTACK(agent, 4, 0, Hash40::new("btail2"), DAMAGE, ANGLE_G, KBG_G, FKB_G, BKB_G, 3.5, 1.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        macros::ATTACK(agent, 5, 0, Hash40::new("btail3"), DAMAGE, ANGLE_G, KBG_G, FKB_G, BKB_G, 3.5, 1.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        
+        for i in 0..5 {
+            AttackModule::set_add_reaction_frame_revised(agent.module_accessor, i, 4.0, false);
+        }
     }
     wait(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
@@ -42,8 +57,8 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
-        let flip_z_rot = if PostureModule::lr(agent.module_accessor) > 0.0 {0.0} else {180.0};
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("pichu_tail_arc3"), Hash40::new("pichu_tail_arc3"), Hash40::new("top"), 0, 4.5, -2, 5, 195, 40.0+flip_z_rot, 1.0, true, *EF_FLIP_YZ);
+        let flip_z_rot = 0.0;//if PostureModule::lr(agent.module_accessor) > 0.0 {0.0} else {180.0};
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("pichu_tail_arc3"), Hash40::new("pichu_tail_arc3"), Hash40::new("top"), 0, 4.5, -2, 5, 195, 40.0+flip_z_rot, 0.9, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent,1.5);
     }
     frame(agent.lua_state_agent, 12.0);
@@ -52,8 +67,8 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
-        let flip_z_rot = if PostureModule::lr(agent.module_accessor) < 0.0 {0.0} else {180.0};
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("pichu_tail_arc3"), Hash40::new("pichu_tail_arc3"), Hash40::new("top"), 0, 4.5, -2, 5, 230, 40.0+flip_z_rot, 1.0, true, *EF_FLIP_YZ);
+        let flip_z_rot = 0.0;
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("pichu_tail_arc3"), Hash40::new("pichu_tail_arc3"), Hash40::new("top"), 0, 4.5, -2, 5, 230, 40.0+180.0, 0.9, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent,1.5);
     }
 }

@@ -2324,7 +2324,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 65
+      cancel_frame: 60
       no_stop_intp: false
   attack_air_lw2:
     game_script: game_attackairlw

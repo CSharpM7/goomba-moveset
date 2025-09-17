@@ -108,9 +108,10 @@ unsafe extern "C" fn attackair_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 unsafe extern "C" fn attackair_lw_dive(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_DIVE);
+
     let frame = MotionModule::frame(fighter.module_accessor);
     MotionModule::change_motion_force_inherit_frame(fighter.module_accessor, Hash40::new("attack_air_lw2"), frame, 1.0, 1.0);
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_DIVE);
     fighter.main_shift(attackair_lw_dive_loop)
 }
 
@@ -124,6 +125,8 @@ unsafe extern "C" fn attackair_lw_dive_loop(fighter: &mut L2CFighterCommon) -> L
 
 unsafe extern "C" fn attackair_lw_swoop(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_DIVE);
+    
+    KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE);
 
