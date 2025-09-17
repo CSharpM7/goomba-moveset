@@ -100,7 +100,12 @@ unsafe extern "C" fn specials_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
     WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_SFX);
 
-    let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let mut speed_x = 0.5*KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let prev_status = StatusModule::prev_status_kind(fighter.module_accessor, 0);
+    if [*FIGHTER_STATUS_KIND_DASH,*FIGHTER_STATUS_KIND_TURN_DASH].contains(&prev_status) {
+        let run_speed = WorkModule::get_param_float(fighter.module_accessor, hash40("run_speed_max"), 0);
+        speed_x = run_speed * PostureModule::lr(fighter.module_accessor) * 0.25;
+    }
 
     PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
     PostureModule::update_rot_y_lr(fighter.module_accessor);

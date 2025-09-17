@@ -2270,7 +2270,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 55
+      cancel_frame: 46
       no_stop_intp: true
   attack_air_hi:
     game_script: game_attackairhi
@@ -2325,6 +2325,33 @@ list:
       xlu_start: 0
       xlu_end: 0
       cancel_frame: 65
+      no_stop_intp: false
+  attack_air_lw2:
+    game_script: game_attackairlw
+    flags:
+      turn: false
+      loop: false
+      move: false
+      fix_trans: false
+      fix_rot: false
+      fix_scale: false
+      unk_40: false
+      unk_80: true
+      unk_100: false
+      unk_200: false
+      unk_400: false
+    blend_frames: 0
+    animations:
+      - name: c05attackairlw2.nuanmb
+        unk: 0
+    scripts:
+      - expression_attackairlw
+      - sound_attackairlw
+      - effect_attackairlw
+    extra:
+      xlu_start: 0
+      xlu_end: 0
+      cancel_frame: 60
       no_stop_intp: false
   landing_air_n:
     game_script: game_landingairn

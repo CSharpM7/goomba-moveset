@@ -6,7 +6,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
         macros::SET_SPEED_EX(agent, 0, 0.5, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
-        KineticModule::unable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        KineticModule::suspend_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE);
     }
     frame(agent.lua_state_agent, 4.0);
@@ -35,42 +35,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 27.0);
     if macros::is_excute(agent) {
-        let speed_y = KineticModule::get_sum_speed_y(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE);
-
-        KineticModule::enable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-        sv_kinetic_energy!(
-            reset_energy,
-            agent,
-            FIGHTER_KINETIC_ENERGY_ID_STOP,
-            ENERGY_STOP_RESET_TYPE_AIR,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        );
-        sv_kinetic_energy!(
-            set_accel,
-            agent,
-            FIGHTER_KINETIC_ENERGY_ID_STOP,
-            0.0,
-            0.2
-        );
-        sv_kinetic_energy!(
-            set_stable_speed,
-            agent,
-            FIGHTER_KINETIC_ENERGY_ID_STOP,
-            -1.0,
-            -1.0
-        );
-        sv_kinetic_energy!(
-            set_limit_speed,
-            agent,
-            FIGHTER_KINETIC_ENERGY_ID_STOP,
-            -1.0,
-            speed_y*-1.25
-        );
+        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_CHECK_FOR_DIVE);
     }
     frame(agent.lua_state_agent, 30.0);
     if macros::is_excute(agent) {
@@ -84,19 +49,26 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 49.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        if !WorkModule::is_flag(agent.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_DIVE) {
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        }
+        else {
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE);
+        }
     }
     frame(agent.lua_state_agent, 57.0);
     if macros::is_excute(agent) {
-        let speed_y = KineticModule::get_sum_speed_y(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        sv_kinetic_energy!(
-            set_speed,
-            agent,
-            FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
-            0.0,
-            speed_y
-        );
-        KineticModule::unable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+        if !WorkModule::is_flag(agent.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_DIVE) {
+            let speed_y = KineticModule::get_sum_speed_y(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            sv_kinetic_energy!(
+                set_speed,
+                agent,
+                FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+                0.0,
+                speed_y
+            );
+            KineticModule::unable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+        }
     }
 
     
@@ -112,15 +84,28 @@ unsafe extern "C" fn effect_attackairlw(agent: &mut L2CAgentBase) {
         macros::EFFECT(agent, Hash40::new("goomba_wing_flying"), Hash40::new("top"), 0, 3, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent,1.25);
         //air lw
+        macros::EFFECT_FOLLOW(agent, Hash40::new("goomba_air_lw"), Hash40::new("top"), 0, -10, 2, -105, 0, 0, 0.8, true);
     }
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 0, 2, 0, 0, 0, 1.7, true, 0.9);
     }
-    frame(agent.lua_state_agent, 66.0);
+    frame(agent.lua_state_agent, 31.0);
     if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("goomba_wing_scatter"), Hash40::new("top"), 0, 5, -5, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
-        LAST_EFFECT_SET_RATE(agent,1.25);
+        if !WorkModule::is_flag(agent.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_DIVE) {
+            EFFECT_OFF_KIND(agent,Hash40::new("goomba_air_lw"),false,false);
+        }
+    }
+    
+    frame(agent.lua_state_agent, 63.0);
+    if macros::is_excute(agent) {
+        if !WorkModule::is_flag(agent.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_DIVE) {
+            wait(agent.lua_state_agent, 3.0);
+        }
+        if macros::is_excute(agent) {
+            macros::EFFECT(agent, Hash40::new("goomba_wing_scatter"), Hash40::new("top"), 0, 5, -5, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+            LAST_EFFECT_SET_RATE(agent,1.25);
+        }
     }
 }
 
@@ -134,8 +119,7 @@ unsafe extern "C" fn sound_attackairlw(agent: &mut L2CAgentBase) {
     }
     wait(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
-        //macros::PLAY_SE(agent, Hash40::new("se_pichu_attackair_l01"));
-        macros::PLAY_SE(agent, Hash40::new("se_common_swing_08"));
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_attackair_l01"));
     }
 }
 
@@ -147,6 +131,12 @@ unsafe extern "C" fn expression_attackairlw(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
         macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
+    }
+    frame(agent.lua_state_agent, 63.0);
+    if macros::is_excute(agent) {
+        if WorkModule::is_flag(agent.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_DIVE) {
+            ModelModule::set_mesh_visibility(agent.module_accessor, Hash40::new("wing"), false);
+        }
     }
 }
 
