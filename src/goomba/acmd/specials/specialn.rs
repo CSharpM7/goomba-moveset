@@ -41,13 +41,15 @@ unsafe extern "C" fn effect_specialn(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 19.0);
     if macros::is_excute(agent) {
-        if !WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {
+        if !WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) 
+        && agent.is_grounded() {
             macros::FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         }
     }
     frame(agent.lua_state_agent, 20.0);
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {
+        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) 
+        && agent.is_grounded() {
             macros::FOOT_EFFECT(agent, Hash40::new("sys_action_smoke_h"), Hash40::new("top"), -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         }
     }

@@ -1,5 +1,8 @@
 use crate::imports::imports_acmd::*;
 
+const ANGLE: f32 = 65.0;
+const SPEED: f32 = 3.2;
+
 unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_LANDING_CLEAR_SPEED);
@@ -15,10 +18,8 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
-        let angle = 65.0f32.to_radians();
-        let speed = 3.2;
-        let speed_x = angle.cos()*speed;
-        let speed_y = angle.sin()*-speed;
+        let speed_x = ANGLE.cos()*-SPEED;
+        let speed_y = ANGLE.sin()*-SPEED;
 
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
         macros::SET_SPEED_EX(agent, speed_x, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN); //0.9, -4. Speed = 4.1
@@ -58,12 +59,27 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
         if !WorkModule::is_flag(agent.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_IS_DIVING) {
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
-        else {
+        else {/*
+            KineticModule::clear_speed_attr(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
             let speed_x = KineticModule::get_sum_speed_x(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            //let speed_y = KineticModule::get_sum_speed_y(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            let speed_y = ANGLE.sin()*-SPEED;
+            macros::SET_SPEED_EX(agent, speed_x, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            sv_kinetic_energy!(
+                set_speed,
+                agent,
+                FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+                0.0,
+                speed_y
+            );
+            KineticModule::unable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP); */
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE);
+            /*
             let speed_y = KineticModule::get_sum_speed_y(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             macros::SET_SPEED_EX(agent, speed_x, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE);
-            KineticModule::unable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+            KineticModule::unable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP); 
+            */
         }
     }
     frame(agent.lua_state_agent, 57.0);
