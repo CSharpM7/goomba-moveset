@@ -1,23 +1,6 @@
 use crate::imports::imports_acmd::*;
 use crate::imports::imports_agent::*;
 
-unsafe extern "C" fn spawn_article(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 2.0);
-    if macros::is_excute(agent) {
-        println!("Gen?");
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, false, -1);
-    }
-    wait(agent.lua_state_agent, 1.0);
-    if ArticleModule::is_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL) {
-        println!("Gened");
-    }
-    wait(agent.lua_state_agent, 5.0);
-    if macros::is_excute(agent) {
-        //ArticleModule::shoot(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-        ArticleModule::change_status_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, REDSHELL_STATUS_KIND_SHOOT);
-    }
-}
-
 pub unsafe extern "C" fn landing_air_main(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
     let mot = WorkModule::get_int64(fighter.module_accessor,*FIGHTER_STATUS_ATTACK_AIR_WORK_INT_MOTION_KIND);
     let original = fighter.status_LandingAttackAir();
@@ -58,7 +41,7 @@ pub unsafe extern "C" fn escape_air_main(fighter: &mut smashline::L2CFighterComm
 }
 pub fn install(agent: &mut smashline::Agent) {
     agent.status(Main,*FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR,landing_air_main);
-    agent.status(Main,*FIGHTER_STATUS_KIND_ESCAPE,escape_main);
-    agent.status(Main,*FIGHTER_STATUS_KIND_ESCAPE_AIR,escape_air_main);
+    //agent.status(Main,*FIGHTER_STATUS_KIND_ESCAPE,escape_main);
+    //agent.status(Main,*FIGHTER_STATUS_KIND_ESCAPE_AIR,escape_air_main);
     //agent.acmd("game_attackairn", spawn_article,Priority::Default);
 }

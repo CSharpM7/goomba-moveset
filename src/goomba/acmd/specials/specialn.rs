@@ -3,7 +3,9 @@ use crate::imports::imports_acmd::*;
 unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {
+        let can_gen = WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN);
+        //println!("ACMD Can gen: {can_gen}");
+        if can_gen {
             ArticleModule::generate_article(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, false, -1);
             ArticleModule::change_status_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, REDSHELL_STATUS_KIND_HAVED);
         }
@@ -17,23 +19,6 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
             //ArticleModule::shoot(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
             ArticleModule::change_status_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, REDSHELL_STATUS_KIND_SHOOT);
             WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_N_FLAG_SHOOT);
-            println!("Req shoot");
-        }
-        if agent.is_grounded() {
-            /*
-            println!("JUMP!");
-            GroundModule::correct(agent.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-            StatusModule::set_situation_kind(agent.module_accessor, SituationKind(*SITUATION_KIND_AIR), false);
-            KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
-            sv_kinetic_energy!(
-                set_speed,
-                agent,
-                FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
-                4.0
-            );
-            WorkModule::off_flag(agent.module_accessor, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_MTRANS_SMPL_GROUND);
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_MTRANS_SMPL_AIR); 
-            */
         }
     }
     wait(agent.lua_state_agent, 3.0);

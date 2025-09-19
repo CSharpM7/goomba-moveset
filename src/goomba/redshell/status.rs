@@ -204,7 +204,7 @@ unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCo
         
         let status = StatusModule::status_kind(weapon.module_accessor);
         if status != REDSHELL_STATUS_KIND_FURAFURA {
-            println!("Needs attack");
+           // println!("Needs attack");
             WorkModule::on_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE);
 
             HitModule::set_no_team(weapon.module_accessor, true);
@@ -235,7 +235,7 @@ unsafe extern "C" fn redshell_check_for_rebound(weapon: &mut smashline::L2CWeapo
         redshell_update_brake(weapon,2.0);
         WorkModule::on_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE);
         if reflect {
-            println!("REFLECTED");
+            //println!("REFLECTED");
             WorkModule::set_int(weapon.module_accessor, 12, REDSHELL_INSTANCE_INT_RESPAWN_ATTACK_COUNTDOWN);
             let speed_y = KineticModule::get_sum_speed_y(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             sv_kinetic_energy!(
@@ -248,7 +248,7 @@ unsafe extern "C" fn redshell_check_for_rebound(weapon: &mut smashline::L2CWeapo
         }
         else {
             WorkModule::set_int(weapon.module_accessor, 10, REDSHELL_INSTANCE_INT_RESPAWN_ATTACK_COUNTDOWN);
-            println!("NO ATTACK");
+            //println!("NO ATTACK");
         }
     }
 }
