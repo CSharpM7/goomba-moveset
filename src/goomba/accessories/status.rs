@@ -2,6 +2,28 @@ use crate::imports::imports_agent::*;
 
 pub const LIFE: f32 = 40.0;
 pub const GRAVITY: f32 = 0.1;
+pub unsafe extern "C" fn accessories_haved_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    StatusModule::init_settings(
+        weapon.module_accessor,
+        SituationKind(*SITUATION_KIND_NONE),
+        *WEAPON_KINETIC_TYPE_NONE,
+        *GROUND_CORRECT_KIND_NONE as u32,
+        GroundCliffCheckKind(0),
+        false,
+        0,
+        0,
+        0,
+        0
+    );
+    0.into()
+}
+pub unsafe extern "C" fn accessories_haved_main(weapon: &mut smashline::L2CWeaponCommon) -> L2CValue {
+    weapon.fastshift(L2CValue::Ptr(accessories_haved_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn accessories_haved_main_loop(weapon: &mut smashline::L2CWeaponCommon) -> smashline::L2CValue {
+    0.into()
+}
 
 pub unsafe extern "C" fn accessories_ejected_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
     StatusModule::init_settings(
@@ -133,6 +155,10 @@ unsafe extern "C" fn accessories_ejected_main_loop(weapon: &mut smashline::L2CWe
 }
 
 pub fn install(agent: &mut smashline::Agent) {
+	agent.status(Pre, ACCESSORIES_STATUS_KIND_HAVED, accessories_haved_pre);
+	agent.status(Main, ACCESSORIES_STATUS_KIND_HAVED, accessories_haved_main);
+	agent.status(End, ACCESSORIES_STATUS_KIND_HAVED, empty_status);
+
 	agent.status(Pre, ACCESSORIES_STATUS_KIND_EJECTED, accessories_ejected_pre);
 	agent.status(Main, ACCESSORIES_STATUS_KIND_EJECTED, accessories_ejected_main);
 	agent.status(End, ACCESSORIES_STATUS_KIND_EJECTED, empty_status);

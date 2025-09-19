@@ -10,6 +10,16 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
     //println!("{status_exited} > {status_next}");
     let situation = StatusModule::situation_kind(fighter.module_accessor);
 
+    /*
+    SUPERLEAF
+    */
+    let is_smash = [*FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_next);
+    if !is_smash {
+        WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SUPERLEAF_VISIBLE);
+    }
+    /*
+    RESTORE SPECIALS
+    */
     let is_reborn = [*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_GIMMICK_SPRING_JUMP].contains(&status_next);
     let is_hit = is_damage_status_next(fighter.module_accessor);
     let is_ground = (&[*SITUATION_KIND_GROUND,*SITUATION_KIND_CLIFF]).contains(&situation);

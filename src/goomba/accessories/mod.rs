@@ -6,7 +6,7 @@ use crate::vars::*;
 pub fn install_hook(hookstatus: bool) {
     unsafe {
         FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES += FIGHTER_GOOMBA_GENERATE_ARTICLE_LAST +
-         smashline::clone_weapon("dolly", *smash::lib::lua_const::WEAPON_KIND_DOLLY_CAP, 
+         smashline::clone_weapon("peach", *smash::lib::lua_const::WEAPON_KIND_PEACH_KINOPIO, 
     "pichu", "accessories",false);
     println!("[smashline_kuribo::kuribo] (HOOK) Accessories assigned to {}",FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
     }
@@ -46,30 +46,7 @@ unsafe fn init_common(module_accessor: *mut BattleObjectModuleAccessor) {
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("lollipop"), false);
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("lollitop"), false);
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("boot"), false);
-
-    /*
-    let owner_id = WorkModule::get_int(module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
-    let owner = sv_battle_object::module_accessor(owner_id);
-    let owner_status = StatusModule::status_kind(owner);
-    if LinkModule::is_model_constraint(module_accessor) {
-        if LinkModule::is_model_constraint_mutual(module_accessor) {
-        }
-        LinkModule::remove_model_constraint(module_accessor,true);
-    }
-    let mut has_link = LinkModule::is_link(module_accessor,*WEAPON_LINK_NO_CONSTRAINT);
-    if !has_link {
-        let link_created = LinkModule::link(module_accessor,*WEAPON_LINK_NO_CONSTRAINT,owner_id);
-        has_link = link_created & 1 != 0;
-    }
-    if has_link {
-        LinkModule::set_attribute(module_accessor, *WEAPON_LINK_NO_CONSTRAINT, LinkAttribute{_address: *LINK_ATTRIBUTE_REFERENCE_PARENT_SCALE as u8}, true);
-        LinkModule::set_attribute(module_accessor, *WEAPON_LINK_NO_CONSTRAINT, LinkAttribute{_address: *LINK_ATTRIBUTE_REFERENCE_PARENT_SLOW as u8}, true);
-        LinkModule::set_attribute(module_accessor, *WEAPON_LINK_NO_CONSTRAINT, LinkAttribute{_address: *LINK_ATTRIBUTE_REFERENCE_PARENT_STOP as u8}, true);
-        LinkModule::set_attribute(module_accessor, *WEAPON_LINK_NO_CONSTRAINT, LinkAttribute{_address: *LINK_ATTRIBUTE_REFERENCE_PARENT_VISIBILITY as u8}, true);
-        //LinkModule::set_attribute(module_accessor, *WEAPON_LINK_NO_CONSTRAINT, LinkAttribute{_address: *LINK_ATTRIBUTE_REFERENCE_PARENT_POS as u8}, true);
-        LinkModule::set_attribute(module_accessor, *WEAPON_LINK_NO_CONSTRAINT, LinkAttribute{_address: *LINK_ATTRIBUTE_REFERENCE_PARENT_FLIP as u8}, true);
-    } 
-    */
+    ModelModule::set_mesh_visibility(module_accessor, Hash40::new("book"), false);
 }
 pub unsafe fn init_lolipop(module_accessor: *mut BattleObjectModuleAccessor) {
     init_common(module_accessor);
@@ -80,6 +57,7 @@ pub unsafe fn init_lolipop(module_accessor: *mut BattleObjectModuleAccessor) {
     LinkModule::set_model_constraint_pos_ort(module_accessor,*WEAPON_LINK_NO_CONSTRAINT,Hash40::new("food"),parent_bone,
     (*CONSTRAINT_FLAG_MTX 
          | *CONSTRAINT_FLAG_OFFSET_ROT | *CONSTRAINT_FLAG_OFFSET_TRANSLATE) as u32,true);
+    MotionModule::change_motion(module_accessor, Hash40::new("null"), 0.0, 0.0, false, 0.0, false, false);
 }
 pub unsafe fn init_shoe(module_accessor: *mut BattleObjectModuleAccessor) {
     init_common(module_accessor);
@@ -91,5 +69,15 @@ pub unsafe fn init_shoe(module_accessor: *mut BattleObjectModuleAccessor) {
     (*CONSTRAINT_FLAG_MTX 
          | *CONSTRAINT_FLAG_OFFSET_ROT | *CONSTRAINT_FLAG_OFFSET_TRANSLATE) as u32,true);
 
-    MotionModule::set_rate(module_accessor, 0.0);
+    MotionModule::change_motion(module_accessor, Hash40::new("null"), 0.0, 0.0, false, 0.0, false, false);
+}
+pub unsafe fn init_book(module_accessor: *mut BattleObjectModuleAccessor) {
+    init_common(module_accessor);
+    ModelModule::set_mesh_visibility(module_accessor, Hash40::new("book"), true);
+    
+    let parent_bone = Hash40::new("throw");
+    LinkModule::set_model_constraint_pos_ort(module_accessor,*WEAPON_LINK_NO_CONSTRAINT,Hash40::new("have"),parent_bone,
+    (*CONSTRAINT_FLAG_MTX 
+         | *CONSTRAINT_FLAG_OFFSET_ROT | *CONSTRAINT_FLAG_OFFSET_TRANSLATE) as u32,true);
+    MotionModule::change_motion(module_accessor, Hash40::new("appeal_s_r"), 0.0, 1.0, false, 0.0, false, false);
 }

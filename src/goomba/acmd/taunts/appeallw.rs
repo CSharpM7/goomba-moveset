@@ -1,0 +1,59 @@
+use crate::imports::imports_acmd::*;
+
+unsafe extern "C" fn effect_appeallwr(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 12.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_cheek"), Hash40::new("head"), 0, 0, 0, 0, -90, -90, 1, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("pichu_elec2"), Hash40::new("top"), 0, 4, 0, 0, 0, 0, 0.9, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("pichu_elec2"), Hash40::new("top"), 0, 4, 0, 0, 0, 0, 1.1, true);
+    }
+    frame(agent.lua_state_agent, 13.0);
+    for _ in 0..3 {
+        if macros::is_excute(agent) {
+            macros::EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 1, 0, 0, 0, 0.35, 0, 0, 0, 0, 0, 0, false);
+        }
+        wait(agent.lua_state_agent, 13.0);
+    }
+    frame(agent.lua_state_agent, 56.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_OFF_KIND(agent, Hash40::new("pichu_elec2"), false, true);
+        macros::EFFECT_OFF_KIND(agent, Hash40::new("pichu_cheek"), false, true);
+    }
+}
+
+unsafe extern "C" fn sound_appeallwr(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 13.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_STATUS(agent, Hash40::new("se_pichu_appeal_h01"));
+        macros::PLAY_SE(agent, Hash40::new("vc_pichu_appeal01"));
+    }
+    frame(agent.lua_state_agent, 56.0);
+    if macros::is_excute(agent) {
+        sound!(agent, *MA_MSC_CMD_SOUND_STOP_SE_STATUS);
+    }
+}
+
+unsafe extern "C" fn expression_appeallwr(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+    }
+    frame(agent.lua_state_agent, 20.0);
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_elecattack"), 28, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(agent.lua_state_agent, 55.0);
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_flys"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
+pub fn install(agent: &mut smashline::Agent) {
+	//agent.acmd("game_appeallwr", game_appeallwr, Priority::Default);
+	//agent.acmd("game_appeallwl", game_appeallwr, Priority::Default);
+	agent.acmd("effect_appeallwr", effect_appeallwr, Priority::Default);
+	agent.acmd("effect_appeallwl", effect_appeallwr, Priority::Default);
+	agent.acmd("sound_appeallwr", sound_appeallwr, Priority::Default);
+	agent.acmd("sound_appeallwl", sound_appeallwr, Priority::Default);
+	agent.acmd("expression_appeallwr", expression_appeallwr, Priority::Default);
+	agent.acmd("expression_appeallwl", expression_appeallwr, Priority::Default);
+}

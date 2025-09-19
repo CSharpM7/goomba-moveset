@@ -9,9 +9,17 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 116, 100, 100, 0, 4.0, 0.0, 3.0, 6.0, Some(0.0), Some(3.0), Some(-6.0), 0.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
     }
-    wait(agent.lua_state_agent, 2.0);
+    wait(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
+    }
+    wait(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
+    }
+    wait(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
     }
     frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
@@ -25,7 +33,7 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn effect_attackhi4(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 10, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 12, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
@@ -35,6 +43,10 @@ unsafe extern "C" fn effect_attackhi4(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 2, 0, -90, 0, 0, 1.2, true, *EF_FLIP_YZ, 0.3);
         common_effect_color(agent);
+    }
+    frame(agent.lua_state_agent, 9.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("hat"), 4.0, 0.0, 0, 0, 0, 0, 1.0, true);
     }
     frame(agent.lua_state_agent, 26.0);
     if macros::is_excute(agent) {

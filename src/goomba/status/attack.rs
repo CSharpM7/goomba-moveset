@@ -288,5 +288,5 @@ pub fn install(agent: &mut smashline::Agent) {
 	agent.status(Main, *FIGHTER_STATUS_KIND_ATTACK_S4, attacks4_main);
 
 	agent.status(Main, *FIGHTER_STATUS_KIND_ATTACK_AIR, attackair_main);
-	agent.status(Exit, *FIGHTER_STATUS_KIND_ATTACK_AIR, attackair_exit);
+	//agent.status(Exit, *FIGHTER_STATUS_KIND_ATTACK_AIR, attackair_exit);
 }
