@@ -16,7 +16,7 @@ use std::{
     fs,
     iter::FromIterator,
 };
-const DEFAULT_COLORS: [usize;2] = [0,1];
+const DEFAULT_COLORS: [usize;2] = [120,121];
 lazy_static! {
     pub static ref MOD_SLOTS: RwLock<Vec<usize>> = RwLock::new({
         let mut default = Vec::with_capacity(256);
@@ -219,9 +219,9 @@ fn csk() {
     }
 
     let chara_hash = smash::hash40("ui_chara_kuribo");
-    //csk_database(chara_hash);
-    //csk_css(chara_hash);
-    //csk_bgm(chara_hash);
+    csk_database(chara_hash);
+    csk_css(chara_hash);
+    csk_bgm(chara_hash);
 }
 fn csk_bgm(chara_hash: u64) {
     use smash::hash40;
@@ -274,30 +274,30 @@ fn csk_database(chara_hash: u64) {
     let MAX_SLOT = *slots.iter().max().unwrap();
     let colors = (MAX_SLOT-LOWEST_SLOT+1) as u8;
     println!("[smashline_kuribo::ssm]: Creating CSK config {LOWEST_SLOT}-{MAX_SLOT}({colors})");
-
     //DATABASE ENTRY//
     let disp = 71; //Plant
-    let save_no = 71; //Save no for Plant
+    let skill_disp = 76; //Plant
+    let save_no = 20; //Save no for Pichu
     let kind_hash = smash::hash40("fighter_kind_pichu");
     the_csk_collection_api::add_chara_db_entry_info(
         the_csk_collection_api::CharacterDatabaseEntry {
             ui_chara_id: chara_hash, 
             fighter_kind: the_csk_collection_api::Hash40Type::Overwrite(kind_hash), 
             fighter_kind_corps: the_csk_collection_api::Hash40Type::Overwrite(kind_hash), 
-            ui_series_id: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("ui_series_mario")), 
+            ui_series_id: the_csk_collection_api::Hash40Type::Optional(Some(smash::hash40("ui_series_mario"))), 
             fighter_type: the_csk_collection_api::Hash40Type::Optional(Some(0x1353795179 /* Hash40 of fighter_type_normal */)), 
             alt_chara_id: the_csk_collection_api::Hash40Type::Overwrite(0x2302D482A /* Hash40 of -1 */), 
             shop_item_tag: the_csk_collection_api::Hash40Type::Optional(Some(0x2302D482A /* Hash40 of -1 */)), 
             name_id: the_csk_collection_api::StringType::Overwrite(the_csk_collection_api::CStrCSK::new("kuribo")), 
-            exhibit_year: the_csk_collection_api::ShortType::Overwrite(1991), 
-            exhibit_day_order: the_csk_collection_api::IntType::Optional(Some(60101)), 
+            exhibit_year: the_csk_collection_api::ShortType::Overwrite(1985), 
+            exhibit_day_order: the_csk_collection_api::IntType::Overwrite(91301), 
             extra_flags: the_csk_collection_api::IntType::Optional(Some(0)), 
-            ext_skill_page_num: the_csk_collection_api::SignedByteType::Overwrite(1), //the_csk_collection_api::SignedByteType::Overwrite(2)
-            skill_list_order: the_csk_collection_api::SignedByteType::Optional(Some(disp)), 
+            ext_skill_page_num: the_csk_collection_api::SignedByteType::Overwrite(1),
+            skill_list_order: the_csk_collection_api::SignedByteType::Optional(Some(skill_disp)), 
             disp_order: the_csk_collection_api::SignedByteType::Optional(Some(disp)), 
             save_no: the_csk_collection_api::SignedByteType::Optional(Some(save_no)), 
             chara_count: the_csk_collection_api::SignedByteType::Optional(Some(1)), 
-            is_img_ext_skill_page0: the_csk_collection_api::BoolType::Optional(Some(false)), //the_csk_collection_api::BoolType::Overwrite(true)
+            is_img_ext_skill_page0: the_csk_collection_api::BoolType::Optional(Some(false)),
             is_img_ext_skill_page1: the_csk_collection_api::BoolType::Optional(Some(false)), 
             is_img_ext_skill_page2: the_csk_collection_api::BoolType::Optional(Some(false)), 
             can_select: the_csk_collection_api::BoolType::Optional(Some(true)), 
@@ -370,6 +370,7 @@ fn csk_database(chara_hash: u64) {
     the_csk_collection_api::allow_ui_chara_hash_online(chara_hash);
     the_csk_collection_api::add_narration_characall_entry("vc_narration_characall_kuribo");
 
+    return;
     //TIPS//
     let mut level: Vec<u64> = Vec::new();
     let mut topics: Vec<u64> = Vec::new();
