@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<xmsbt>
+  <entry label="tip_title_2700">
+    <text>Goomba's Origins</text>
+  </entry>
+  <entry label="tip_text_2800">
+    <text>Goomba is one of the many soliders that join Bowser's army in
+the original Super Mario Bros. As the first enemy Mario encounters, this simple
+enemy has become a main stay of the franchise.</text>
+  </entry>
+  <entry label="tip_title_2801">
+    <text>Goomba: In His Series</text>
+  </entry>
+  <entry label="tip_text_2801">
+    <text>Dude it's Goomba...</text>
+  </entry>
+  <entry label="tip_title_2802">
+    <text>Goomba: Fighter Attributes</text>
+  </entry>
+  <entry label="tip_text_2802">
+    <text>Goomba is the same weight as Bayonetta, his run and airspeed
+are just barely slower than Mario', and his jump height is uniquely subpar.</text>
+  </entry>
+  <entry label="tip_title_2803">
+    <text>Goomba: Jab</text>
+  </entry>
+  <entry label="tip_text_2803">
+    <text>Goomba's jab might have poor range (like the rest of his moveset),
+but this jab deals extra shield damage! Use this alongside Down Tilt to pressure foes!</text>
+  </entry>
+  <entry label="tip_title_2804">
+    <text>Goomba: Lollipop Lick/text>
+  </entry>
+  <entry label="tip_text_2804">
+    <text>If you press Attack once more during Goomba's side smash, he will
+eat his lollipop! Though this heals him, Goomba will be wide open for an attack.</text>
+  </entry>
+  <entry label="tip_title_2805">
+    <text>Goomba: Paragoomba Dive</text>
+  </entry>
+  <entry label="tip_text_2805">
+    <text>Goomba's downair has a very unique swooping trajectory. If you hold down
+during the descent, Goomba will continue to plummet downwards 
+instead of swooping back up.</text>
+  </entry>
+  <entry label="tip_title_2806">
+    <text>Goomba: Special Attacks</text>
+  </entry>
+  <entry label="tip_text_2806">
+    <text>Don't forget to check the move list inside Training
+Mode to learn about Goomba's special moves!</text>
+  </entry>
+
+</xmsbt>
