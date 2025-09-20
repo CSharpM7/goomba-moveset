@@ -43,12 +43,35 @@ eat his lollipop! Though this heals him, Goomba will be wide open for an attack.
 during the descent, Goomba will continue to plummet downwards 
 instead of swooping back up.</text>
   </entry>
-  <entry label="tip_title_2806">
-    <text>Goomba: Special Attacks</text>
+    <entry label="tip_title_2806">
+    <text>Goomba Boot</text>
   </entry>
   <entry label="tip_text_2806">
-    <text>Don't forget to check the move list inside Training
-Mode to learn about Goomba's special moves!</text>
+    <text>Jumps up quickly and slams into
+the ground, pogo jumping off opponents.</text>
+  </entry>
+  <entry label="tip_title_2807">
+    <text>Red Shell</text>
+  </entry>
+  <entry label="tip_text_2807">
+    <text>A koopa shell that doesn't fall off ledges!
+With each turn and collision, it will slow down until
+it finally stops.</text>
+  </entry>
+  <entry label="tip_title_2808">
+    <text>Tanooki Goomba</text>
+  </entry>
+  <entry label="tip_text_2808">
+    <text>A quick tail swipe that can reflect
+projectiles and launch opponents upward.</text>
+  </entry>
+  <entry label="tip_title_2809">
+    <text>Paragoomba</text>
+  </entry>
+  <entry label="tip_text_2809">
+    <text>Soar into the skies with wings!
+Hits multiple times while ascending.</text>
   </entry>
 
 </xmsbt>
+
