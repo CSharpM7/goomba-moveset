@@ -292,7 +292,7 @@ fn csk_database(chara_hash: u64) {
             exhibit_year: the_csk_collection_api::ShortType::Overwrite(1985), 
             exhibit_day_order: the_csk_collection_api::IntType::Overwrite(91301), 
             extra_flags: the_csk_collection_api::IntType::Optional(Some(0)), 
-            ext_skill_page_num: the_csk_collection_api::SignedByteType::Overwrite(1),
+            ext_skill_page_num: the_csk_collection_api::SignedByteType::Optional(Some(0)),
             skill_list_order: the_csk_collection_api::SignedByteType::Optional(Some(skill_disp)), 
             disp_order: the_csk_collection_api::SignedByteType::Optional(Some(disp)), 
             save_no: the_csk_collection_api::SignedByteType::Optional(Some(save_no)), 
@@ -370,11 +370,11 @@ fn csk_database(chara_hash: u64) {
     the_csk_collection_api::allow_ui_chara_hash_online(chara_hash);
     the_csk_collection_api::add_narration_characall_entry("vc_narration_characall_kuribo");
 
-    return;
     //TIPS//
     let mut level: Vec<u64> = Vec::new();
     let mut topics: Vec<u64> = Vec::new();
     let mut skill_kind: Vec<u64> = Vec::new();
+
     level.push(smash::hash40("level_beginner"));
     topics.push(smash::hash40("topic_story"));
     skill_kind.push(smash::hash40(""));
@@ -382,8 +382,12 @@ fn csk_database(chara_hash: u64) {
     level.push(smash::hash40("level_beginner"));
     topics.push(smash::hash40("topic_story"));
     skill_kind.push(smash::hash40(""));
-
+    
     level.push(smash::hash40("level_beginner"));
+    topics.push(smash::hash40(""));
+    skill_kind.push(smash::hash40(""));
+
+    level.push(smash::hash40("level_middle"));
     topics.push(smash::hash40("topic_technic"));
     skill_kind.push(smash::hash40(""));
     
@@ -391,10 +395,35 @@ fn csk_database(chara_hash: u64) {
     topics.push(smash::hash40("topic_technic"));
     skill_kind.push(smash::hash40(""));
 
-    let base_id = 2700 as u32;
+    level.push(smash::hash40("level_middle"));
+    topics.push(smash::hash40("topic_technic"));
+    skill_kind.push(smash::hash40(""));
+    
+    level.push(smash::hash40("level_beginner"));
+    topics.push(smash::hash40("topic_technic"));
+    skill_kind.push(smash::hash40("down_1"));
+    
+    level.push(smash::hash40("level_beginner"));
+    topics.push(smash::hash40("topic_technic"));
+    skill_kind.push(smash::hash40("neutral_1"));
+    
+    level.push(smash::hash40("level_beginner"));
+    topics.push(smash::hash40("topic_technic"));
+    skill_kind.push(smash::hash40("side_1"));
+    
+    level.push(smash::hash40("level_beginner"));
+    topics.push(smash::hash40("topic_technic"));
+    skill_kind.push(smash::hash40("up_1"));
+
+    level.push(smash::hash40("level_beginner"));
+    topics.push(smash::hash40("topic_technic"));
+    skill_kind.push(smash::hash40("final_1"));
+
+    let base_id = 2800 as u32;
     for i in 0..(topics.len()) {
         let id = (base_id + i as u32) as u32;
         let order = id + 5050;
+        println!("Added tip {i} at {order}");
         the_csk_collection_api::add_tips_db_entry_info(
             &the_csk_collection_api::TipsDatabaseEntry {
                 ui_tips_id: id as u64,
@@ -407,8 +436,8 @@ fn csk_database(chara_hash: u64) {
                 disp_order: the_csk_collection_api::UnsignedIntType::Optional(Some(order)),
                 type_0: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("relation_chara")),
                 key_0: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("ui_chara_kuribo")), //chara_hash?
-                type_1: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("relation_series")),
-                key_1: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("ui_series_kuribo")),
+                type_1: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("relation_series")), //relation_series
+                key_1: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("ui_series_mario")), //ui_series_mario
                 type_2: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("")),
                 key_2: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("")),
                 type_3: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("")),
@@ -435,10 +464,10 @@ fn csk_css(chara_hash: u64) {
             ui_chara_id: the_csk_collection_api::Hash40Type::Optional(Some(chara_hash)), 
             chara_color: the_csk_collection_api::UnsignedByteType::Optional(Some(0)), 
             eye_0_flash_count: the_csk_collection_api::UnsignedByteType::Optional(Some(2)), 
-            eye_0_flash0_pos_x: the_csk_collection_api::FloatType::Optional(Some(-90.0)), 
-            eye_0_flash0_pos_y: the_csk_collection_api::FloatType::Optional(Some(244.0)), 
-            eye_0_flash1_pos_x: the_csk_collection_api::FloatType::Optional(Some(33.0)), 
-            eye_0_flash1_pos_y: the_csk_collection_api::FloatType::Optional(Some(242.0)), 
+            eye_0_flash0_pos_x: the_csk_collection_api::FloatType::Optional(Some(-117.0)), 
+            eye_0_flash0_pos_y: the_csk_collection_api::FloatType::Optional(Some(-15.0)), 
+            eye_0_flash1_pos_x: the_csk_collection_api::FloatType::Optional(Some(180.0)), 
+            eye_0_flash1_pos_y: the_csk_collection_api::FloatType::Optional(Some(146.0)), 
             eye_0_flash2_pos_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_0_flash2_pos_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_0_flash3_pos_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
@@ -446,10 +475,10 @@ fn csk_css(chara_hash: u64) {
             eye_0_flash4_pos_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_0_flash4_pos_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_1_flash_count: the_csk_collection_api::UnsignedByteType::Optional(Some(2)), 
-            eye_1_flash0_pos_x: the_csk_collection_api::FloatType::Optional(Some(-54.0)), 
-            eye_1_flash0_pos_y: the_csk_collection_api::FloatType::Optional(Some(224.0)), 
-            eye_1_flash1_pos_x: the_csk_collection_api::FloatType::Optional(Some(62.0)), 
-            eye_1_flash1_pos_y: the_csk_collection_api::FloatType::Optional(Some(224.0)), 
+            eye_1_flash0_pos_x: the_csk_collection_api::FloatType::Optional(Some(-108.0)), 
+            eye_1_flash0_pos_y: the_csk_collection_api::FloatType::Optional(Some(74.0)), 
+            eye_1_flash1_pos_x: the_csk_collection_api::FloatType::Optional(Some(110.0)), 
+            eye_1_flash1_pos_y: the_csk_collection_api::FloatType::Optional(Some(192.0)), 
             eye_1_flash2_pos_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_1_flash2_pos_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_1_flash3_pos_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
@@ -457,63 +486,61 @@ fn csk_css(chara_hash: u64) {
             eye_1_flash4_pos_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_1_flash4_pos_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_2_flash_count: the_csk_collection_api::UnsignedByteType::Optional(Some(2)), 
-            eye_2_flash0_pos_x: the_csk_collection_api::FloatType::Optional(Some(-34.0)), 
-            eye_2_flash0_pos_y: the_csk_collection_api::FloatType::Optional(Some(95.0)), 
-            eye_2_flash1_pos_x: the_csk_collection_api::FloatType::Optional(Some(51.0)), 
-            eye_2_flash1_pos_y: the_csk_collection_api::FloatType::Optional(Some(96.0)), 
+            eye_2_flash0_pos_x: the_csk_collection_api::FloatType::Optional(Some(-50.0)), 
+            eye_2_flash0_pos_y: the_csk_collection_api::FloatType::Optional(Some(-12.0)), 
+            eye_2_flash1_pos_x: the_csk_collection_api::FloatType::Optional(Some(80.0)), 
+            eye_2_flash1_pos_y: the_csk_collection_api::FloatType::Optional(Some(59.0)), 
             eye_2_flash2_pos_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_2_flash2_pos_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_2_flash3_pos_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_2_flash3_pos_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_2_flash4_pos_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             eye_2_flash4_pos_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
-            eye_flash_info_pos_x: the_csk_collection_api::FloatType::Optional(Some(-8.0)), 
-            eye_flash_info_pos_y: the_csk_collection_api::FloatType::Optional(Some(5.0)), 
+            eye_flash_info_pos_x: the_csk_collection_api::FloatType::Optional(Some(39.0)), 
+            eye_flash_info_pos_y: the_csk_collection_api::FloatType::Optional(Some(9.0)), 
             spirits_eye_visible: the_csk_collection_api::BoolType::Optional(Some(true)), 
-            chara_1_offset_x: the_csk_collection_api::FloatType::Optional(Some(-3.0)), 
-            chara_1_offset_y: the_csk_collection_api::FloatType::Optional(Some(-68.0)), 
-            chara_1_scale: the_csk_collection_api::FloatType::Optional(Some(1.18)), 
-            chara_1_1_offset_x: the_csk_collection_api::FloatType::Optional(Some(-3.0)), 
-            chara_1_1_offset_y: the_csk_collection_api::FloatType::Optional(Some(-67.0)), 
-            chara_1_1_scale: the_csk_collection_api::FloatType::Optional(Some(1.51)), 
+            chara_1_offset_x: the_csk_collection_api::FloatType::Optional(Some(-16.0)), 
+            chara_1_offset_y: the_csk_collection_api::FloatType::Optional(Some(-19.0)), 
+            chara_1_scale: the_csk_collection_api::FloatType::Optional(Some(0.84)), 
+            chara_1_1_offset_x: the_csk_collection_api::FloatType::Optional(Some(-11.0)), 
+            chara_1_1_offset_y: the_csk_collection_api::FloatType::Optional(Some(-5.0)), 
+            chara_1_1_scale: the_csk_collection_api::FloatType::Optional(Some(0.99)), 
             chara_1_2_offset_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             chara_1_2_offset_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             chara_1_2_scale: the_csk_collection_api::FloatType::Optional(Some(1.0)), 
-            chara_1_3_offset_x: the_csk_collection_api::FloatType::Optional(Some(-3.0)), 
-            chara_1_3_offset_y: the_csk_collection_api::FloatType::Optional(Some(-40.0)), 
-            chara_1_3_scale: the_csk_collection_api::FloatType::Optional(Some(1.51)), 
-            chara_1_4_offset_x: the_csk_collection_api::FloatType::Optional(Some(-3.0)), 
-            chara_1_4_offset_y: the_csk_collection_api::FloatType::Optional(Some(-40.0)), 
-            chara_1_4_scale: the_csk_collection_api::FloatType::Optional(Some(1.51)), 
+            chara_1_3_offset_x: the_csk_collection_api::FloatType::Optional(Some(-7.0)), 
+            chara_1_3_offset_y: the_csk_collection_api::FloatType::Optional(Some(-7.0)), 
+            chara_1_3_scale: the_csk_collection_api::FloatType::Optional(Some(1.1)), 
+            chara_1_4_offset_x: the_csk_collection_api::FloatType::Optional(Some(-8.0)), 
+            chara_1_4_offset_y: the_csk_collection_api::FloatType::Optional(Some(-3.0)), 
+            chara_1_4_scale: the_csk_collection_api::FloatType::Optional(Some(0.77)), 
             chara_1_5_offset_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             chara_1_5_offset_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             chara_1_5_scale: the_csk_collection_api::FloatType::Optional(Some(1.0)), 
-            
-            chara_3_0_offset_x: the_csk_collection_api::FloatType::Optional(Some(-105.0)), 
-            chara_3_0_offset_y: the_csk_collection_api::FloatType::Optional(Some(47.0)), 
+            chara_3_0_offset_x: the_csk_collection_api::FloatType::Optional(Some(-31.0)), 
+            chara_3_0_offset_y: the_csk_collection_api::FloatType::Optional(Some(111.0)), 
             chara_3_0_scale: the_csk_collection_api::FloatType::Optional(Some(1.0)), 
-            chara_3_1_offset_x: the_csk_collection_api::FloatType::Optional(Some(-78.0)), 
-            chara_3_1_offset_y: the_csk_collection_api::FloatType::Optional(Some(42.0)), 
-            chara_3_1_scale: the_csk_collection_api::FloatType::Optional(Some(0.96)), 
-            chara_3_2_offset_x: the_csk_collection_api::FloatType::Optional(Some(-40.0)), 
-            chara_3_2_offset_y: the_csk_collection_api::FloatType::Optional(Some(70.0)), 
-            chara_3_2_scale: the_csk_collection_api::FloatType::Optional(Some(0.76)), 
-            chara_3_3_offset_x: the_csk_collection_api::FloatType::Optional(Some(-80.0)), 
-            chara_3_3_offset_y: the_csk_collection_api::FloatType::Optional(Some(120.0)), 
+            chara_3_1_offset_x: the_csk_collection_api::FloatType::Optional(Some(-45.0)), 
+            chara_3_1_offset_y: the_csk_collection_api::FloatType::Optional(Some(153.0)), 
+            chara_3_1_scale: the_csk_collection_api::FloatType::Optional(Some(0.74)), 
+            chara_3_2_offset_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
+            chara_3_2_offset_y: the_csk_collection_api::FloatType::Optional(Some(20.0)), 
+            chara_3_2_scale: the_csk_collection_api::FloatType::Optional(Some(1.02)), 
+            chara_3_3_offset_x: the_csk_collection_api::FloatType::Optional(Some(50.0)), 
+            chara_3_3_offset_y: the_csk_collection_api::FloatType::Optional(Some(200.0)), 
             chara_3_3_scale: the_csk_collection_api::FloatType::Optional(Some(1.0)), 
-            chara_3_4_offset_x: the_csk_collection_api::FloatType::Optional(Some(-105.0)), 
-            chara_3_4_offset_y: the_csk_collection_api::FloatType::Optional(Some(47.0)), 
+            chara_3_4_offset_x: the_csk_collection_api::FloatType::Optional(Some(-31.0)), 
+            chara_3_4_offset_y: the_csk_collection_api::FloatType::Optional(Some(111.0)), 
             chara_3_4_scale: the_csk_collection_api::FloatType::Optional(Some(1.0)), 
-            chara_3_5_offset_x: the_csk_collection_api::FloatType::Optional(Some(-100.0)), 
-            chara_3_5_offset_y: the_csk_collection_api::FloatType::Optional(Some(20.0)), 
-            chara_3_5_scale: the_csk_collection_api::FloatType::Optional(Some(0.96)), 
+            chara_3_5_offset_x: the_csk_collection_api::FloatType::Optional(Some(-105.0)), 
+            chara_3_5_offset_y: the_csk_collection_api::FloatType::Optional(Some(157.0)), 
+            chara_3_5_scale: the_csk_collection_api::FloatType::Optional(Some(0.8)), 
             chara_3_6_offset_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             chara_3_6_offset_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             chara_3_6_scale: the_csk_collection_api::FloatType::Optional(Some(1.0)), 
-            chara_3_7_offset_x: the_csk_collection_api::FloatType::Optional(Some(-105.0)), 
-            chara_3_7_offset_y: the_csk_collection_api::FloatType::Optional(Some(47.0)), 
+            chara_3_7_offset_x: the_csk_collection_api::FloatType::Optional(Some(-31.0)), 
+            chara_3_7_offset_y: the_csk_collection_api::FloatType::Optional(Some(111.0)), 
             chara_3_7_scale: the_csk_collection_api::FloatType::Optional(Some(1.0)), 
-
             chara_5_offset_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             chara_5_offset_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             chara_5_scale: the_csk_collection_api::FloatType::Optional(Some(1.0)), 
@@ -521,14 +548,14 @@ fn csk_css(chara_hash: u64) {
             chara_select_icon_list_offset_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             chara_select_icon_list_scale: the_csk_collection_api::FloatType::Optional(Some(1.0)), 
             chara_7_0_offset_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
-            chara_7_0_offset_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
-            chara_7_0_scale: the_csk_collection_api::FloatType::Optional(Some(0.97)), 
+            chara_7_0_offset_y: the_csk_collection_api::FloatType::Optional(Some(3.0)), 
+            chara_7_0_scale: the_csk_collection_api::FloatType::Optional(Some(0.88)), 
             chara_7_1_offset_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
-            chara_7_1_offset_y: the_csk_collection_api::FloatType::Optional(Some(-10.0)), 
-            chara_7_1_scale: the_csk_collection_api::FloatType::Optional(Some(0.96)), 
+            chara_7_1_offset_y: the_csk_collection_api::FloatType::Optional(Some(5.0)), 
+            chara_7_1_scale: the_csk_collection_api::FloatType::Optional(Some(0.84)), 
             chara_0_offset_x: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
             chara_0_offset_y: the_csk_collection_api::FloatType::Optional(Some(0.0)), 
-            chara_0_scale: the_csk_collection_api::FloatType::Optional(Some(1.0)), 
+            chara_0_scale: the_csk_collection_api::FloatType::Optional(Some(1.0)),  
             ..Default::default()
         }
     );

@@ -6,9 +6,11 @@ mod specials;
 //mod finalsmash;
 
 mod movement;
+mod taunts;
 //mod misc;
 
-mod taunts;
+mod entry;
+mod results;
 
 pub fn install(agent: &mut smashline::Agent) {
     tilts::install(agent);
@@ -19,7 +21,9 @@ pub fn install(agent: &mut smashline::Agent) {
     //finalsmash::install(agent);
 
     movement::install(agent);
+    taunts::install(agent);
     //misc::install(agent);
 
-    taunts::install(agent);
+    entry::install(agent);
+    results::install(agent);
 }
