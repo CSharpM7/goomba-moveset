@@ -8,10 +8,11 @@ pub unsafe extern "C" fn specialn_init(fighter: &mut smashline::L2CFighterCommon
     0.into()
 }
 
-pub unsafe extern "C" fn specialn_end(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
+pub unsafe extern "C" fn specialn_exit(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
     let param = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
     //fighter.sub_remove_exist_article_at_status_end(param.into(), FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL.into());
     if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_N_FLAG_SHOOT) {
+        println!("Fura fura");
         ArticleModule::change_status_exist(fighter.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, REDSHELL_STATUS_KIND_FURAFURA);
     }
     0.into()
@@ -19,5 +20,6 @@ pub unsafe extern "C" fn specialn_end(fighter: &mut smashline::L2CFighterCommon)
 
 pub fn install(agent: &mut smashline::Agent) {
 	agent.status(Init, *FIGHTER_STATUS_KIND_SPECIAL_N, specialn_init);
-	agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_N, specialn_end);
+	//agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_N, specialn_end);
+	agent.status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_N, specialn_exit);
 }

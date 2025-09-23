@@ -66,11 +66,14 @@ unsafe extern "C" fn speciallw_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     0.into()
 }
 
-pub unsafe extern "C" fn speciallw_end_common(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
+pub unsafe extern "C" fn speciallw_exit_common(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
     let status = StatusModule::status_kind(fighter.module_accessor);
     let status_interupt = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
     let status_next = StatusModule::status_kind_next(fighter.module_accessor);
-    if !([FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT].contains(&status_next)) {
+    if [FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT].contains(&status_next) {
+    }
+    else {
+        println!("De-shoe");
         ArticleModule::remove_exist(fighter.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
     0.into()
@@ -256,7 +259,7 @@ unsafe extern "C" fn speciallw_landing_end(fighter: &mut L2CFighterCommon) -> L2
         0.0,
         0.0
     );
-    speciallw_end_common(fighter)
+    0.into()
 }
 
 pub unsafe extern "C" fn speciallw_hit_init(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
@@ -330,14 +333,16 @@ pub fn install(agent: &mut smashline::Agent) {
 	agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_LW, speciallw_pre);
 	agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, speciallw_main);
 	agent.status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_LW, empty_status);
-	agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_N, speciallw_end_common);
-	agent.status(CheckAttack, *FIGHTER_STATUS_KIND_SPECIAL_N, speciallw_pound_attack);
+	agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_LW, empty_status);
+	agent.status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_LW, speciallw_exit_common);
+	agent.status(CheckAttack, *FIGHTER_STATUS_KIND_SPECIAL_LW, speciallw_pound_attack);
     
 	agent.status(Init, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, empty_status);
 	agent.status(Pre, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, speciallw_pound_pre);
 	agent.status(Main, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, speciallw_pound_main);
 	agent.status(Exec, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, speciallw_pound_exec);
-	agent.status(End, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, speciallw_end_common);
+	agent.status(End, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, empty_status);
+	agent.status(Exit, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, speciallw_exit_common);
 	agent.status(CheckAttack, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND, speciallw_pound_attack);
     
 	agent.status(Init, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING, empty_status);
@@ -345,10 +350,12 @@ pub fn install(agent: &mut smashline::Agent) {
 	agent.status(Main, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING, speciallw_landing_main);
 	agent.status(Exec, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING, empty_status);
 	agent.status(End, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING, speciallw_landing_end);
+	agent.status(Exit, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING, speciallw_exit_common);
     
 	agent.status(Init, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT, speciallw_hit_init);
 	agent.status(Pre, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT, speciallw_hit_pre);
 	agent.status(Main, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT, speciallw_hit_main);
 	agent.status(Exec, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT, empty_status);
-	agent.status(End, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT, speciallw_end_common);
+	agent.status(End, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT, empty_status);
+	agent.status(Exit, FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT, speciallw_exit_common);
 }

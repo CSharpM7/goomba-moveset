@@ -16,6 +16,7 @@ use std::{
     fs,
     iter::FromIterator,
 };
+
 const DEFAULT_COLORS: [usize;2] = [120,121];
 lazy_static! {
     pub static ref MOD_SLOTS: RwLock<Vec<usize>> = RwLock::new({
@@ -140,6 +141,8 @@ fn params() {
     let mut param_attributes: Vec<(u64,u64,f32)> = Vec::new();
 
     param_config::disable_kirby_copy(*FIGHTER_KIND_PICHU, slots.clone());
+    param_config::disable_villager_pocket(*smash::lib::lua_const::FIGHTER_KIND_PICHU, slots.clone(), *crate::vars::ACCESSORIES_KIND);
+    param_config::disable_villager_pocket(*smash::lib::lua_const::FIGHTER_KIND_PICHU, slots.clone(), *crate::vars::REDSHELL_KIND);
 
     param_ints.push((hash40("s4_combo_max"),0 as u64, 2));
 
@@ -279,6 +282,7 @@ fn csk_database(chara_hash: u64) {
     let skill_disp = 76; //Plant
     let save_no = 20; //Save no for Pichu
     let kind_hash = smash::hash40("fighter_kind_pichu");
+    let narration = "vc_narration_characall_kuribo";
     the_csk_collection_api::add_chara_db_entry_info(
         the_csk_collection_api::CharacterDatabaseEntry {
             ui_chara_id: chara_hash, 
@@ -317,7 +321,7 @@ fn csk_database(chara_hash: u64) {
             result_pf2: the_csk_collection_api::BoolType::Optional(Some(true)), 
             color_num: the_csk_collection_api::UnsignedByteType::Optional(Some(colors)), 
             extra_hash_maps: the_csk_collection_api::Hash40Map::Overwrite(HashMap::from([
-                (0x1337FC912E /* Hash40 of characall_label_c00 */, the_csk_collection_api::Hash40Type::Optional(Some(0x1e1923432d))), 
+                (0x1337FC912E /* Hash40 of characall_label_c00 */, the_csk_collection_api::Hash40Type::Optional(Some(hash40(narration)))), 
             
                 (0x1340FBA1B8 /* Hash40 of characall_label_c01 */, the_csk_collection_api::Hash40Type::Optional(Some(0x2302D482A /* Hash40 of -1 */))), 
                 (0x13D9F2F002 /* Hash40 of characall_label_c02 */, the_csk_collection_api::Hash40Type::Optional(Some(0x2302D482A /* Hash40 of -1 */))), 
@@ -368,7 +372,7 @@ fn csk_database(chara_hash: u64) {
     );
     //ONLINE,NARRATION//
     the_csk_collection_api::allow_ui_chara_hash_online(chara_hash);
-    the_csk_collection_api::add_narration_characall_entry("vc_narration_characall_kuribo");
+    the_csk_collection_api::add_narration_characall_entry(narration);
 
     //TIPS//
     let mut level: Vec<u64> = Vec::new();

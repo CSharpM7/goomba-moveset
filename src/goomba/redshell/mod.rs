@@ -6,7 +6,7 @@ use crate::vars::*;
 pub fn install_hook(hookstatus: bool) {
     unsafe {
         FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL += FIGHTER_GOOMBA_GENERATE_ARTICLE_LAST +
-     smashline::clone_weapon("yoshi", *smash::lib::lua_const::WEAPON_KIND_YOSHI_TAMAGO, 
+     smashline::clone_weapon("yoshi", *REDSHELL_KIND, 
 "pichu", "redshell",false);
         println!("[smashline_kuribo::kuribo] (HOOK) Redshell assigned to {}",FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL);
     }

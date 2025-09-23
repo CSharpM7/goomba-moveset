@@ -351,7 +351,12 @@ pub unsafe extern "C" fn redshell_furafura_pre(weapon: &mut L2CWeaponCommon) -> 
     0.into()
 }
 pub unsafe extern "C" fn redshell_furafura_main(weapon: &mut smashline::L2CWeaponCommon) -> L2CValue {
-    //redshell_set_correct_kinetics(weapon);
+    LinkModule::remove_model_constraint(weapon.module_accessor, true);
+    let mut has_link = LinkModule::is_link(weapon.module_accessor,*WEAPON_LINK_NO_CONSTRAINT);
+    if !has_link {
+        LinkModule::unlink(weapon.module_accessor, *WEAPON_LINK_NO_CONSTRAINT);
+    }
+    
     let correct = if weapon.is_grounded() {*GROUND_CORRECT_KIND_GROUND} else {*GROUND_CORRECT_KIND_AIR};
     GroundModule::set_correct(weapon.module_accessor, GroundCorrectKind(correct));
 
