@@ -1,5 +1,5 @@
 [package]
-name = "mycoolcharacter"
+name = "smashline_kuribo"
 version = "0.1.0"
 authors = []
 edition = "2021"
@@ -29,6 +29,11 @@ smash-bgm-property = {version = "1.2.0",  optional = true }
 hash40 = {version = "1.1", optional = true }
 arcropolis-api = { git = "https://github.com/Raytwo/arcropolis_api" }
 
+toml = { version = "0.5.2", optional = true }
+serde = { version = "1.0.136", optional = true }
+serde_derive = { version = "1.0.136", optional = true }
+skyline-web = { git = "https://github.com/skyline-rs/skyline-web", optional = true }
+
 [profile.dev]
 panic = "abort"
 
@@ -39,5 +44,7 @@ lto = true
 [features]
 dev = []
 hookstatus = []
-default = ["wubor_utils","param_config","the_csk_collection_api","smash-bgm-property","hash40"]
-devhook = ["wubor_utils","param_config","the_csk_collection_api","smash-bgm-property","hash40"]
+default = ["param_config","the_csk_collection_api","smash-bgm-property","hash40",]
+#"toml","serde","serde_derive","skyline-web"]
+devhook = ["param_config","the_csk_collection_api","smash-bgm-property","hash40",]
+#"toml","serde","serde_derive","skyline-web"]

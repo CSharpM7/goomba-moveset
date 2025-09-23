@@ -1,4 +1,3 @@
-use crate::imports::imports_acmd::*;
 use crate::imports::imports_agent::*;
 
 pub unsafe extern "C" fn landing_air_main(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
@@ -29,19 +28,6 @@ pub unsafe extern "C" fn landing_air_main(fighter: &mut smashline::L2CFighterCom
     return original;
 }
 
-pub unsafe extern "C" fn escape_main(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
-    let toreturn = fighter.status_Escape();
-    fighter.change_status(FIGHTER_STATUS_KIND_SLIP.into(), true.into());
-    toreturn
-}
-pub unsafe extern "C" fn escape_air_main(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
-    let toreturn = fighter.status_EscapeAir();
-    fighter.change_status(FIGHTER_STATUS_KIND_DAMAGE_FALL.into(), true.into());
-    toreturn
-}
 pub fn install(agent: &mut smashline::Agent) {
     agent.status(Main,*FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR,landing_air_main);
-    //agent.status(Main,*FIGHTER_STATUS_KIND_ESCAPE,escape_main);
-    //agent.status(Main,*FIGHTER_STATUS_KIND_ESCAPE_AIR,escape_air_main);
-    //agent.acmd("game_attackairn", spawn_article,Priority::Default);
 }

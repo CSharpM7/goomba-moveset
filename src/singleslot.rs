@@ -375,6 +375,12 @@ fn csk_database(chara_hash: u64) {
     let mut topics: Vec<u64> = Vec::new();
     let mut skill_kind: Vec<u64> = Vec::new();
 
+    //2799
+    level.push(smash::hash40("level_beginner"));
+    topics.push(smash::hash40(""));
+    skill_kind.push(smash::hash40(""));
+
+    //2800
     level.push(smash::hash40("level_beginner"));
     topics.push(smash::hash40("topic_story"));
     skill_kind.push(smash::hash40(""));
@@ -419,7 +425,7 @@ fn csk_database(chara_hash: u64) {
     topics.push(smash::hash40("topic_technic"));
     skill_kind.push(smash::hash40("final_1"));
 
-    let base_id = 2800 as u32;
+    let base_id = 2800-1 as u32;
     for i in 0..(topics.len()) {
         let id = (base_id + i as u32) as u32;
         let order = id + 5050;

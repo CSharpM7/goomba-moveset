@@ -2,6 +2,7 @@ use crate::imports::imports_agent::*;
 
 pub const LIFE: i32 = 180;
 pub const BRAKE_X_INIT: f32 = 0.001;
+pub const FRIENDLY_FIRE_THRESHOLD: i32 = 160;
 pub const GRAVITY: f32 = 0.2;
 pub const SPEED_X: f32 = 1.75;
 
@@ -106,6 +107,7 @@ unsafe extern "C" fn redshell_set_correct_kinetics(weapon: &mut smashline::L2CWe
 
     redshell_update_brake(weapon,1.0);
 }
+
 unsafe extern "C" fn redshell_update_brake(weapon: &mut smashline::L2CWeaponCommon, mul_brake: f32) {
     let lr = PostureModule::lr(weapon.module_accessor);
     let situation = StatusModule::situation_kind(weapon.module_accessor);
@@ -189,6 +191,17 @@ pub unsafe extern "C" fn redshell_fly_main(weapon: &mut smashline::L2CWeaponComm
     weapon.fastshift(L2CValue::Ptr(redshell_fly_main_loop as *const () as _))
 }
 
+unsafe extern "C" fn redshell_start_friendly_fire(weapon: &mut smashline::L2CWeaponCommon) {
+    if !WorkModule::is_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE) {
+        let status = StatusModule::status_kind(weapon.module_accessor);
+        if status != REDSHELL_STATUS_KIND_FURAFURA {
+            WorkModule::on_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE);
+            TeamModule::set_team(weapon.module_accessor, -1, true);
+            HitModule::set_no_team(weapon.module_accessor, true);
+        }
+    }
+}
+
 unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCommon) {
     let situation = StatusModule::situation_kind(weapon.module_accessor);
     let lr = PostureModule::lr(weapon.module_accessor);
@@ -201,21 +214,7 @@ unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCo
         KineticModule::mul_speed(weapon.module_accessor, &Vector3f{x: -0.8, y: 1.0, z: 1.0}, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
 
         redshell_update_brake(weapon,2.0);
-        
-        let status = StatusModule::status_kind(weapon.module_accessor);
-        if status != REDSHELL_STATUS_KIND_FURAFURA {
-           // println!("Needs attack");
-            WorkModule::on_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE);
-
-            HitModule::set_no_team(weapon.module_accessor, true);
-            ReflectorModule::clean(weapon.module_accessor);
-            ReflectorModule::set_no_team(weapon.module_accessor, true);
-            ReflectModule::set_team_no(weapon.module_accessor, *TEAM_NONE);
-            ReflectModule::reset_info(weapon.module_accessor);
-
-            //let frame = MotionModule::frame(weapon.module_accessor);
-            //MotionModule::change_motion(weapon.module_accessor, Hash40::new("fly"), frame, 1.0, false, 0.0, false, false);
-        }
+        redshell_start_friendly_fire(weapon);
     }
 }
 unsafe extern "C" fn redshell_check_for_rebound(weapon: &mut smashline::L2CWeaponCommon) {
@@ -265,6 +264,10 @@ unsafe extern "C" fn redshell_fly_main_loop(weapon: &mut smashline::L2CWeaponCom
     if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
         weapon.change_status(REDSHELL_STATUS_KIND_FURAFURA.into(), false.into());
         return 1.into();
+    }
+
+    if life <= FRIENDLY_FIRE_THRESHOLD {
+        redshell_start_friendly_fire(weapon);
     }
     let cooldown = WorkModule::get_int(weapon.module_accessor, REDSHELL_INSTANCE_INT_RESPAWN_ATTACK_COUNTDOWN);
     if cooldown > 0 {println!("Cool: {cooldown}")};

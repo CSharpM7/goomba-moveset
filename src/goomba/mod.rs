@@ -7,7 +7,7 @@ mod status;
 //mod vtable;
 //pub mod common;
 
-mod temp;
+mod dev_only;
 
 pub mod accessories;
 pub mod redshell;
@@ -47,10 +47,16 @@ pub fn install() {
     let agent = &mut smashline::Agent::new("pichu");
     let slots = (*MOD_SLOTS.read().unwrap()).to_vec();
     agent.set_costume(slots);
+    
+    #[cfg(feature = "dev")]
+    {
+        //dev_only::install(agent);
+        agent.install();
+        //return;
+    }
 
     acmd::install(agent);
     frame::install(agent);
-    temp::install(agent);
     #[cfg(not(feature = "hookstatus"))]
     {
         println!("[smashline_kuribo::kuribo] Installing Status Scripts");
