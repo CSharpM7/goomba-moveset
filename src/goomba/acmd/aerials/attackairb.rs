@@ -9,7 +9,7 @@ const KBG_A: i32 = 25;
 const FKB_G: i32 = 0;
 const FKB_A: i32 = 0;
 const BKB_G: i32 = 50;
-const BKB_A: i32 = 50;
+const BKB_A: i32 = 65;
 
 unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
@@ -27,7 +27,7 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
         macros::ATTACK(agent, 5, 0, Hash40::new("btail3"), DAMAGE, ANGLE_G, KBG_G, FKB_G, BKB_G, 3.5, 1.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
         
         for i in 0..5 {
-            AttackModule::set_add_reaction_frame_revised(agent.module_accessor, i, 4.0, false);
+            AttackModule::set_add_reaction_frame_revised(agent.module_accessor, i, 2.0, false);
         }
     }
     wait(agent.lua_state_agent, 2.0);
