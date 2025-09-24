@@ -80,4 +80,13 @@ pub unsafe fn init_book(module_accessor: *mut BattleObjectModuleAccessor) {
     (*CONSTRAINT_FLAG_MTX 
          | *CONSTRAINT_FLAG_OFFSET_ROT | *CONSTRAINT_FLAG_OFFSET_TRANSLATE) as u32,true);
     MotionModule::change_motion(module_accessor, Hash40::new("appeal_s_r"), 0.0, 1.0, false, 0.0, false, false);
+
+    let owner = &mut *sv_battle_object::module_accessor(
+        (WorkModule::get_int(module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32
+    );
+    let rot_y = if PostureModule::lr(module_accessor) > 0.0 {0.0} else {180.0};
+    let pos_offset = Vector3f{x:0.0,y:0.0,z:0.0};
+    let rot_offset = Vector3f{x:0.0,y:rot_y,z:0.0};
+    LinkModule::set_constraint_translate_offset(module_accessor, &pos_offset);
+    LinkModule::set_constraint_rot_offset(module_accessor, &rot_offset);
 }

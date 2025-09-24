@@ -5852,7 +5852,7 @@ list:
       unk_400: false
     blend_frames: 0
     animations:
-      - name: j01appealsr.nuanmb
+      - name: j01appealsl.nuanmb
         unk: 0
     scripts:
       - expression_appealsl

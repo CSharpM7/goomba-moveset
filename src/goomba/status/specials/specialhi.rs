@@ -1,6 +1,7 @@
 use crate::imports::imports_status::*;
 
 const DECIDE_DIRECTION_SETS_LR: bool = true;
+const JUMP_SPEED_MUL: f32 = 1.2;
 
 pub unsafe extern "C" fn specialhi_start_init(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
     0.into()
@@ -108,6 +109,12 @@ pub unsafe extern "C" fn specialhi_pre(fighter: &mut L2CFighterCommon) -> L2CVal
 
 unsafe extern "C" fn specialhi_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     specialhi_apply_angle(fighter);
+    sv_kinetic_energy!(
+        set_speed_mul,
+        fighter,
+        FIGHTER_KINETIC_ENERGY_ID_MOTION,
+        JUMP_SPEED_MUL
+    );
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_hi"), 0.0, 1.0, false, 0.0, false, false);
 	fighter.sub_shift_status_main(L2CValue::Ptr( specialhi_main_loop as *const () as _)) 
 }
