@@ -42,7 +42,7 @@ unsafe extern "C" fn effect_attacks4(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 18.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 2, 4, 4, 0, 0, 16, 1, true, *EF_FLIP_YZ);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 2, 2.75, 4, 0, 0, -7, 1, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_COLOR(agent,2.8,0.1,0.1);
     }
     frame(agent.lua_state_agent, 19.0);
@@ -121,7 +121,7 @@ unsafe extern "C" fn game_attacks4s2(agent: &mut L2CAgentBase) {
         ArticleModule::remove_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         //let lolipop = get_article_boma(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
         //ModelModule::set_mesh_visibility(lolipop, Hash40::new("lollitop"), false);
-        macros::FT_ADD_DAMAGE(agent, -2.0);
+        macros::FT_ADD_DAMAGE(agent, -1.5);
     }
     frame(agent.lua_state_agent, 73.0);
     if macros::is_excute(agent) {

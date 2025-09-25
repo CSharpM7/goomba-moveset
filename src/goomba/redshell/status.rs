@@ -5,6 +5,7 @@ pub const BRAKE_X_INIT: f32 = 0.001;
 pub const FRIENDLY_FIRE_THRESHOLD: i32 = 160;
 pub const GRAVITY: f32 = 0.2;
 pub const SPEED_X: f32 = 1.75;
+pub const OTTOTTO_CHECK_MUL: f32 = 1.5;
 
 pub unsafe extern "C" fn redshell_haved_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
     StatusModule::init_settings(
@@ -92,6 +93,15 @@ unsafe extern "C" fn redshell_set_correct_kinetics(weapon: &mut smashline::L2CWe
     let lr = PostureModule::lr(weapon.module_accessor);
     let situation = StatusModule::situation_kind(weapon.module_accessor);
     let is_ground = situation == *SITUATION_KIND_GROUND;
+
+    if !is_ground {
+        let rot_y = PostureModule::rot_x(weapon.module_accessor, 0);
+        PostureModule::set_rot(weapon.module_accessor, &Vector3f::new(0.0,rot_y,0.0), 0);
+    }
+    else {
+        redshell_set_angle(weapon);
+    }
+
     let correct = if is_ground {*GROUND_CORRECT_KIND_GROUND} else {*GROUND_CORRECT_KIND_AIR};
     GroundModule::set_correct(weapon.module_accessor, GroundCorrectKind(correct));
     
@@ -201,13 +211,35 @@ unsafe extern "C" fn redshell_start_friendly_fire(weapon: &mut smashline::L2CWea
         }
     }
 }
+unsafe extern "C" fn redshell_set_angle(weapon: &mut smashline::L2CWeaponCommon) {
+    let mut rot_z = 0.0f32;
+    let situation = StatusModule::situation_kind(weapon.module_accessor);
+    if situation == *SITUATION_KIND_GROUND {
+        let touch_flag = GroundModule::get_touch_moment_flag(weapon.module_accessor);
+        if GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
+            let lr = PostureModule::lr(weapon.module_accessor);
+            let ground_normal = GroundModule::get_touch_normal(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32);
+            let mut ground_angle = (ground_normal.y.abs()).atan2(ground_normal.x).to_degrees() - (90.0);
+            WorkModule::set_float(weapon.module_accessor, ground_angle, REDSHELL_INSTANCE_FLOAT_GROUND_ANGLE);
+            //println!("Ground: X: {} Y: {} :{ground_angle}",ground_normal.x,ground_normal.y);
+            rot_z = ground_angle;
+        }
+    }
+    if rot_z.abs() > 70.0 {rot_z = 0.0;}
+    let rot_x = PostureModule::rot_x(weapon.module_accessor, 0);
+    let rot_y = PostureModule::rot_y(weapon.module_accessor, 0);
+    PostureModule::set_rot(weapon.module_accessor, &Vector3f::new(rot_x,0.0,rot_z), 0);
+}
 
 unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCommon) {
     let situation = StatusModule::situation_kind(weapon.module_accessor);
+    if situation != *SITUATION_KIND_GROUND {return;}
     let lr = PostureModule::lr(weapon.module_accessor);
     let speed_x = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let ottotto_check = speed_x.abs() + 0.5;
+    let ottotto_check = (OTTOTTO_CHECK_MUL*speed_x.abs()) + SPEED_X;
+    //let near_check = speed_x.abs() + 5.0;
     let is_ottotto = situation == *SITUATION_KIND_GROUND && GroundModule::is_ottotto(weapon.module_accessor, ottotto_check);
+    //let is_near = GroundModule::is_near_cliff(weapon.module_accessor, lr, near_check);
 
     if is_ottotto || GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_SIDE as u32) {
         PostureModule::reverse_lr(weapon.module_accessor);
@@ -261,6 +293,7 @@ unsafe extern "C" fn redshell_fly_main_loop(weapon: &mut smashline::L2CWeaponCom
     WorkModule::set_float(weapon.module_accessor, speed_x, REDSHELL_INSTANCE_FLOAT_SPEED);
     let mut brake_x_var = WorkModule::get_float(weapon.module_accessor, REDSHELL_INSTANCE_FLOAT_BRAKE_X);
     //println!("Life: {life} Brake: {brake_x_var} Speed {speed_x},{speed_y}");
+    redshell_set_angle(weapon);
 
     if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_SHIELD)
     || AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_ATTACK) {
@@ -386,6 +419,8 @@ pub unsafe extern "C" fn redshell_furafura_main(weapon: &mut smashline::L2CWeapo
 }
 
 unsafe extern "C" fn redshell_furafura_main_loop(weapon: &mut smashline::L2CWeaponCommon) -> smashline::L2CValue {
+    redshell_set_angle(weapon);
+    
     if MotionModule::is_end(weapon.module_accessor) {
         return redshell_kill(weapon);
     }

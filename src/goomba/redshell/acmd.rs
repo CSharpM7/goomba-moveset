@@ -33,6 +33,7 @@ unsafe extern "C" fn effect_turn(agent: &mut L2CAgentBase) {
         EFFECT_OFF_KIND(agent, Hash40::new("sys_greenshell_trace"), false, false);
     }
 }
+
 unsafe extern "C" fn effect_furafura(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("sys_greenshell_trace"), false, false);

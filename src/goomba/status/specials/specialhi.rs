@@ -1,7 +1,7 @@
 use crate::imports::imports_status::*;
 
 const DECIDE_DIRECTION_SETS_LR: bool = true;
-const JUMP_SPEED_MUL: f32 = 1.25;
+const JUMP_SPEED_MUL: f32 = 1.13;
 const STICK_MUL: f32 = 42.0;
 
 pub unsafe extern "C" fn specialhi_start_init(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
