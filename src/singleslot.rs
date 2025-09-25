@@ -433,7 +433,6 @@ fn csk_database(chara_hash: u64) {
     for i in 0..(topics.len()) {
         let id = (base_id + i as u32) as u32;
         let order = id + 5050;
-        println!("Added tip {i} at {order}");
         the_csk_collection_api::add_tips_db_entry_info(
             &the_csk_collection_api::TipsDatabaseEntry {
                 ui_tips_id: id as u64,

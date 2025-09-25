@@ -220,7 +220,6 @@ unsafe extern "C" fn redshell_set_angle(weapon: &mut smashline::L2CWeaponCommon)
             let lr = PostureModule::lr(weapon.module_accessor);
             let ground_normal = GroundModule::get_touch_normal(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32);
             let mut ground_angle = (ground_normal.y.abs()).atan2(ground_normal.x).to_degrees() - (90.0);
-            WorkModule::set_float(weapon.module_accessor, ground_angle, REDSHELL_INSTANCE_FLOAT_GROUND_ANGLE);
             //println!("Ground: X: {} Y: {} :{ground_angle}",ground_normal.x,ground_normal.y);
             rot_z = ground_angle;
         }
