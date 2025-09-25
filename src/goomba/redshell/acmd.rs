@@ -23,6 +23,8 @@ unsafe extern "C" fn effect_fly(agent: &mut L2CAgentBase) {
         if macros::is_excute(agent) {
             if agent.is_grounded() {
                 macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("have"), 0, -3, 0, 0, 0, 0, 0.5, false, *EF_FLIP_NONE);
+                let handle = EffectModule::get_last_handle(agent.module_accessor);
+                WorkModule::set_int(agent.module_accessor, handle as i32, REDSHELL_INSTANCE_INT_EFF);
             }
         }
         wait(agent.lua_state_agent, 10.0);
@@ -38,6 +40,8 @@ unsafe extern "C" fn effect_furafura(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("sys_greenshell_trace"), false, false);
         macros::EFFECT_FLW_POS(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("have"), 0, -3, 0, 0, 0, 0, 1, true);
+        let handle = EffectModule::get_last_handle(agent.module_accessor);
+        WorkModule::set_int(agent.module_accessor, handle as i32, REDSHELL_INSTANCE_INT_EFF);
     }
 }
 

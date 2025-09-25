@@ -102,8 +102,8 @@ unsafe extern "C" fn redshell_set_correct_kinetics(weapon: &mut smashline::L2CWe
         redshell_set_angle(weapon);
     }
 
-    let correct = if is_ground {*GROUND_CORRECT_KIND_GROUND} else {*GROUND_CORRECT_KIND_AIR};
-    GroundModule::set_correct(weapon.module_accessor, GroundCorrectKind(correct));
+    let correct = if is_ground {*GROUND_CORRECT_KIND_GROUND_OTTOTTO} else {*GROUND_CORRECT_KIND_AIR};
+    GroundModule::correct(weapon.module_accessor, GroundCorrectKind(correct));
     
     let speed_x = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let speed_y = if weapon.is_grounded() {0.0} else {KineticModule::get_sum_speed_y(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN)};
@@ -171,6 +171,9 @@ pub unsafe extern "C" fn redshell_fly_main(weapon: &mut smashline::L2CWeaponComm
     WorkModule::off_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_BIG_BRAKE);
     WorkModule::set_int(weapon.module_accessor, 0, REDSHELL_INSTANCE_INT_RESPAWN_ATTACK_COUNTDOWN);
     WorkModule::off_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE);
+    WorkModule::set_int(weapon.module_accessor, 0, REDSHELL_INSTANCE_INT_OTTOTTO_COUNTDOWN);
+    WorkModule::set_int(weapon.module_accessor, *BATTLE_OBJECT_ID_INVALID, REDSHELL_INSTANCE_INT_EFF);
+    
     
     let speed_x = SPEED_X*lr;//KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let speed_y = -0.1;//KineticModule::get_sum_speed_y(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
@@ -237,8 +240,18 @@ unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCo
     let speed_x = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let ottotto_check = (OTTOTTO_CHECK_MUL*speed_x.abs()) + SPEED_X;
     //let near_check = speed_x.abs() + 5.0;
-    let is_ottotto = situation == *SITUATION_KIND_GROUND && GroundModule::is_ottotto(weapon.module_accessor, ottotto_check);
-    //let is_near = GroundModule::is_near_cliff(weapon.module_accessor, lr, near_check);
+    let mut is_ottotto = false;
+    let ottotto_cooled = WorkModule::count_down_int(weapon.module_accessor, REDSHELL_INSTANCE_INT_OTTOTTO_COUNTDOWN, 0)
+    || WorkModule::get_int(weapon.module_accessor, REDSHELL_INSTANCE_INT_OTTOTTO_COUNTDOWN) == 0;
+    
+    if situation == *SITUATION_KIND_GROUND 
+    && ottotto_cooled {
+        if GroundModule::is_ottotto_lr(weapon.module_accessor, lr, ottotto_check) {
+            is_ottotto = true;
+            WorkModule::set_int(weapon.module_accessor, 2, REDSHELL_INSTANCE_INT_OTTOTTO_COUNTDOWN);
+            //let is_near = GroundModule::is_near_cliff(weapon.module_accessor, lr, near_check);
+        }
+    }
 
     if is_ottotto || GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_SIDE as u32) {
         PostureModule::reverse_lr(weapon.module_accessor);
@@ -347,6 +360,12 @@ unsafe extern "C" fn redshell_fly_main_loop(weapon: &mut smashline::L2CWeaponCom
 
 unsafe extern "C" fn redshell_fly_exec(weapon: &mut smashline::L2CWeaponCommon) -> smashline::L2CValue {
     WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    let eff = WorkModule::get_int(weapon.module_accessor, REDSHELL_INSTANCE_INT_EFF);
+    if eff != *BATTLE_OBJECT_ID_INVALID {
+        let rot_z = PostureModule::rot_z(weapon.module_accessor,0);
+        EffectModule::set_rot(weapon.module_accessor, eff as u32, &Vector3f::new(rot_z, 0.0, 0.0));
+    }
+
     0.into()
 }
 
@@ -463,5 +482,6 @@ pub fn install(agent: &mut smashline::Agent) {
 	agent.status(Pre, REDSHELL_STATUS_KIND_FURAFURA, redshell_furafura_pre);
 	agent.status(Init, REDSHELL_STATUS_KIND_FURAFURA, empty_status);
 	agent.status(Main, REDSHELL_STATUS_KIND_FURAFURA, redshell_furafura_main);
+	agent.status(Exec, REDSHELL_STATUS_KIND_FURAFURA, redshell_fly_exec);
 	agent.status(End, REDSHELL_STATUS_KIND_FURAFURA, empty_status);
 }

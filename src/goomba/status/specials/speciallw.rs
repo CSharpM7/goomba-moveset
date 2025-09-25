@@ -79,8 +79,8 @@ pub unsafe extern "C" fn speciallw_exit_common(fighter: &mut smashline::L2CFight
 }
 
 pub unsafe extern "C" fn speciallw_pound_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let turn = if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FROM_GROUND) 
-    {*FIGHTER_STATUS_ATTR_START_TURN} else {0};
+    let turn = 0;
+    //if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FROM_GROUND) {*FIGHTER_STATUS_ATTR_START_TURN} else {0};
     StatusModule::init_settings(
         fighter.module_accessor,
         SituationKind(*SITUATION_KIND_AIR),
