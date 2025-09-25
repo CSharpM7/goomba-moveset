@@ -214,9 +214,10 @@ unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCo
         KineticModule::mul_speed(weapon.module_accessor, &Vector3f{x: -0.8, y: 1.0, z: 1.0}, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
 
         redshell_update_brake(weapon,2.0);
-        redshell_start_friendly_fire(weapon);
+        //redshell_start_friendly_fire(weapon);
     }
 }
+//UNUSED
 unsafe extern "C" fn redshell_check_for_rebound(weapon: &mut smashline::L2CWeaponCommon) {
     let situation = StatusModule::situation_kind(weapon.module_accessor);
     let lr = PostureModule::lr(weapon.module_accessor);
@@ -261,7 +262,8 @@ unsafe extern "C" fn redshell_fly_main_loop(weapon: &mut smashline::L2CWeaponCom
     let mut brake_x_var = WorkModule::get_float(weapon.module_accessor, REDSHELL_INSTANCE_FLOAT_BRAKE_X);
     //println!("Life: {life} Brake: {brake_x_var} Speed {speed_x},{speed_y}");
 
-    if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+    if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_SHIELD)
+    || AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_ATTACK) {
         weapon.change_status(REDSHELL_STATUS_KIND_FURAFURA.into(), false.into());
         return 1.into();
     }
@@ -289,7 +291,6 @@ unsafe extern "C" fn redshell_fly_main_loop(weapon: &mut smashline::L2CWeaponCom
         let lr = PostureModule::lr(weapon.module_accessor);
         let speed_x = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         if speed_x.abs() < 0.5 && life > 0 {
-            println!("Req die");
             life = -1;
             WorkModule::set_int(weapon.module_accessor, life,*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
             WorkModule::on_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_BIG_BRAKE);

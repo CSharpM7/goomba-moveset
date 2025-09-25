@@ -73,7 +73,6 @@ pub unsafe extern "C" fn speciallw_exit_common(fighter: &mut smashline::L2CFight
     if [FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT].contains(&status_next) {
     }
     else {
-        println!("De-shoe");
         ArticleModule::remove_exist(fighter.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
     0.into()

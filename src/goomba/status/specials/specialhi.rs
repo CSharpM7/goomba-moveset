@@ -1,7 +1,8 @@
 use crate::imports::imports_status::*;
 
 const DECIDE_DIRECTION_SETS_LR: bool = true;
-const JUMP_SPEED_MUL: f32 = 1.2;
+const JUMP_SPEED_MUL: f32 = 1.25;
+const STICK_MUL: f32 = 42.0;
 
 pub unsafe extern "C" fn specialhi_start_init(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
     0.into()
@@ -158,21 +159,20 @@ unsafe extern "C" fn specialhi_exec(fighter: &mut L2CFighterCommon) -> L2CValue 
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_DECIDE_DIRECTION) {
         WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_DECIDE_DIRECTION);
         let stick_min = 0.25;
-        let stick_mul = 40.0;
         let mut stick_x = ControlModule::get_stick_x(fighter.module_accessor);
         let mut is_reverse = stick_x.signum() != PostureModule::lr(fighter.module_accessor);
         if stick_x.abs() <= 0.25 {
             stick_x = 0.0;
             is_reverse = false;
         }
-        let mut angle = -stick_mul*stick_x;
+        let mut angle = -STICK_MUL*stick_x;
         if DECIDE_DIRECTION_SETS_LR {
             PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
         }
         else {
-            let angle_forward = 30.0;
-            let angle_back = 15.0;
-            //Set posture module where x is stick_mul*stick?
+            let angle_forward = STICK_MUL;
+            let angle_back = STICK_MUL/2.0;
+            //Set posture module where x is STICK_MUL*stick?
             angle = if is_reverse {
                 angle.clamp(-angle_back, angle_back)
             }

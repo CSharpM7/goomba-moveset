@@ -116,7 +116,7 @@ unsafe extern "C" fn game_attacks4s2(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent,12.0,38.0,30.0);
     frame(agent.lua_state_agent, 38.0);
     FT_MOTION_RATE(agent,1.0);
-    frame(agent.lua_state_agent, 40.0);
+    frame(agent.lua_state_agent, 41.0);
     if macros::is_excute(agent) {
         ArticleModule::remove_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         //let lolipop = get_article_boma(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
@@ -129,7 +129,7 @@ unsafe extern "C" fn game_attacks4s2(agent: &mut L2CAgentBase) {
     }
 }
 unsafe extern "C" fn effect_attacks4s2(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 40.0);
+    frame(agent.lua_state_agent, 41.0);
     if macros::is_excute(agent) {
         macros::EFFECT(agent, Hash40::new("sys_recovery"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
     }
@@ -139,11 +139,11 @@ unsafe extern "C" fn sound_attacks4s2(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_common_swing_03"));
     }
-    frame(agent.lua_state_agent, 39.0);
+    frame(agent.lua_state_agent, 40.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_common_item_get_food"));
     }
-    frame(agent.lua_state_agent, 40.0);
+    wait(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_item_healball_lifeup"));
     }
@@ -153,7 +153,7 @@ unsafe extern "C" fn expression_attacks4s2(agent: &mut L2CAgentBase) {
         ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
         ControlModule::stop_rumble(agent.module_accessor, true);
     }
-    frame(agent.lua_state_agent, 40.0);
+    frame(agent.lua_state_agent, 41.0);
     if macros::is_excute(agent) {
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_stg_power_up"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }

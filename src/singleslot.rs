@@ -164,12 +164,12 @@ fn params() {
     
     param_attributes.push((hash40("jump_initial_y"),0 as u64, 16.0 / 20.2125)); 
     param_attributes.push((hash40("jump_y"),0 as u64, 30.0 / 36.75)); 
-    param_attributes.push((hash40("mini_jump_y"),0 as u64, 11.0 / 17.43)); 
+    param_attributes.push((hash40("mini_jump_y"),0 as u64, 15.5 / 17.43)); 
     param_attributes.push((hash40("jump_aerial_y"),0 as u64, 27.0 / 36.02)); 
 
-    param_attributes.push((hash40("air_accel_x_mul"),0 as u64, 0.09 / 0.09)); 
+    param_attributes.push((hash40("air_accel_x_mul"),0 as u64, 0.08 / 0.09)); 
     //param_floats.push((hash40("air_accel_x_add"),0 as u64, 0.01 / 0.01));
-    param_attributes.push((hash40("air_speed_x_stable"),0 as u64, 1.06 / 1.029)); 
+    param_attributes.push((hash40("air_speed_x_stable"),0 as u64, 1.17 / 1.029)); 
     param_attributes.push((hash40("air_brake_x"),0 as u64, 0.008 / 0.0075)); 
 
     param_attributes.push((hash40("air_accel_y"),0 as u64, 0.095 / 0.14));
