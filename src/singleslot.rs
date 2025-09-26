@@ -375,72 +375,34 @@ fn csk_database(chara_hash: u64) {
     the_csk_collection_api::add_narration_characall_entry(narration);
 
     //TIPS//
-    let mut level: Vec<u64> = Vec::new();
-    let mut topics: Vec<u64> = Vec::new();
-    let mut skill_kind: Vec<u64> = Vec::new();
+    let skill_kinds = ["down_1","neutral_1","side_1","up_1","final_1"];
+    let id_base = 2800-1 as u32;
+    let id_specials = 2803;
+    let id_normals = 2808;
+    let id_final = 2812;
 
-    //2799
-    level.push(smash::hash40("level_beginner"));
-    topics.push(smash::hash40(""));
-    skill_kind.push(smash::hash40(""));
+    for id in id_base..(id_final+1) {
+        //let id = (base_id + i as u32) as u32;
+        let is_misc = [2799,2802].contains(&id);
+        let is_story = id < id_specials;
+        let is_special = id >= id_specials && id < id_normals && !is_misc;
+        let is_normal = id >= id_normals && !is_misc;
 
-    //2800
-    level.push(smash::hash40("level_beginner"));
-    topics.push(smash::hash40("topic_story"));
-    skill_kind.push(smash::hash40(""));
-    
-    level.push(smash::hash40("level_beginner"));
-    topics.push(smash::hash40("topic_story"));
-    skill_kind.push(smash::hash40(""));
-    
-    level.push(smash::hash40("level_beginner"));
-    topics.push(smash::hash40(""));
-    skill_kind.push(smash::hash40(""));
+        let level = if is_normal {"level_middle"} else {"level_beginner"};
+        let topic = if is_story {"topic_story"} else if is_misc {""} else {"topic_technic"};
+        let skill_kind = if is_special {skill_kinds[(id-id_specials) as usize]} else {""};
 
-    level.push(smash::hash40("level_middle"));
-    topics.push(smash::hash40("topic_technic"));
-    skill_kind.push(smash::hash40(""));
-    
-    level.push(smash::hash40("level_middle"));
-    topics.push(smash::hash40("topic_technic"));
-    skill_kind.push(smash::hash40(""));
+        //println!("ID: {id} L: {} T: {} S: {}",level,topic,skill_kind);
 
-    level.push(smash::hash40("level_middle"));
-    topics.push(smash::hash40("topic_technic"));
-    skill_kind.push(smash::hash40(""));
-    
-    level.push(smash::hash40("level_beginner"));
-    topics.push(smash::hash40("topic_technic"));
-    skill_kind.push(smash::hash40("down_1"));
-    
-    level.push(smash::hash40("level_beginner"));
-    topics.push(smash::hash40("topic_technic"));
-    skill_kind.push(smash::hash40("neutral_1"));
-    
-    level.push(smash::hash40("level_beginner"));
-    topics.push(smash::hash40("topic_technic"));
-    skill_kind.push(smash::hash40("side_1"));
-    
-    level.push(smash::hash40("level_beginner"));
-    topics.push(smash::hash40("topic_technic"));
-    skill_kind.push(smash::hash40("up_1"));
-
-    level.push(smash::hash40("level_beginner"));
-    topics.push(smash::hash40("topic_technic"));
-    skill_kind.push(smash::hash40("final_1"));
-
-    let base_id = 2800-1 as u32;
-    for i in 0..(topics.len()) {
-        let id = (base_id + i as u32) as u32;
         let order = id + 5050;
         the_csk_collection_api::add_tips_db_entry_info(
             &the_csk_collection_api::TipsDatabaseEntry {
                 ui_tips_id: id as u64,
                 clone_from_ui_tips_id: None,
                 save_no: the_csk_collection_api::UnsignedIntType::Optional(Some(id)),
-                level: the_csk_collection_api::Hash40Type::Overwrite(level[i]),
-                topic: the_csk_collection_api::Hash40Type::Overwrite(topics[i]),
-                skill_kind: the_csk_collection_api::Hash40Type::Overwrite(skill_kind[i]),
+                level: the_csk_collection_api::Hash40Type::Overwrite(hash40(level)),
+                topic: the_csk_collection_api::Hash40Type::Overwrite(hash40(topic)),
+                skill_kind: the_csk_collection_api::Hash40Type::Overwrite(hash40(skill_kind)),
                 ui_tips_unlock_id: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("")),
                 disp_order: the_csk_collection_api::UnsignedIntType::Optional(Some(order)),
                 type_0: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("relation_chara")),

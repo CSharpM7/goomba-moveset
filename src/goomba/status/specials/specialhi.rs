@@ -61,13 +61,41 @@ unsafe extern "C" fn specialhi_start_main_loop(fighter: &mut L2CFighterCommon) -
                 );
             }
         }
+        let air_speed_y_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_y_stable"), 0);
         if start_stop_y_frame_air <= MotionModule::frame(fighter.module_accessor) + 1.0 {
-            let fall_speed_y = 0.1*WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
+            let fall_speed_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
             sv_kinetic_energy!(
                 set_accel,
                 fighter,
                 FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
-                -fall_speed_y
+                -fall_speed_y*0.1
+            );
+            sv_kinetic_energy!(
+                set_stable_speed,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+                air_speed_y_stable*0.1
+            );
+            sv_kinetic_energy!(
+                set_limit_speed,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+                air_speed_y_stable*0.1
+            );
+            println!("C");
+        }
+        else {
+            sv_kinetic_energy!(
+                set_stable_speed,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+                air_speed_y_stable
+            );
+            sv_kinetic_energy!(
+                set_limit_speed,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+                air_speed_y_stable
             );
         }
     }
