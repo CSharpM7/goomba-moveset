@@ -37,7 +37,8 @@ pub fn smashline_uninstall() {
     uninstall();
 }
  */
-pub fn install() {    
+pub fn install() {   
+    #[cfg(not(feature = "devhook"))] 
     goomba::install();
 }
 pub fn uninstall() {

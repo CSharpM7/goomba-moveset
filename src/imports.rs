@@ -26,11 +26,6 @@ pub mod imports_acmd {
         smashline::*,
     };
     pub unsafe extern "C" fn empty_acmd(agent: &mut L2CAgentBase) {}
-    pub unsafe fn common_effect_color(agent: &mut L2CAgentBase) {
-        let r = 2.8; let g = 0.5; let b = 0.1;
-        macros::LAST_PARTICLE_SET_COLOR(agent, r,g,b);
-        LAST_EFFECT_SET_COLOR(agent, r,g,b);
-    }
 }
 
 pub mod imports_agent {

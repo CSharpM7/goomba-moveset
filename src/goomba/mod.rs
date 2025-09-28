@@ -1,13 +1,17 @@
 use smash::{lib::lua_const::*, hash40};
 
+#[cfg(not(feature = "devhook"))]
 mod acmd;
+#[cfg(not(feature = "devhook"))]
 mod agent_init;
+#[cfg(not(feature = "devhook"))]
 mod frame;
+#[cfg(not(feature = "devhook"))]
 mod status;
-//mod vtable;
-//pub mod common;
-
+#[cfg(not(feature = "devhook"))]
 mod dev_only;
+
+//mod vtable;
 
 pub mod accessories;
 pub mod redshell;
@@ -40,6 +44,7 @@ pub fn install_hook() {
     redshell::install_hook(hookstatus);
     println!("[smashline_kuribo::kuribo] ");
 }
+#[cfg(not(feature = "devhook"))]
 pub fn install() {
     println!("[smashline_kuribo::kuribo] Installing Under Slots:");
     crate::singleslot::print_slots();

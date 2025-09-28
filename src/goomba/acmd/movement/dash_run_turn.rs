@@ -1,5 +1,17 @@
 use crate::imports::imports_acmd::*;
 
+unsafe extern "C" fn game_turn(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        if is_kuribo_rpg(agent.module_accessor) {
+            let lr = PostureModule::lr(agent.module_accessor);
+            let new_flip = lr > 0.0;
+    
+            ModelModule::set_mesh_visibility(agent.module_accessor, Hash40::new("pichu_facen_mouth"), !new_flip);
+            ModelModule::set_mesh_visibility(agent.module_accessor, Hash40::new("pichu_facen_mouthflip"), new_flip);
+        }
+    }
+}
+
 unsafe extern "C" fn game_dash(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
@@ -190,6 +202,8 @@ unsafe extern "C" fn expression_turnrun(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
+	agent.acmd("game_turn", game_turn, Priority::Default);
+
 	agent.acmd("game_dash", game_dash, Priority::Default);
 	agent.acmd("game_turndash", game_turndash, Priority::Default);
 	agent.acmd("effect_dash", effect_dash, Priority::Default);

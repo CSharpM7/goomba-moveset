@@ -17,13 +17,32 @@ use std::{
     iter::FromIterator,
 };
 
-const DEFAULT_COLORS: [usize;2] = [120,121];
+const DEFAULT_COLOR: (f32,f32,f32) = (2.8f32,0.5f32,0.1f32);
+pub static mut EFFECT_COLORS: [(f32,f32,f32);256] = [DEFAULT_COLOR;256];
+pub unsafe fn common_effect_color(agent: &mut L2CAgentBase) {
+    use smash_script::{macros::*, *};
+
+    //let r = 2.8; let g = 0.5; let b = 0.1;
+    let entry_id = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let effect_color = EFFECT_COLORS[entry_id];
+    macros::LAST_PARTICLE_SET_COLOR(agent, effect_color.0,effect_color.1,effect_color.2);
+    macros::LAST_EFFECT_SET_COLOR(agent, effect_color.0,effect_color.1,effect_color.2);
+}
+
+//const DEFAULT_COLORS: [usize;2] = [120,121];
+const DEFAULT_COLORS: [usize;2] = [126,127];
 lazy_static! {
     pub static ref MOD_SLOTS: RwLock<Vec<usize>> = RwLock::new({
         let mut default = Vec::with_capacity(256);
         for c in DEFAULT_COLORS {
             default.push(c);
         }
+        
+        default
+    });
+    pub static ref RPG_SLOTS: RwLock<Vec<usize>> = RwLock::new({
+        let mut default = Vec::with_capacity(256);
+        default.push(127);
         
         default
     });
@@ -56,6 +75,20 @@ pub unsafe fn is_kuribo(module_accessor: *mut BattleObjectModuleAccessor) -> boo
     let modded = (*MOD_SLOTS.read().unwrap()).contains(&color);
     return modded;
 }
+pub unsafe fn is_kuribo_rpg(module_accessor: *mut BattleObjectModuleAccessor) -> bool
+{
+    let entry_id = sv_battle_object::entry_id((*module_accessor).battle_object_id) as u32;
+    let info = app::lua_bind::FighterManager::get_fighter_information(singletons::FighterManager(), app::FighterEntryID(entry_id as i32));
+    let color = app::lua_bind::FighterInformation::fighter_color(info) as usize;
+
+    #[cfg(feature = "dev")]
+    return true;
+    #[cfg(feature = "devhook")]
+    return true;
+
+    let modded = (*RPG_SLOTS.read().unwrap()).contains(&color);
+    return modded;
+}
 
 pub fn print_slots() {
     for slot in (&*MOD_SLOTS.read().unwrap()) {
@@ -78,24 +111,36 @@ pub fn install() {
 
 extern "C" fn mods_mounted(_ev: arcropolis_api::Event) {
     #[cfg(feature = "devhook")]{
-        install_continue();
+        install_by_finding_markers();
         return;
     }
     install_by_finding_markers();
 }
 
-pub fn install_by_finding_markers() {
+fn install_by_finding_markers() {
     unsafe {
         let mut found_folder = false;
         (*MOD_SLOTS.write().unwrap()).clear();
+        (*RPG_SLOTS.write().unwrap()).clear();
 
         println!("[smashline_kuribo::ssm] Finding marker files...");
         const FIGHTER_NAME: &str = "pichu";
         const MARKER_FILE: &str = "kuribo.marker";
+        const MARKER_FILE_ADD: &str = "kuriborpg.marker";
         let mut lowest_color: i32 = -1;
         let mut marked_slots: Vec<i32> = Vec::with_capacity(256);
         for x in 0..256 {
-            if let Ok(_) = std::fs::read(format!(
+            /*
+            if let Ok(marker_contents) = std::fs::read_to_string(format!(
+                "mods:/fighter/{}/model/body/c{:02}/{}",
+                FIGHTER_NAME, x, MARKER_FILE_ADD
+            )) {
+                unsafe {
+                    (*RPG_SLOTS.write().unwrap()).push(x as _);
+                }
+            }
+            */
+            if let Ok(marker_contents) = std::fs::read_to_string(format!(
                 "mods:/fighter/{}/model/body/c{:02}/{}",
                 FIGHTER_NAME, x, MARKER_FILE
             )) {
@@ -103,6 +148,31 @@ pub fn install_by_finding_markers() {
                     (*MOD_SLOTS.write().unwrap()).push(x as _);
                     if lowest_color == -1 {
                         lowest_color = x as _ ;
+                    }
+
+                    let mut eff_color = (DEFAULT_COLOR.0,DEFAULT_COLOR.1,DEFAULT_COLOR.2);
+                    let (r, g) = marker_contents.split_once(char::is_whitespace).unwrap();
+                    let (g, b) = g.trim_start().split_once(char::is_whitespace).unwrap();
+                    let b = b.trim_start();
+
+                    let mut color_changed=false;
+                    let r32 = r.parse::<f32>();
+                    let g32 = g.parse::<f32>();
+                    let b32 = b.parse::<f32>();
+                    if !r32.is_err() {
+                        color_changed=true;
+                        eff_color.0 = r32.unwrap();
+                    }
+                    if !g32.is_err() {
+                        color_changed=true;
+                        eff_color.1 = g32.unwrap();
+                    }
+                    if b32.is_err() {
+                        color_changed=true;
+                        eff_color.2 = b32.unwrap();
+                    }
+                    if color_changed {
+                        println!("Custom effect color for {x}: {}, {}, {}",eff_color.0,eff_color.1,eff_color.2);
                     }
                 }
             }
@@ -117,7 +187,7 @@ pub fn install_by_finding_markers() {
     }
 }
 
-pub fn install_continue() {
+fn install_continue() {
     println!("[smashline_kuribo::ssm] Goomba slots: ");
     print_slots();
     params();
