@@ -1,7 +1,10 @@
 use crate::imports::imports_acmd::*;
 
 unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 1.0);
+    FT_MOTION_RATE_RANGE(agent,1.0,6.0,7.0);
     frame(agent.lua_state_agent, 6.0);
+    FT_MOTION_RATE(agent,1.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
     }
@@ -10,10 +13,10 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
         macros::HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_INVINCIBLE);
 
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 130, 120, 100, 0, 4.0, 0.0, 3.0, 6.0, Some(0.0), Some(3.0), Some(-6.0), 0.6, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 130, 120, 100, 0, 4.0, 0.0, 3.0, 4.0, Some(0.0), Some(3.0), Some(-5.0), 0.6, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
         AttackModule::set_attack_height_all(agent.module_accessor, AttackHeight(*ATTACK_HEIGHT_MIDDLE), false);
     }
-    frame(agent.lua_state_agent, 9.0);
+    frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
