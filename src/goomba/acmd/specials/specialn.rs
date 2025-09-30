@@ -12,22 +12,21 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 21.0);
     if macros::is_excute(agent) {
-        let power = if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {6.75} else {10.0};
-
         macros::HIT_NODE(agent, Hash40::new("toer"), *HIT_STATUS_XLU);
-        macros::ATTACK(agent, 0, 0, Hash40::new("footr"), power, 75, 99, 0, 38, 4.0, 0.0, -2.5, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+
 
         if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {
-            //ArticleModule::shoot(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
             ArticleModule::change_status_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL, REDSHELL_STATUS_KIND_SHOOT);
             WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_N_FLAG_SHOOT);
+        }
+        else {
+            macros::ATTACK(agent, 0, 0, Hash40::new("kneer"), 12.5, 75, 84, 0, 48, 4.1, 4.9, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         }
     }
     wait(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
         macros::HIT_NODE(agent, Hash40::new("toer"), *HIT_STATUS_NORMAL);
-        macros::ATK_POWER(agent, 0, 7);
-        macros::ATK_POWER(agent, 1, 7);
+        macros::ATTACK(agent, 0, 0, Hash40::new("kneer"), 7.0, 75, 84, 0, 48, 4.1, 4.9, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
     frame(agent.lua_state_agent, 29.0);
     if macros::is_excute(agent) {

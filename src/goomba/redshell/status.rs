@@ -2,9 +2,9 @@ use crate::imports::imports_agent::*;
 
 pub const LIFE: i32 = 180;
 pub const BRAKE_X_INIT: f32 = 0.001;
-pub const FRIENDLY_FIRE_THRESHOLD: i32 = 160;
+pub const FRIENDLY_FIRE_THRESHOLD: i32 = 150;
 pub const GRAVITY: f32 = 0.2;
-pub const SPEED_X: f32 = 1.75;
+pub const SPEED_X: f32 = 1.875;
 pub const OTTOTTO_CHECK_MUL: f32 = 1.5;
 
 pub unsafe extern "C" fn redshell_haved_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
@@ -84,11 +84,6 @@ unsafe extern "C" fn redshell_reset_attack(weapon: &mut smashline::L2CWeaponComm
     }
     MotionModule::change_motion_force_inherit_frame(weapon.module_accessor, new_motion, 0.0, 1.0, 1.0);
 }
-unsafe extern "C" fn redshell_set_situation(weapon: &mut smashline::L2CWeaponCommon) {
-    let is_ground = false;//GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32);
-    let situation = if is_ground {*SITUATION_KIND_GROUND} else {*SITUATION_KIND_AIR};
-    StatusModule::set_situation_kind(weapon.module_accessor, SituationKind(situation), false);
-}
 unsafe extern "C" fn redshell_set_correct_kinetics(weapon: &mut smashline::L2CWeaponCommon) {
     let lr = PostureModule::lr(weapon.module_accessor);
     let situation = StatusModule::situation_kind(weapon.module_accessor);
@@ -154,12 +149,18 @@ pub unsafe extern "C" fn redshell_fly_main(weapon: &mut smashline::L2CWeaponComm
     let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
     let owner = sv_battle_object::module_accessor(owner_id);
     let owner_pos = *PostureModule::pos(owner);
+    let owner_scale = PostureModule::scale(owner);
     let lr = PostureModule::lr(owner);
     PostureModule::set_lr(weapon.module_accessor, lr);
+    let new_pos = Vector3f::new(owner_pos.x+(5.0*lr*owner_scale), owner_pos.y+(1.5*owner_scale), owner_pos.z);
+    PostureModule::set_pos(weapon.module_accessor, &new_pos);
+    //snap_to_owner(weapon, Hash40::new("have"), Hash40::new("throw"));
+
     let rot_y = PostureModule::rot_y(owner, 0);
     ModelModule::clear_joint_srt(weapon.module_accessor, Hash40::new("have"));
     ModelModule::clear_joint_srt(weapon.module_accessor, Hash40::new("rot"));
     PostureModule::set_rot(weapon.module_accessor, &Vector3f{x: 0.0, y: rot_y, z: 0.0}, 0);
+
 
     //Set Motion
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("fly"), 0.0, 1.0, false, 0.0, false, false);
@@ -198,7 +199,9 @@ pub unsafe extern "C" fn redshell_fly_main(weapon: &mut smashline::L2CWeaponComm
         -1.0,
         -1.0
     );
-    redshell_set_situation(weapon);
+
+    let situation = StatusModule::situation_kind(owner);
+    StatusModule::set_situation_kind(weapon.module_accessor, SituationKind(situation), false);
     redshell_set_correct_kinetics(weapon);
 
     weapon.fastshift(L2CValue::Ptr(redshell_fly_main_loop as *const () as _))

@@ -1889,7 +1889,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 45
+      cancel_frame: 41
       no_stop_intp: false
   attack_s3_s:
     game_script: game_attacks3
@@ -1916,7 +1916,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 45
+      cancel_frame: 41
       no_stop_intp: false
   attack_s3_lw:
     game_script: game_attacks3
@@ -1943,7 +1943,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 45
+      cancel_frame: 41
       no_stop_intp: false
   attack_hi3:
     game_script: game_attackhi3
@@ -1970,7 +1970,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 41
+      cancel_frame: 40
       no_stop_intp: false
   attack_lw3:
     game_script: game_attacklw3
@@ -2162,7 +2162,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 44
+      cancel_frame: 40
       no_stop_intp: true
   attack_lw4_hold:
     game_script: game_attacklw4charge
@@ -2216,7 +2216,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 40
+      cancel_frame: 37
       no_stop_intp: false
   attack_air_f:
     game_script: game_attackairf
@@ -2243,7 +2243,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 40
+      cancel_frame: 32
       no_stop_intp: true
   attack_air_b:
     game_script: game_attackairb
@@ -2297,7 +2297,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 32
+      cancel_frame: 30
       no_stop_intp: false
   attack_air_lw:
     game_script: game_attackairlw
@@ -2513,7 +2513,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 52
+      cancel_frame: 46
       no_stop_intp: false
   special_air_n:
     game_script: game_specialairn
@@ -2540,7 +2540,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 52
+      cancel_frame: 46
       no_stop_intp: false
   special_s_start:
     game_script: game_specialsstart

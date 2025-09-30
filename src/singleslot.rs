@@ -19,22 +19,30 @@ use std::{
 
 const DEFAULT_COLOR: (f32,f32,f32) = (2.8f32,0.5f32,0.1f32);
 pub static mut EFFECT_COLORS: [(f32,f32,f32);256] = [DEFAULT_COLOR;256];
+
+unsafe fn get_slot_from_module_accesor(boma: &mut BattleObjectModuleAccessor) -> usize {
+    let entry_id = sv_battle_object::entry_id((*boma).battle_object_id) as u32;
+    let info = app::lua_bind::FighterManager::get_fighter_information(singletons::FighterManager(), app::FighterEntryID(entry_id as i32));
+    let slot = app::lua_bind::FighterInformation::fighter_color(info) as usize;
+    return slot;
+}
 pub unsafe fn common_effect_color(agent: &mut L2CAgentBase) {
     use smash_script::{macros::*, *};
 
     //let r = 2.8; let g = 0.5; let b = 0.1;
-    let entry_id = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let effect_color = EFFECT_COLORS[entry_id];
+    let slot = get_slot_from_module_accesor(&mut *agent.module_accessor);
+
+    let effect_color = EFFECT_COLORS[slot];
     macros::LAST_PARTICLE_SET_COLOR(agent, effect_color.0,effect_color.1,effect_color.2);
     macros::LAST_EFFECT_SET_COLOR(agent, effect_color.0,effect_color.1,effect_color.2);
 }
 
-//const DEFAULT_COLORS: [usize;2] = [120,121];
-const DEFAULT_COLORS: [usize;2] = [126,127];
+//const DEFAULT_SLOTS: [usize;2] = [120,121];
+const DEFAULT_SLOTS: [usize;8] = [120,121,122,123,124,125,126,127];
 lazy_static! {
     pub static ref MOD_SLOTS: RwLock<Vec<usize>> = RwLock::new({
         let mut default = Vec::with_capacity(256);
-        for c in DEFAULT_COLORS {
+        for c in DEFAULT_SLOTS {
             default.push(c);
         }
         
@@ -48,17 +56,15 @@ lazy_static! {
     });
 }
 pub unsafe fn get_kuribo_color(module_accessor: *mut BattleObjectModuleAccessor) -> i32 {
-    let entry_id = sv_battle_object::entry_id((*module_accessor).battle_object_id) as u32;
-    let info = app::lua_bind::FighterManager::get_fighter_information(singletons::FighterManager(), app::FighterEntryID(entry_id as i32));
-    let color = app::lua_bind::FighterInformation::fighter_color(info) as usize;
+    let slot = get_slot_from_module_accesor(&mut *module_accessor);
 
-    let mut color_base: usize = 0;
+    let mut slot_base: usize = 0;
     #[cfg(feature = "dev")]
-    let color_base = DEFAULT_COLORS[0];
+    let slot_base = DEFAULT_SLOTS[0];
     #[cfg(not(feature = "dev"))]
-    let color_base = (*MOD_SLOTS.read().unwrap())[0];
+    let slot_base = (*MOD_SLOTS.read().unwrap())[0];
     
-    return (color-color_base) as i32;
+    return (slot-slot_base) as i32;
 }
 
 pub unsafe fn is_kuribo(module_accessor: *mut BattleObjectModuleAccessor) -> bool
@@ -68,9 +74,9 @@ pub unsafe fn is_kuribo(module_accessor: *mut BattleObjectModuleAccessor) -> boo
     let color = app::lua_bind::FighterInformation::fighter_color(info) as usize;
 
     #[cfg(feature = "dev")]
-    return DEFAULT_COLORS.contains(&color);
+    return DEFAULT_SLOTS.contains(&color);
     #[cfg(feature = "devhook")]
-    return DEFAULT_COLORS.contains(&color);
+    return DEFAULT_SLOTS.contains(&color);
 
     let modded = (*MOD_SLOTS.read().unwrap()).contains(&color);
     return modded;
@@ -110,13 +116,16 @@ pub fn install() {
 }
 
 extern "C" fn mods_mounted(_ev: arcropolis_api::Event) {
+    /*
     #[cfg(feature = "devhook")]{
-        install_by_finding_markers();
+        install_continue();
         return;
-    }
+    } */
+    #[cfg(not(feature = "dev"))]
     install_by_finding_markers();
 }
 
+#[cfg(not(feature = "dev"))]
 fn install_by_finding_markers() {
     unsafe {
         let mut found_folder = false;
@@ -143,7 +152,8 @@ fn install_by_finding_markers() {
                     let mut eff_color = (DEFAULT_COLOR.0,DEFAULT_COLOR.1,DEFAULT_COLOR.2);
                     let (r, g) = marker_contents.split_once(char::is_whitespace).unwrap();
                     let (g, b) = g.trim_start().split_once(char::is_whitespace).unwrap();
-                    let (b, rpg) = b.trim_start().split_once(char::is_whitespace).unwrap();
+                    let b = b.trim_start();
+                    //let (b, rpg) = b.trim_start().split_once(char::is_whitespace).unwrap();
 
                     let mut color_changed=false;
                     let r32 = r.parse::<f32>();
@@ -163,11 +173,16 @@ fn install_by_finding_markers() {
                     }
                     if color_changed {
                         println!("[smashline_kuribo::ssm] Custom effect color for {x}: {}, {}, {}",eff_color.0,eff_color.1,eff_color.2);
+                        EFFECT_COLORS[x] = eff_color;
                     }
-                    if rpg.contains("=T") {
-                        println!("[smashline_kuribo::ssm] Alt {x} is Goombella");
-                        (*RPG_SLOTS.write().unwrap()).push(x as _);
-                    }
+                    /*
+                    if rpg.len() > 1 {
+                        if rpg.contains("goombella=T") {
+                            println!("[smashline_kuribo::ssm] Alt {x} is Goombella");
+                            (*RPG_SLOTS.write().unwrap()).push(x as _);
+                        }
+                    } 
+                    */
                 }
             }
         }
@@ -181,6 +196,7 @@ fn install_by_finding_markers() {
     }
 }
 
+#[cfg(not(feature = "dev"))]
 fn install_continue() {
     println!("[smashline_kuribo::ssm] Goomba slots: ");
     print_slots();
@@ -189,6 +205,7 @@ fn install_continue() {
     crate::install_after_mount();
 }
 
+#[cfg(not(feature = "dev"))]
 fn params() {
     println!("[smashline_kuribo::singleslot]: Installing Goomba Params...");
     param_config::set_article_use_type(-(*WEAPON_KIND_PICHU_MONSTERBALL), *ARTICLE_USETYPE_FINAL);
@@ -218,8 +235,8 @@ fn params() {
     param_attributes.push((hash40("walk_fast_ratio"),0 as u64, 0.75 / 0.75));
 
     param_attributes.push((hash40("ground_brake"),0 as u64, 0.1 / 0.11));
-    param_attributes.push((hash40("dash_speed"),0 as u64, 1.85 / 1.98));
-    param_attributes.push((hash40("run_speed_max"),0 as u64, 1.75 / 1.892));
+    param_attributes.push((hash40("dash_speed"),0 as u64, 1.825 / 1.98));
+    param_attributes.push((hash40("run_speed_max"),0 as u64, 1.735 / 1.892));
 
     param_attributes.push((hash40("jump_speed_x"),0 as u64, 0.9 / 0.8)); 
     param_attributes.push((hash40("jump_speed_x_mul"),0 as u64, 0.8 / 0.8)); 
@@ -228,8 +245,8 @@ fn params() {
     
     param_attributes.push((hash40("jump_initial_y"),0 as u64, 16.0 / 20.2125)); 
     param_attributes.push((hash40("jump_y"),0 as u64, 30.0 / 36.75)); 
-    param_attributes.push((hash40("mini_jump_y"),0 as u64, 15.5 / 17.43)); 
-    param_attributes.push((hash40("jump_aerial_y"),0 as u64, 27.0 / 36.02)); 
+    param_attributes.push((hash40("mini_jump_y"),0 as u64, 16.0 / 17.43)); 
+    param_attributes.push((hash40("jump_aerial_y"),0 as u64, 28.0 / 36.02)); 
 
     param_attributes.push((hash40("air_accel_x_mul"),0 as u64, 0.08 / 0.09)); 
     //param_floats.push((hash40("air_accel_x_add"),0 as u64, 0.01 / 0.01));
@@ -276,6 +293,7 @@ fn params() {
     println!("[smashline_kuribo::ssm]: Installed Params");
 }
 
+#[cfg(not(feature = "dev"))]
 fn csk() {
     #[cfg(feature = "devhook")] {
         let has_csk = std::fs::metadata("sd:/atmosphere/contents/01006a800016e000/romfs/skyline/plugins/libthe_csk_collection.nro").is_ok();
@@ -290,6 +308,7 @@ fn csk() {
     csk_css(chara_hash);
     csk_bgm(chara_hash);
 }
+#[cfg(not(feature = "dev"))]
 fn csk_bgm(chara_hash: u64) {
     use smash::hash40;
     the_csk_collection_api::add_bgm_db_entry_info(&the_csk_collection_api::BgmDatabaseRootEntry {
@@ -335,6 +354,7 @@ fn csk_bgm(chara_hash: u64) {
     println!("[smashline_kuribo::ssm]: Replaced BGM");
 }
 
+#[cfg(not(feature = "dev"))]
 fn csk_database(chara_hash: u64) {
     let slots = &*MOD_SLOTS.read().unwrap();
     let LOWEST_SLOT = *slots.iter().min().unwrap();
@@ -439,11 +459,11 @@ fn csk_database(chara_hash: u64) {
     the_csk_collection_api::add_narration_characall_entry(narration);
 
     //TIPS//
-    let skill_kinds = ["down_1","neutral_1","side_1","up_1","final_1"];
+    let skill_kinds = ["down_1","neutral_1","neutral_1","side_1","up_1","final_1"];
     let id_base = 2800-1 as u32;
     let id_specials = 2803;
     let id_normals = 2808;
-    let id_final = 2812;
+    let id_final = 2813;
 
     for id in id_base..(id_final+1) {
         //let id = (base_id + i as u32) as u32;
@@ -492,6 +512,7 @@ fn csk_database(chara_hash: u64) {
     } 
 }
 
+#[cfg(not(feature = "dev"))]
 fn csk_css(chara_hash: u64) {
     the_csk_collection_api::add_chara_layout_db_entry_info(
         the_csk_collection_api::CharacterLayoutDatabaseEntry{

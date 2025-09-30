@@ -30,6 +30,9 @@ pub unsafe extern "C" fn goomba_frame(fighter: &mut L2CFighterCommon) {
     
     let frame = MotionModule::frame(fighter.module_accessor);
     let status = StatusModule::status_kind(fighter.module_accessor);
+    if status == *FIGHTER_STATUS_KIND_TREAD_FALL {
+        KineticModule::clear_speed_all(fighter.module_accessor);
+    }
 }
 
 pub unsafe extern "C" fn goomba_frame_init(fighter: &mut L2CFighterCommon) {

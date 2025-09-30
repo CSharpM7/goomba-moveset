@@ -12,7 +12,8 @@ unsafe extern "C" fn attacklw3_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {return 0.into();}
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW3) {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO_INPUT) 
-        && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 != 0 {
+        && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 != 0
+        && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 == 0 {
             fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_LW3.into(), true.into());
         }
     }

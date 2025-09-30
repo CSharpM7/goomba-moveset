@@ -1,7 +1,10 @@
+mod testing;
+
 //mod reveal_intro;
-mod gameplay;
+//mod cinema_gameplay;
 
 pub fn install(agent: &mut smashline::Agent) {
-    gameplay::install(agent);
+    testing::install(agent);
+    //cinema_gameplay::install(agent);
     //reveal_intro::install(agent);
 }

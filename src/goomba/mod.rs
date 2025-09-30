@@ -11,8 +11,6 @@ mod status;
 #[cfg(not(feature = "devhook"))]
 mod dev_only;
 
-//mod vtable;
-
 pub mod accessories;
 pub mod redshell;
 
@@ -54,11 +52,7 @@ pub fn install() {
     agent.set_costume(slots);
     
     #[cfg(feature = "dev")]
-    {
-        //dev_only::install(agent);
-        agent.install();
-        //return;
-    }
+    dev_only::install(agent);
 
     acmd::install(agent);
     frame::install(agent);

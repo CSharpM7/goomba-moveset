@@ -1,9 +1,10 @@
 use crate::imports::imports_acmd::*;
 
 unsafe extern "C" fn effect_entryr(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 15.0);
+    frame(agent.lua_state_agent, 19.0);
     if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("renga_break"), Hash40::new("top"), 0, 4, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        macros::EFFECT(agent, Hash40::new("renga_break"), Hash40::new("top"), 0, 7, 0, 0, 0, 0, 1.25, 0, 0, 0, 0, 0, 0, true);
+        LAST_EFFECT_SET_ALPHA(agent,0.7);
     }
     frame(agent.lua_state_agent, 82.0);
     if macros::is_excute(agent) {
@@ -12,13 +13,9 @@ unsafe extern "C" fn effect_entryr(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn sound_entryr(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 24.0);
+    frame(agent.lua_state_agent, 19.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_pichu_appear01"));
-    }
-    wait(agent.lua_state_agent, 3.0);
-    if macros::is_excute(agent) {
-        //macros::PLAY_SE(agent, Hash40::new("se_pichu_appear02"));
     }
     frame(agent.lua_state_agent, 55.0);
     if macros::is_excute(agent) {
@@ -41,7 +38,7 @@ unsafe extern "C" fn expression_entryr(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         ItemModule::set_attach_item_visibility(agent.module_accessor, true,0);
     }
-    frame(agent.lua_state_agent, 21.0);
+    frame(agent.lua_state_agent, 18.0);
     if macros::is_excute(agent) {
         VisibilityModule::set_whole(agent.module_accessor, true);
     }
