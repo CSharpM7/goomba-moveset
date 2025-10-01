@@ -7,10 +7,9 @@ mod agent_init;
 #[cfg(not(feature = "devhook"))]
 mod frame;
 #[cfg(not(feature = "devhook"))]
-mod status;
-#[cfg(not(feature = "devhook"))]
 mod dev_only;
 
+mod status;
 pub mod accessories;
 pub mod redshell;
 

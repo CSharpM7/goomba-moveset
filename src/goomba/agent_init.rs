@@ -8,6 +8,14 @@ unsafe extern "C" fn reset_meshes(fighter: &mut L2CFighterCommon,status_next: i3
     if !is_smash {
         WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SUPERLEAF_VISIBLE);
     }
+    let status = StatusModule::status_kind(fighter.module_accessor);
+    let special_lw_statuses = [*FIGHTER_STATUS_KIND_SPECIAL_LW,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND,
+    FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT];
+    
+    let was_special_lw = special_lw_statuses.contains(&status) && !special_lw_statuses.contains(&status_next);
+    if was_special_lw {
+        ArticleModule::remove_exist(fighter.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    }
 }
 
 unsafe extern "C" fn restore_specials(fighter: &mut L2CFighterCommon,status_next: i32) {
@@ -37,6 +45,10 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
     return true.into();
 }
 
+unsafe extern "C" fn should_use_special_n(fighter: &mut L2CFighterCommon) -> L2CValue {
+    return true.into();
+}
+
 unsafe extern "C" fn set_hurtbox(fighter: &mut L2CFighterCommon) {
     let custom_hurtboxes = [
         //["bone", x1, y1, z1, x2, y2, z2, scale, collision_part, hit height]
@@ -62,6 +74,7 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     on_rebirth(fighter);
 
 	fighter.global_table[STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));
+	fighter.global_table[CHECK_SPECIAL_N_UNIQ].assign(&L2CValue::Ptr(should_use_special_n as *const () as _));
 }
 
 unsafe extern "C" fn rebirth_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
