@@ -1,6 +1,6 @@
 use crate::imports::imports_status::*;
 
-const CLIFF_CHECK_KIND: smash::lib::LuaConst = GROUND_CLIFF_CHECK_KIND_ON_DROP;
+const CLIFF_CHECK_KIND: smash::lib::LuaConst = GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES;
 
 pub unsafe extern "C" fn speciallw_init(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
     StatusModule::set_keep_situation_air(fighter.module_accessor, true);
@@ -59,6 +59,9 @@ unsafe extern "C" fn speciallw_main(fighter: &mut L2CFighterCommon) -> L2CValue 
 	fighter.sub_shift_status_main(L2CValue::Ptr( speciallw_main_loop as *const () as _)) 
 }
 unsafe extern "C" fn speciallw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND.into(), false.into());
     }
@@ -113,14 +116,15 @@ pub unsafe extern "C" fn speciallw_pound_pre(fighter: &mut L2CFighterCommon) -> 
 }
 unsafe extern "C" fn speciallw_pound_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_lw"), 0.0, 1.0, false, 0.0, false, false);
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CLIFF_CATCH);
     WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_CLIFF);
     WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_GOOMBA_SPECIAL_LW_INT_COUNT);
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FROM_GROUND) {
+        fighter.sub_fighter_cliff_check(CLIFF_CHECK_KIND.into());
         let end_frame = FIGHTER_GOOMBA_SPECIAL_LW_SPIKE_FRAME;//MotionModule::end_frame(fighter.module_accessor);
         MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, end_frame, true, true, false);
         WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_LANDING_ENABLE);
         WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE);
-        GroundModule::set_cliff_check(fighter.module_accessor, GroundCliffCheckKind(*CLIFF_CHECK_KIND));
     }
     
     if fighter.global_table[IS_STOP].get_bool() {
@@ -130,6 +134,9 @@ unsafe extern "C" fn speciallw_pound_main(fighter: &mut L2CFighterCommon) -> L2C
 	fighter.sub_shift_status_main(L2CValue::Ptr( speciallw_pound_main_loop as *const () as _)) 
 }
 unsafe extern "C" fn speciallw_pound_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
     if MotionModule::is_end(fighter.module_accessor) {
         WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FALL);
         WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE);
@@ -150,12 +157,6 @@ unsafe extern "C" fn speciallw_pound_main_loop(fighter: &mut L2CFighterCommon) -
             fighter.change_status(FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING.into(), false.into());
             return 0.into();
         }
-        else if speed_y <= 0.0 {
-            GroundModule::set_cliff_check(fighter.module_accessor, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS));
-        }
-    }
-    if fighter.sub_transition_group_check_air_cliff().get_bool() {
-        return 1.into();
     }
     0.into()
 }
@@ -165,19 +166,27 @@ unsafe extern "C" fn speciallw_pound_exec(fighter: &mut L2CFighterCommon) -> L2C
     let param_speed_y = -4.8;
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FALL) {
         //I feel like we should switch the flag off but uhhhh yoshi doesnt
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-        KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        if KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_FALL {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+            KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        }
         let mut gravity_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) as *mut app::FighterKineticEnergyGravity;
         smash::app::lua_bind::FighterKineticEnergyGravity::set_speed(gravity_energy, param_speed_y);
         smash::app::lua_bind::FighterKineticEnergyGravity::set_accel(gravity_energy, 0.0);
     }
-    //added//
-    else if !fighter.is_grounded() {
-        let cliff_check_type = GroundModule::cliff_check(fighter.module_accessor);
-        fighter.sub_fighter_cliff_check(cliff_check_type.into());
-    }
-    //
-
+    // DARK MAGIC
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_LANDING_ENABLE) {
+        fighter.set_cliff_hangdata(16.0, 18.0, -8.6, 6.0);
+        fighter.sub_fighter_cliff_check(CLIFF_CHECK_KIND.into());
+        let is_near_cliff = GroundModule::is_near_cliff(fighter.module_accessor, 18.0, 18.0);
+        let can_cliff = GroundModule::can_entry_cliff(fighter.module_accessor) != 0;
+        let cliff_max_count = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("cliff_max_count")); //0x189f0b0c96?
+        let is_stalling = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_COUNT) >= cliff_max_count;
+        if is_near_cliff && can_cliff && !is_stalling {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_CATCH_MOVE.into(), true.into());
+            return 1.into();
+        }
+    } 
     0.into()
 }
 unsafe extern "C" fn speciallw_pound_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {

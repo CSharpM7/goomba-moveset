@@ -82,7 +82,6 @@ unsafe extern "C" fn specialhi_start_main_loop(fighter: &mut L2CFighterCommon) -
                 FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
                 air_speed_y_stable*0.1
             );
-            println!("C");
         }
         else {
             sv_kinetic_energy!(
