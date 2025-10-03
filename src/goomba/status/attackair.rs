@@ -29,17 +29,6 @@ unsafe extern "C" fn attackair_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn attackair_lw_dive(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_ATTACK_AIR_FLAG_IS_DIVING);
-    /*
-    let fx = EffectModule::req_follow(fighter.module_accessor, 
-        Hash40::new("sys_smash_flash"), 
-        Hash40::new("head"), 
-        &Vector3f::new(4.0, 4.0, 0.0), 
-        &VECTOR_ZERO,
-        0.6, 
-        true, 0, 0, 0, 0, 0, true, true
-    ) as u32;
-    EffectModule::set_rgb(fighter.module_accessor, fx, 1.0, 1.0, 0.0);
-    */
     let frame = MotionModule::frame(fighter.module_accessor);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_lw2"), frame, 1.0, false, 0.0, false, false);
     //MotionModule::change_motion_force_inherit_frame(fighter.module_accessor, Hash40::new("attack_air_lw2"), frame, 1.0, 1.0);
@@ -146,7 +135,7 @@ unsafe extern "C" fn attackair_lw_swoop_loop(fighter: &mut L2CFighterCommon) -> 
             0.0
         );
         //Do I really gotta do all this?
-        let ACCEL_MUL = 0.5;
+        let ACCEL_MUL = 0.625;
         let MAX_MUL = 1.0;
         let air_accel_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_mul"), 0);
         let air_accel_x_add = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_add"), 0);

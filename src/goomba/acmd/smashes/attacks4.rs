@@ -26,11 +26,14 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
     }
+    frame(agent.lua_state_agent, 35.0);
+    FT_MOTION_RATE_RANGE(agent,35.0,60.0,20.0);
     frame(agent.lua_state_agent, 40.0);
     if macros::is_excute(agent) {
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
     }
     frame(agent.lua_state_agent, 60.0);
+    FT_MOTION_RATE(agent,1.0);
     if macros::is_excute(agent) {
         ArticleModule::remove_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }

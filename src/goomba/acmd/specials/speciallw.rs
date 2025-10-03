@@ -120,7 +120,7 @@ unsafe extern "C" fn effect_specialairlw(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, FIGHTER_GOOMBA_SPECIAL_LW_SPIKE_FRAME);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("sys_machstamp"), Hash40::new("top"), 0, 3, 2, 0, 0, 0, 1.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("goomba_stomp"), Hash40::new("top"), 0, 3, 2, 0, 0, 0, 1.5, true);
     }
 }
 

@@ -6,7 +6,7 @@ pub const FRIENDLY_FIRE_COOLDOWN: i32 = 30;
 pub const GRAVITY: f32 = 0.2;
 pub const SPEED_X: f32 = 1.875;
 pub const OTTOTTO_CHECK_MUL: f32 = 1.5;
-pub const TIMEOUT_COOLDOWN: i32 = 30;
+pub const TIMEOUT_COOLDOWN: i32 = 15;
 
 pub unsafe extern "C" fn redshell_haved_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
     StatusModule::init_settings(
@@ -210,12 +210,14 @@ pub unsafe extern "C" fn redshell_fly_main(weapon: &mut smashline::L2CWeaponComm
 }
 
 unsafe extern "C" fn redshell_start_friendly_fire(weapon: &mut smashline::L2CWeaponCommon) {
-    if !WorkModule::is_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE) {
+    //if !WorkModule::is_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE) {
+    if WorkModule::get_int(weapon.module_accessor,REDSHELL_INSTANCE_INT_FRIENDLY_FIRE_COUNTDOWN) == 0 {
         let status = StatusModule::status_kind(weapon.module_accessor);
         if status != REDSHELL_STATUS_KIND_FURAFURA {
             WorkModule::on_flag(weapon.module_accessor, REDSHELL_INSTANCE_FLAG_FRIENDLY_FIRE);
             TeamModule::set_team(weapon.module_accessor, -1, true);
             HitModule::set_no_team(weapon.module_accessor, true);
+            ReflectModule::set_team_no(weapon.module_accessor, *TEAM_NONE);
         }
     }
 }
@@ -246,7 +248,7 @@ unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCo
     let ottotto_check = (OTTOTTO_CHECK_MUL*speed_x.abs()) + SPEED_X;
     //let near_check = speed_x.abs() + 5.0;
     let mut is_ottotto = false;
-    let ottotto_cooled = WorkModule::count_down_int(weapon.module_accessor, REDSHELL_INSTANCE_INT_OTTOTTO_COUNTDOWN, 0)
+    let ottotto_cooled = true//WorkModule::count_down_int(weapon.module_accessor, REDSHELL_INSTANCE_INT_OTTOTTO_COUNTDOWN, 0)
     || WorkModule::get_int(weapon.module_accessor, REDSHELL_INSTANCE_INT_OTTOTTO_COUNTDOWN) == 0;
     
     if situation == *SITUATION_KIND_GROUND 
@@ -263,7 +265,7 @@ unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCo
         KineticModule::mul_speed(weapon.module_accessor, &Vector3f{x: -0.8, y: 1.0, z: 1.0}, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
 
         redshell_update_brake(weapon,2.0);
-        //redshell_start_friendly_fire(weapon);
+        redshell_start_friendly_fire(weapon);
     }
 }
 //UNUSED
@@ -321,14 +323,15 @@ unsafe extern "C" fn redshell_fly_main_loop(weapon: &mut smashline::L2CWeaponCom
 
     //Countdown
     if !StopModule::is_stop(weapon.module_accessor) {
-        if speed_x.abs () < 0.1 {
+        if speed_x.abs () < 0.2 {
+            let timeout = WorkModule::get_int(weapon.module_accessor,REDSHELL_INSTANCE_INT_TIME_OUT_COUNT);
             if WorkModule::count_down_int(weapon.module_accessor,REDSHELL_INSTANCE_INT_TIME_OUT_COUNT, 0) {
                 weapon.change_status(REDSHELL_STATUS_KIND_FURAFURA.into(), false.into());
                 return 1.into();
             }
         }
         else {
-            WorkModule::set_int(weapon.module_accessor,30, REDSHELL_INSTANCE_INT_TIME_OUT_COUNT);
+            WorkModule::set_int(weapon.module_accessor,TIMEOUT_COOLDOWN, REDSHELL_INSTANCE_INT_TIME_OUT_COUNT);
         }
         if WorkModule::count_down_int(weapon.module_accessor,REDSHELL_INSTANCE_INT_RESPAWN_ATTACK_COUNTDOWN, 0) {
             MotionModule::change_motion(weapon.module_accessor, Hash40::new("fly"), 0.0, 1.0, false, 0.0, false, false);
