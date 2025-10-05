@@ -168,7 +168,7 @@ unsafe extern "C" fn speciallw_pound_exec(fighter: &mut L2CFighterCommon) -> L2C
     let param_speed_y = -4.8;
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FALL) {
         //I feel like we should switch the flag off but uhhhh yoshi doesnt
-        if KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_FALL {
+        if !KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_FALL {
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
             KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         }

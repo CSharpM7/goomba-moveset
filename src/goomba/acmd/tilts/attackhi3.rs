@@ -1,61 +1,78 @@
 use crate::imports::imports_acmd::*;
 
 unsafe extern "C" fn game_attackhi3(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
-    FT_MOTION_RATE_RANGE(agent,1.0,9.0,5.0);
-    frame(agent.lua_state_agent, 9.0);
-    FT_MOTION_RATE(agent,1.0);
+    frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("neck"), 7.0, 85, 70, 0, 45, 5.9, 4.9, 0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
-        macros::ATTACK(agent, 1, 0, Hash40::new("hip"), 7.0, 85, 70, 0, 45, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 105, 50, 0, 55, 5.0, 0.0, 5.0, 3.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
+        //0,-0.5,2.0?
+        //0,3.0,-0.5?. 73.51KB at 38% against Byleth
+        macros::ATTACK(agent, 1, 0, Hash40::new("have"), 7.0, 107, 50, 0, 45, 4.75, 0.0, 0.5, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
+    }
+    wait(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        AttackModule::clear(agent.module_accessor,0,false);
     }
     wait(agent.lua_state_agent, 5.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        HitModule::set_status_all(agent.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
-    frame(agent.lua_state_agent, 15.0);
-    FT_MOTION_RATE_RANGE(agent,15.0,31.0,7.0);
-    frame(agent.lua_state_agent, 31.0);
-    FT_MOTION_RATE(agent,1.0);
 }
 
 unsafe extern "C" fn effect_attackhi3(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 9.0);
+    frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 1, 6, -0.5, 32, -75, -138, 1.25, true, *EF_FLIP_YZ);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.8);
+        macros::EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 2, 0, -90, 0, 0, 0.85, true, *EF_FLIP_YZ, 0.3);
         common_effect_color(agent);
     }
-    frame(agent.lua_state_agent, 14.0);
+    frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
-        macros::LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 3, 0, -2, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("goomba_bite_s"), Hash40::new("goomba_bite_s"), Hash40::new("top"), -0.5, 16, 0, 0, 0, 60, 0.5, true, *EF_FLIP_YZ);
+        LAST_EFFECT_SET_ALPHA(agent,0.6);
+    }
+    frame(agent.lua_state_agent, 8.0);
+    if macros::is_excute(agent) {
+        //macros::EFFECT(agent, Hash40::new("goomba_bite_line2"), Hash40::new("head"), 0, 0, 0, 0, 0, -90, 0.5, 0, 1, 0, 0, 0, 0, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("goomba_bite_line2"), Hash40::new("mouth"), 0, 1, 0, 0, 0, -0, 0.5, true);
+    }
+    frame(agent.lua_state_agent, 11.0);
+    if macros::is_excute(agent) {
+        //macros::EFFECT_DETACH_KIND(agent, Hash40::new("goomba_bite_s"), -1);
+    }
+    frame(agent.lua_state_agent, 21.0);
+    if macros::is_excute(agent) {
+        macros::FOOT_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0.0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
     }
 }
 
 unsafe extern "C" fn sound_attackhi3(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 5.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_rise"));
+    }
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_pichu_attackhard_s01"));
-        PLAY_VC(agent, Hash40::new("vc_pichu_attack06"), 0.5);
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_swing_s"));
     }
-    frame(agent.lua_state_agent, 9.0);
+    frame(agent.lua_state_agent, 22.0);
     if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_landing01"));
     }
 }
 
 unsafe extern "C" fn expression_attackhi3(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_NONE, 3);
+        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_NONE, 5);
     }
     frame(agent.lua_state_agent, 5.0);
     if macros::is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_NONE, 3);
+        macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 9, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 9.0);
+    frame(agent.lua_state_agent, 21.0);
     if macros::is_excute(agent) {
-        macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ItemModule::set_have_item_visibility(agent.module_accessor, true, 0);
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 3);
     }
 }
 
