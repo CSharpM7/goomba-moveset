@@ -25,8 +25,8 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         AreaModule::enable_area(agent.module_accessor, *FIGHTER_AREA_KIND_TREAD_PASSIVE, false, -1);
 
-        macros::ATTACK(agent, 0, 0, Hash40::new("head"), 13.0, 85, 105, 0, 30, 4.7, 5.1, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 13.0, 85, 105, 0, 30, 4.7, 0.0, 9.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
+        macros::ATTACK(agent, 0, 0, Hash40::new("head"), 13.0, 85, 103, 0, 30, 4.7, 5.1, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
+        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 13.0, 85, 103, 0, 30, 4.7, 0.0, 9.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
     }
     wait(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
@@ -42,9 +42,9 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
         AreaModule::enable_area(agent.module_accessor, *FIGHTER_AREA_KIND_TREAD_PASSIVE, true, -1);
         AttackModule::clear_all(agent.module_accessor);
     }
-    frame(agent.lua_state_agent, 30.0);
-    //FT_MOTION_RATE_RANGE(agent,30.0,41.0,16.0);
-    frame(agent.lua_state_agent, 41.0);
+    frame(agent.lua_state_agent, 31.0);
+    //FT_MOTION_RATE_RANGE(agent,31.0,40.0,14.0);
+    frame(agent.lua_state_agent, 40.0);
     FT_MOTION_RATE(agent,1.0);
 }
 

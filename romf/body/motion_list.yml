@@ -2108,7 +2108,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 49
+      cancel_frame: 53
       no_stop_intp: false
   attack_hi4_hold:
     game_script: game_attackhi4charge
