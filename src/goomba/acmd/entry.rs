@@ -3,7 +3,7 @@ use crate::imports::imports_acmd::*;
 unsafe extern "C" fn effect_entryr(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 19.0);
     if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("renga_break"), Hash40::new("top"), 0, 7, 0, 0, 0, 0, 1.25, 0, 0, 0, 0, 0, 0, true);
+        macros::EFFECT(agent, Hash40::new("goomba_renga_break"), Hash40::new("top"), 0, 7, 0, 0, 0, 0, 1.25, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_ALPHA(agent,0.7);
     }
     frame(agent.lua_state_agent, 82.0);

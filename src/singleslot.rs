@@ -18,6 +18,7 @@ use std::{
 };
 
 const DEFAULT_COLOR: (f32,f32,f32) = (2.8f32,0.5f32,0.1f32);
+const DEFAULT_COLOR_ODD: (f32,f32,f32) = (0.5f32,2.8f32,0.1f32);
 pub static mut EFFECT_COLORS: [(f32,f32,f32);256] = [DEFAULT_COLOR;256];
 
 unsafe fn get_slot_from_module_accesor(boma: &mut BattleObjectModuleAccessor) -> usize {
@@ -32,7 +33,12 @@ pub unsafe fn common_effect_color(agent: &mut L2CAgentBase) {
     //let r = 2.8; let g = 0.5; let b = 0.1;
     let slot = get_slot_from_module_accesor(&mut *agent.module_accessor);
 
-    let effect_color = EFFECT_COLORS[slot];
+    let mut effect_color = EFFECT_COLORS[slot];
+    #[cfg(feature = "dev")] {
+        if slot % 2 != 0 {
+            effect_color = DEFAULT_COLOR_ODD;
+        }
+    }
     macros::LAST_PARTICLE_SET_COLOR(agent, effect_color.0,effect_color.1,effect_color.2);
     macros::LAST_EFFECT_SET_COLOR(agent, effect_color.0,effect_color.1,effect_color.2);
 }

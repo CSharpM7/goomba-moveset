@@ -18,15 +18,17 @@ unsafe extern "C" fn effect_attack11(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -1, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 4.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("goomba_bite_s"), Hash40::new("goomba_bite_s"), Hash40::new("top"), -8, 4, 4, 0, -90, 20, 0.5, true, *EF_FLIP_YZ);
-        LAST_EFFECT_SET_ALPHA(agent,0.4);
-    }
     frame(agent.lua_state_agent, 5.0);
     if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("goomba_bite_line2"), Hash40::new("mouth"), 1, -1, 0, -20, 0, 0, 0.5, 0, 1, 0, 0, 0, 0, true);
-        macros::EFFECT_DETACH_KIND(agent, Hash40::new("goomba_bite_s"), -1);
+        let lr = PostureModule::lr(agent.module_accessor);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("goomba_bite_line2"),  Hash40::new("top"), -12.0*lr, 3.8, 5.5, 0, 0, 0,0.6, true);
+        common_effect_color(agent);
+    }
+    frame(agent.lua_state_agent, 6.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("goomba_bite_s"), Hash40::new("goomba_bite_s"), Hash40::new("top"), -10, 4, 4, 0, -90, 20, 0.5, true, *EF_FLIP_YZ);
+        LAST_EFFECT_SET_ALPHA(agent,0.4);
+        common_effect_color(agent);
     }
 }
 

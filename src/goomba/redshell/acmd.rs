@@ -8,15 +8,11 @@ unsafe extern "C" fn game_fly(agent: &mut L2CAgentBase) {
     }
 }
 unsafe extern "C" fn game_turn(agent: &mut L2CAgentBase) {
-    if macros::is_excute(agent) {
-        //macros::ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 361, 0, 0, 0, 1.0, 0.0, 2.0, 0.0, None, None, None, 0.5, 1.3, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_SPEED, false, -2.5, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KAMEHIT, *ATTACK_REGION_OBJECT);
-        //AttackModule::enable_safe_pos(agent.module_accessor);
-    }
 }
 unsafe extern "C" fn effect_fly(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        macros::EFFECT_FLW_POS(agent, Hash40::new("sys_greenshell_trace"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, true);
-        LAST_EFFECT_SET_COLOR(agent,2.0,1.0,0.0);
+        macros::EFFECT_FLW_POS(agent, Hash40::new("goomba_greenshell_trace"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent,1.0,2.0,1.0);
         EffectModule::enable_sync_init_pos_last(agent.module_accessor);
     }
     for _ in 0..i32::MAX {
@@ -32,13 +28,13 @@ unsafe extern "C" fn effect_fly(agent: &mut L2CAgentBase) {
 }
 unsafe extern "C" fn effect_turn(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("sys_greenshell_trace"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("goomba_greenshell_trace"), false, false);
     }
 }
 
 unsafe extern "C" fn effect_furafura(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("sys_greenshell_trace"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("goomba_greenshell_trace"), false, false);
         macros::EFFECT_FLW_POS(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("have"), 0, -3, 0, 0, 0, 0, 1, true);
         let handle = EffectModule::get_last_handle(agent.module_accessor);
         WorkModule::set_int(agent.module_accessor, handle as i32, REDSHELL_INSTANCE_INT_EFF);
