@@ -51,7 +51,7 @@ unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_attackairn(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SEQUENCE(agent, Hash40::new("seq_pichu_rnd_attack"));
+        //macros::PLAY_SEQUENCE(agent, Hash40::new("seq_pichu_rnd_attack"));
         macros::PLAY_STATUS(agent, Hash40::new("se_pichu_attackair_n01"));
     }
 }

@@ -302,7 +302,6 @@ unsafe extern "C" fn redshell_check_for_rebound(weapon: &mut smashline::L2CWeapo
 
 unsafe extern "C" fn redshell_fly_main_loop(weapon: &mut smashline::L2CWeaponCommon) -> smashline::L2CValue {
     let lr = PostureModule::lr(weapon.module_accessor);
-    println!("loop LR: {lr}");
     let situation = StatusModule::situation_kind(weapon.module_accessor);
     let mut life = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     let speed_x = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
@@ -466,8 +465,7 @@ unsafe extern "C" fn redshell_furafura_main_loop(weapon: &mut smashline::L2CWeap
         redshell_update_brake(weapon,0.0);
     }
     if !StatusModule::is_changing(weapon.module_accessor)
-    && StatusModule::is_situation_changed(weapon.module_accessor) 
-    && MotionModule::frame(weapon.module_accessor) > 100.0{
+    && StatusModule::is_situation_changed(weapon.module_accessor) {
         let prev_situation = StatusModule::prev_situation_kind(weapon.module_accessor);
         redshell_set_correct_kinetics(weapon);
     }

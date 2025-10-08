@@ -57,6 +57,10 @@ unsafe extern "C" fn sound_speciallw(agent: &mut L2CAgentBase) {
         macros::PLAY_SE(agent, Hash40::new("se_pichu_special_l01"));
         macros::SET_PLAY_INHIVIT(agent, Hash40::new("se_pichu_special_l01"), 30);
     }
+    frame(agent.lua_state_agent, 26.0);
+    if macros::is_excute(agent) {
+        PLAY_VC(agent, Hash40::new("vc_pichu_special_l01"),0.5);
+    }
 }
 
 unsafe extern "C" fn expression_speciallw(agent: &mut L2CAgentBase) {
@@ -77,6 +81,7 @@ unsafe extern "C" fn expression_speciallw(agent: &mut L2CAgentBase) {
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
+
 unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
@@ -132,6 +137,12 @@ unsafe extern "C" fn sound_specialairlw(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_pichu_special_l01"));
+    }
+    frame(agent.lua_state_agent, 17.0);
+    if macros::is_excute(agent) {
+        if !WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FROM_GROUND) {
+            PLAY_VC(agent, Hash40::new("vc_pichu_special_l01"),0.5);
+        }
     }
     frame(agent.lua_state_agent, FIGHTER_GOOMBA_SPECIAL_LW_SPIKE_FRAME);
     if macros::is_excute(agent) {
@@ -213,6 +224,9 @@ unsafe extern "C" fn effect_specialairlwhit(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn sound_specialairlwhit(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        PLAY_VC(agent, Hash40::new("vc_pichu_special_h02"),0.75);
+    }
 }
 
 unsafe extern "C" fn expression_specialairlwhit(agent: &mut L2CAgentBase) {

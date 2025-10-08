@@ -1,9 +1,6 @@
 use crate::imports::imports_acmd::*;
 
 unsafe extern "C" fn reset_meshes(fighter: &mut L2CFighterCommon,status_next: i32) {
-    if is_kuribo_rpg(fighter.module_accessor) {
-        //ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("pichu_facen_mouthflip"), false);
-    }
     let is_smash = [*FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_next);
     if !is_smash {
         WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SUPERLEAF_VISIBLE);

@@ -43,7 +43,6 @@ pub unsafe fn common_effect_color(agent: &mut L2CAgentBase) {
     macros::LAST_EFFECT_SET_COLOR(agent, effect_color.0,effect_color.1,effect_color.2);
 }
 
-//const DEFAULT_SLOTS: [usize;2] = [120,121];
 const DEFAULT_SLOTS: [usize;8] = [120,121,122,123,124,125,126,127];
 lazy_static! {
     pub static ref MOD_SLOTS: RwLock<Vec<usize>> = RwLock::new({
@@ -51,12 +50,6 @@ lazy_static! {
         for c in DEFAULT_SLOTS {
             default.push(c);
         }
-        
-        default
-    });
-    pub static ref RPG_SLOTS: RwLock<Vec<usize>> = RwLock::new({
-        let mut default = Vec::with_capacity(256);
-        default.push(127);
         
         default
     });
@@ -85,20 +78,6 @@ pub unsafe fn is_kuribo(module_accessor: *mut BattleObjectModuleAccessor) -> boo
     return DEFAULT_SLOTS.contains(&color);
 
     let modded = (*MOD_SLOTS.read().unwrap()).contains(&color);
-    return modded;
-}
-pub unsafe fn is_kuribo_rpg(module_accessor: *mut BattleObjectModuleAccessor) -> bool
-{
-    let entry_id = sv_battle_object::entry_id((*module_accessor).battle_object_id) as u32;
-    let info = app::lua_bind::FighterManager::get_fighter_information(singletons::FighterManager(), app::FighterEntryID(entry_id as i32));
-    let color = app::lua_bind::FighterInformation::fighter_color(info) as usize;
-
-    #[cfg(feature = "dev")]
-    return color==127;
-    #[cfg(feature = "devhook")]
-    return color==127;
-
-    let modded = (*RPG_SLOTS.read().unwrap()).contains(&color);
     return modded;
 }
 
@@ -136,7 +115,6 @@ fn install_by_finding_markers() {
     unsafe {
         let mut found_folder = false;
         (*MOD_SLOTS.write().unwrap()).clear();
-        (*RPG_SLOTS.write().unwrap()).clear();
 
         println!("[smashline_kuribo::ssm] Finding marker files...");
         const FIGHTER_NAME: &str = "pichu";
@@ -241,7 +219,9 @@ fn params() {
     param_attributes.push((hash40("walk_fast_ratio"),0 as u64, 0.75 / 0.75));
 
     param_attributes.push((hash40("ground_brake"),0 as u64, 0.1 / 0.11));
-    param_attributes.push((hash40("dash_speed"),0 as u64, 1.825 / 1.98));
+    param_attributes.push((hash40("dash_speed"),0 as u64, 1.625 / 1.98));
+    param_attributes.push((hash40("run_accel_mul"),0 as u64, 0.08 / 0.14)); //0.07-0.12
+    param_attributes.push((hash40("run_accel_add"),0 as u64, 0.04 / 0.06)); //0.08-0.04
     param_attributes.push((hash40("run_speed_max"),0 as u64, 1.735 / 1.892));
 
     param_attributes.push((hash40("jump_speed_x"),0 as u64, 0.9 / 0.8)); 

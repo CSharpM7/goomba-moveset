@@ -60,15 +60,26 @@ unsafe extern "C" fn effect_attacklw4(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn sound_attacklw4(agent: &mut L2CAgentBase) {
+    let mut force_vc = false;
     frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
         macros::STOP_SE(agent, Hash40::new("se_common_smash_start_04"));
     }
-    frame(agent.lua_state_agent, 8.0);
+    frame(agent.lua_state_agent, 7.0);
+    if macros::is_excute(agent) {
+        force_vc = PLAY_VC(agent, Hash40::new("vc_pichu_attack01"), 0.5);
+    }
+    wait(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         macros::PLAY_STATUS(agent, Hash40::new("se_pichu_tailswing"));
     }
-    frame(agent.lua_state_agent, 18.0);
+    frame(agent.lua_state_agent, 17.0);
+    if macros::is_excute(agent) {
+        if force_vc {
+            PLAY_SE(agent, Hash40::new("vc_pichu_attack01"));
+        }
+    }
+    wait(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         macros::PLAY_STATUS(agent, Hash40::new("se_pichu_tailswing"));
     }

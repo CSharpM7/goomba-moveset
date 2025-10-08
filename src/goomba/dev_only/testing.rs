@@ -14,6 +14,20 @@ unsafe extern "C" fn appeal_main_loop(fighter: &mut L2CFighterCommon) -> L2CValu
     }
     0.into()
 }
+
+pub unsafe extern "C" fn common_frame(fighter: &mut L2CFighterCommon) {
+    if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND {
+        let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        if speed_x.abs() > 0.5 {
+            println!("Speed X: {speed_x}");
+        }
+    }
+}
+
 pub fn install(agent: &mut smashline::Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_APPEAL, appeal_main);
+
+    let agent = &mut smashline::Agent::new("fighter")
+    .on_line(Main, common_frame)
+    .install();
 }

@@ -79,6 +79,10 @@ unsafe extern "C" fn sound_specialn(agent: &mut L2CAgentBase) {
         //macros::PLAY_SE(agent, Hash40::new("vc_pichu_special_s01"));
         sequence!(agent,hash40("kuribo"),hash40("vc_pichu_attack04"),hash40("vc_pichu_attack05"),hash40(""));
     }
+    frame(agent.lua_state_agent, 18.0);
+    if macros::is_excute(agent) {
+        PLAY_VC(agent, Hash40::new("vc_pichu_special_n01"),0.75);
+    }
     frame(agent.lua_state_agent, 20.0);
     if macros::is_excute(agent) {
         if WorkModule::is_flag(agent.module_accessor,FIGHTER_GOOMBA_SPECIAL_N_FLAG_CAN_GEN) {

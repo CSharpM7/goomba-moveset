@@ -107,12 +107,11 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn sound_specialhi(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        //macros::PLAY_SE(agent, Hash40::new("se_pichu_special_s02_l"));
-    }
-    //frame(agent.lua_state_agent, 1.0);
-    if macros::is_excute(agent) {
         macros::PLAY_STATUS(agent, Hash40::new("se_pichu_special_h01"));
-        //macros::PLAY_STATUS(agent, Hash40::new("vc_pichu_008"));
+    }
+    wait(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        PLAY_VC(agent, Hash40::new("vc_pichu_special_h01"),0.75);
     }
     frame(agent.lua_state_agent, 34.0);
     if macros::is_excute(agent) {

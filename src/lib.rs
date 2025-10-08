@@ -63,8 +63,10 @@ pub fn main() {
 
 pub fn install_after_mount() {
     unsafe {
-        println!("[smashline_kuribo::main] Could not load plugin");
-        if !SHOULD_INSTALL {return;}
+        if !SHOULD_INSTALL {
+            println!("[smashline_kuribo::main] Could not load plugin");
+            return;
+        }
     }
 
 	install_hook();

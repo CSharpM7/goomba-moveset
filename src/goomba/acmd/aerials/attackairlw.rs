@@ -143,7 +143,11 @@ unsafe extern "C" fn sound_attackairlw(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_common_swing_05"));
     }
-    wait(agent.lua_state_agent, 2.0);
+    wait(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SEQUENCE(agent, Hash40::new("seq_pichu_rnd_attack"));
+    }
+    wait(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_pichu_attackair_l01"));
     }
