@@ -47,18 +47,34 @@ unsafe extern "C" fn should_use_special_n(fighter: &mut L2CFighterCommon) -> L2C
 }
 
 unsafe extern "C" fn set_hurtbox(fighter: &mut L2CFighterCommon) {
+    let disabled_joints = [
+        hash40("mimir1"),hash40("mimil1"),hash40("armr"),hash40("arml"),hash40("tail1")
+    ];
+    for joint in disabled_joints {
+        HitModule::set_status_joint_default(fighter.module_accessor, Hash40::new_raw(joint), HitStatus(*HIT_STATUS_OFF), 0);
+        HitModule::set_status_joint(fighter.module_accessor, Hash40::new_raw(joint), HitStatus(*HIT_STATUS_OFF), 0);
+    }
+
+    let disabled_hurtbox = [hash40("neck") as f64, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, *COLLISION_PART_ETC as f64,*HIT_HEIGHT_CENTER as f64,*HIT_STATUS_OFF as f64];
     let custom_hurtboxes = [
         //["bone", x1, y1, z1, x2, y2, z2, scale, collision_part, hit height]
-        [hash40("hip") as f64, 0.9, 0.0, 0.4, 0.9, 0.0, -0.4, 2.7, *COLLISION_PART_BODY as f64,*HIT_HEIGHT_CENTER as f64],
-        [hash40("head") as f64, 2.5, 0.7, 0.0, 2.5, -0.2, 0.0, 3.6, *COLLISION_PART_HEAD as f64,*HIT_HEIGHT_HIGH as f64],
-        [hash40("toer") as f64, 0.9, -0.3, 0.0, -1.0, -0.3, 0.0, 0.7, *COLLISION_PART_BODY_LEGS as f64,*HIT_HEIGHT_LOW as f64],
-        [hash40("toel") as f64, 0.9, -0.3, 0.0, -1.0, -0.3, 0.0, 0.7, *COLLISION_PART_BODY_LEGS as f64,*HIT_HEIGHT_LOW as f64]
+        [hash40("hip") as f64, 0.9, 0.0, 0.4, 0.9, 0.0, -0.4, 1.7, *COLLISION_PART_BODY as f64,*HIT_HEIGHT_CENTER as f64,*HIT_STATUS_NORMAL as f64],
+        [hash40("head") as f64, 2.5, 0.7, 0.0, 2.5, -0.2, 0.0, 3.6, *COLLISION_PART_HEAD as f64,*HIT_HEIGHT_HIGH as f64,*HIT_STATUS_NORMAL as f64],
+        disabled_hurtbox,
+        disabled_hurtbox,
+        disabled_hurtbox,
+        disabled_hurtbox,
+        [hash40("toer") as f64, 0.7, -1.0, 0.0, -1.0, -1.0, 0.0, 1.0, *COLLISION_PART_BODY_LEGS as f64,*HIT_HEIGHT_LOW as f64,*HIT_STATUS_NORMAL as f64],
+        [hash40("toel") as f64, 0.7, -1.0, 0.0, -1.0, -1.0, 0.0, 1.0, *COLLISION_PART_BODY_LEGS as f64,*HIT_HEIGHT_LOW as f64,*HIT_STATUS_NORMAL as f64],
+        disabled_hurtbox
     ];
     for i in 0..custom_hurtboxes.len() {
         let hurtbox = custom_hurtboxes[i];
         let mut vec1 = Vector3f{x: hurtbox[1] as f32, y: hurtbox[2] as f32, z: hurtbox[3] as f32};
         let mut vec2 = Vector3f{x: hurtbox[4] as f32, y: hurtbox[5] as f32, z: hurtbox[6] as f32};
-        FighterUtil::set_hit_data(fighter.module_accessor,i as i32,0,&vec1,&vec2,hurtbox[7] as f32,Hash40::new_raw(hurtbox[0] as u64),smash::app::CollisionPart(hurtbox[8] as i32),smash::app::HitHeight(hurtbox[9] as i32),smash::app::HitStatus(*HIT_STATUS_NORMAL),smash::app::CollisionShapeType(*COLLISION_SHAPE_TYPE_CAPSULE));    
+        FighterUtil::set_hit_data(fighter.module_accessor,i as i32,0,&vec1,&vec2,hurtbox[7] as f32,Hash40::new_raw(hurtbox[0] as u64),
+        smash::app::CollisionPart(hurtbox[8] as i32),smash::app::HitHeight(hurtbox[9] as i32),smash::app::HitStatus(hurtbox[10] as i32),
+        smash::app::CollisionShapeType(*COLLISION_SHAPE_TYPE_CAPSULE));
     }
 }
 
@@ -67,13 +83,17 @@ unsafe extern "C" fn on_rebirth(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
-    set_hurtbox(fighter);
     on_rebirth(fighter);
+    set_hurtbox(fighter);
 
 	fighter.global_table[STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));
 	fighter.global_table[CHECK_SPECIAL_N_UNIQ].assign(&L2CValue::Ptr(should_use_special_n as *const () as _));
 }
 
+unsafe extern "C" fn entry_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    on_rebirth(fighter);
+    fighter.status_pre_Entry()
+}
 unsafe extern "C" fn rebirth_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     on_rebirth(fighter);
     fighter.status_pre_Rebirth()
@@ -81,5 +101,6 @@ unsafe extern "C" fn rebirth_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 pub fn install(agent: &mut smashline::Agent) {
     agent.on_start(on_start);
+    agent.status(Pre, *FIGHTER_STATUS_KIND_ENTRY, entry_pre);
     agent.status(Pre, *FIGHTER_STATUS_KIND_REBIRTH, rebirth_pre);
 }

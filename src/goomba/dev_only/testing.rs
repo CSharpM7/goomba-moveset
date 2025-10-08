@@ -26,8 +26,9 @@ pub unsafe extern "C" fn common_frame(fighter: &mut L2CFighterCommon) {
 
 pub fn install(agent: &mut smashline::Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_APPEAL, appeal_main);
-
+    /*
     let agent = &mut smashline::Agent::new("fighter")
     .on_line(Main, common_frame)
-    .install();
+    .install(); 
+    */
 }

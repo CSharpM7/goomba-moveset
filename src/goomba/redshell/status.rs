@@ -5,7 +5,7 @@ pub const BRAKE_X_INIT: f32 = 0.001;
 pub const FRIENDLY_FIRE_COOLDOWN: i32 = 30;
 pub const GRAVITY: f32 = 0.2;
 pub const SPEED_X: f32 = 1.875;
-pub const OTTOTTO_CHECK_MUL: f32 = 1.0;
+pub const OTTOTTO_CHECK_MUL: f32 = 1.5;
 pub const TIMEOUT_COOLDOWN: i32 = 15;
 
 pub unsafe extern "C" fn redshell_haved_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
