@@ -15,6 +15,7 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
     }
+    frame(agent.lua_state_agent, 35.0);
 }
 
 unsafe extern "C" fn effect_attackdash(agent: &mut L2CAgentBase) {

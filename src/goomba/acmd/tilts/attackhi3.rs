@@ -3,18 +3,20 @@ use crate::imports::imports_acmd::*;
 unsafe extern "C" fn game_attackhi3(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 100, 54, 0, 57, 5.25, 0.0, 6.5, 2.25, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
-        
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 105, 50, 0, 55, 5.4, 0.0, 4.8, 3.9, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
+        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 6.0, 100, 50, 0, 55, 5.4, 0.0, 4.8, 1.25, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
+        AttackModule::set_add_reaction_frame_revised(agent.module_accessor, 0, 1.0, false);
+        AttackModule::set_add_reaction_frame_revised(agent.module_accessor, 1, 1.0, false);
     }
     wait(agent.lua_state_agent, 1.0);
+    FT_MOTION_RATE_RANGE(agent,7.0,13.0,5.0);
     if macros::is_excute(agent) {
-        //2.0, -0.5, 0.5
-        //0.0, 0.5, -1.25?.
-        // 73.51KB at 38% against Byleth
-        //x is down, z is right and so is y??
-        macros::ATTACK(agent, 0, 0, Hash40::new("have"), 6.0, 102, 50, 0, 55, 5.0, 0.0, 0.5, -1.2, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
+        macros::ATTACK(agent, 0, 0, Hash40::new("throw"), 6.0, 103, 50, 0, 55, 5.4, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
+        AttackModule::set_add_reaction_frame_revised(agent.module_accessor, 0, 0.0, false);
+        AttackModule::clear(agent.module_accessor, 1, false);
     }
-    wait(agent.lua_state_agent, 5.0);
+    frame(agent.lua_state_agent, 13.0);
+    FT_MOTION_RATE(agent,1.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
     }
@@ -30,7 +32,7 @@ unsafe extern "C" fn effect_attackhi3(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW(agent, Hash40::new("goomba_bite_line2"), Hash40::new("head"), 0.0, 2.0, 0.5, 0, 10, -50, 0.5, true);
         common_effect_color(agent);
-        LAST_EFFECT_SET_RATE(agent,0.8);
+        LAST_EFFECT_SET_RATE(agent,0.7);
     }
     wait(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
@@ -39,7 +41,7 @@ unsafe extern "C" fn effect_attackhi3(agent: &mut L2CAgentBase) {
         common_effect_color(agent);
         LAST_EFFECT_SET_RATE(agent,0.8);
     }
-    frame(agent.lua_state_agent, 11.0);
+    frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("goomba_bite_s"), Hash40::new("goomba_bite_s"), Hash40::new("top"), -2.5, 17, 0, 0, 0, 60, 0.6, true, *EF_FLIP_YZ);
         common_effect_color(agent);

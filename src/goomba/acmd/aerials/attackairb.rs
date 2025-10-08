@@ -39,7 +39,7 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
     }
-    frame(agent.lua_state_agent, 14.0);
+    frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.5, 48, 140, 0, 34, 4.25, 0.0, 3.0, -4.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_TAIL);
@@ -71,7 +71,7 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         EFFECT_OFF_KIND(agent,Hash40::new("pichu_tail_arc3"),false,false);
     }
-    frame(agent.lua_state_agent, 14.0);
+    frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
         let flip_z_rot = 0.0;
         macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("pichu_tail_arc3"), Hash40::new("pichu_tail_arc3"), Hash40::new("top"), 0, 2.5, -2, 5, 230, 25.0+180.0, 0.9, true, *EF_FLIP_YZ);
