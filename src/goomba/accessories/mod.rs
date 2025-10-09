@@ -47,6 +47,8 @@ unsafe fn init_common(module_accessor: *mut BattleObjectModuleAccessor) {
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("lollitop"), false);
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("boot"), false);
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("book"), false);
+    ModelModule::set_mesh_visibility(module_accessor, Hash40::new("break"), false);
+    ModelModule::set_mesh_visibility(module_accessor, Hash40::new("whole"), false);
 }
 pub unsafe fn init_lolipop(module_accessor: *mut BattleObjectModuleAccessor) {
     init_common(module_accessor);
@@ -74,12 +76,45 @@ pub unsafe fn init_shoe(module_accessor: *mut BattleObjectModuleAccessor) {
 pub unsafe fn init_book(module_accessor: *mut BattleObjectModuleAccessor) {
     init_common(module_accessor);
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("book"), true);
+    MotionModule::change_motion(module_accessor, Hash40::new("appeal_s_r"), 0.0, 1.0, false, 0.0, false, false);
     
     let parent_bone = Hash40::new("throw");
     LinkModule::set_model_constraint_pos_ort(module_accessor,*WEAPON_LINK_NO_CONSTRAINT,Hash40::new("have"),parent_bone,
     (*CONSTRAINT_FLAG_MTX 
          | *CONSTRAINT_FLAG_OFFSET_ROT | *CONSTRAINT_FLAG_OFFSET_TRANSLATE) as u32,true);
-    MotionModule::change_motion(module_accessor, Hash40::new("appeal_s_r"), 0.0, 1.0, false, 0.0, false, false);
+
+    let owner = &mut *sv_battle_object::module_accessor(
+        (WorkModule::get_int(module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32
+    );
+    let rot_y = if PostureModule::lr(module_accessor) > 0.0 {0.0} else {180.0};
+    let pos_offset = Vector3f{x:0.0,y:0.0,z:0.0};
+    let rot_offset = Vector3f{x:0.0,y:rot_y,z:0.0};
+    LinkModule::set_constraint_translate_offset(module_accessor, &pos_offset);
+    LinkModule::set_constraint_rot_offset(module_accessor, &rot_offset);
+}
+pub unsafe fn init_block(module_accessor: *mut BattleObjectModuleAccessor) {
+    init_common(module_accessor);
+    ModelModule::set_mesh_visibility(module_accessor, Hash40::new("break"), true);
+    ModelModule::set_mesh_visibility(module_accessor, Hash40::new("whole"), true);
+    let owner = &mut *sv_battle_object::module_accessor(
+        (WorkModule::get_int(module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32
+    );
+    MotionModule::change_motion(module_accessor, Hash40::new("entry_r"), 0.0, 1.0, false, 0.0, false, false);
+
+    //let owner_pos= PostureModule::pos(owner);
+    //PostureModule::set_pos(module_accessor, owner_pos);
+    //MotionModule::change_motion(module_accessor, Hash40::new("entry_r"), 0.0, 1.0, false, 0.0, false, false);
+    
+    let mut has_link = LinkModule::is_link(module_accessor,*WEAPON_LINK_NO_CONSTRAINT);
+    //Also has a link of 1?
+    if has_link {
+        LinkModule::set_attribute(module_accessor, *WEAPON_LINK_NO_CONSTRAINT, LinkAttribute{_address: *LINK_ATTRIBUTE_REFERENCE_PARENT_VISIBILITY as u8}, false);
+        LinkModule::set_attribute(module_accessor, *WEAPON_LINK_NO_CONSTRAINT, LinkAttribute{_address: *LINK_ATTRIBUTE_REFERENCE_PARENT_POS as u8}, true);
+    }
+    let parent_bone = Hash40::new("top");
+    LinkModule::set_model_constraint_pos_ort(module_accessor,*WEAPON_LINK_NO_CONSTRAINT,Hash40::new("have"),parent_bone,
+    (*CONSTRAINT_FLAG_MTX 
+         | *CONSTRAINT_FLAG_OFFSET_ROT | *CONSTRAINT_FLAG_OFFSET_TRANSLATE) as u32,true);
 
     let owner = &mut *sv_battle_object::module_accessor(
         (WorkModule::get_int(module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32

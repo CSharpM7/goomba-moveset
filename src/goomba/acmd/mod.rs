@@ -7,8 +7,7 @@ mod finalsmash;
 
 mod movement;
 
-mod taunts;
-mod entry;
+mod entry_appeal;
 mod results;
 
 pub fn install(agent: &mut smashline::Agent) {
@@ -21,7 +20,6 @@ pub fn install(agent: &mut smashline::Agent) {
 
     movement::install(agent);
 
-    taunts::install(agent);
-    entry::install(agent);
+    entry_appeal::install(agent);
     results::install(agent);
 }
