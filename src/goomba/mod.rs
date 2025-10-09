@@ -12,11 +12,13 @@ mod dev_only;
 mod status;
 pub mod accessories;
 pub mod redshell;
+pub mod tower;
 
 pub mod articles {
     pub use {
         super::accessories::*,
         super::redshell::*,
+        super::tower::*,
     };
 }
 use crate::singleslot::MOD_SLOTS;
@@ -39,6 +41,7 @@ pub fn install_hook() {
     }
     accessories::install_hook(hookstatus);
     redshell::install_hook(hookstatus);
+    tower::install_hook(hookstatus);
     println!("[smashline_kuribo::kuribo] ");
 }
 #[cfg(not(feature = "devhook"))]
@@ -66,5 +69,6 @@ pub fn install() {
 
     accessories::install(hookstatus);
     redshell::install(hookstatus);
+    tower::install(hookstatus);
     println!("[smashline_kuribo::kuribo] ");
 }

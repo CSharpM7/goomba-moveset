@@ -1,9 +1,6 @@
 use crate::imports::imports_acmd::*;
 
 unsafe extern "C" fn game_entryr(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
-    if macros::is_excute(agent) {
-    }
     frame(agent.lua_state_agent, 47.0);
     FT_MOTION_RATE(agent,0.5);
     frame(agent.lua_state_agent, 60.0);
