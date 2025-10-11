@@ -214,9 +214,10 @@ fn params() {
     param_attributes.push((hash40("walk_accel_mul"),0 as u64, 0.05 / 0.1575));
     param_floats.push((hash40("walk_accel_add"),0 as u64, 0.05 / 0.105));
     
-    param_attributes.push((hash40("walk_speed_max"),0 as u64, 0.72 / 1.302));
-    param_attributes.push((hash40("walk_middle_ratio"),0 as u64, 0.5 / 0.38));
-    param_attributes.push((hash40("walk_fast_ratio"),0 as u64, 0.75 / 0.75));
+    param_attributes.push((hash40("walk_speed_max"),0 as u64, 0.65 / 1.302));
+    param_attributes.push((hash40("walk_slow_speed_mul"),0 as u64, 0.01 / 0.2));
+    param_attributes.push((hash40("walk_middle_ratio"),0 as u64, 0.38 / 0.38));
+    param_attributes.push((hash40("walk_fast_ratio"),0 as u64, 0.875 / 0.75));
 
     param_attributes.push((hash40("ground_brake"),0 as u64, 0.1 / 0.11));
     param_attributes.push((hash40("dash_speed"),0 as u64, 1.625 / 1.98));

@@ -231,7 +231,7 @@ list:
       unk_100: false
       unk_200: false
       unk_400: false
-    blend_frames: 6
+    blend_frames: 0
     animations:
       - name: a01walkslow.nuanmb
         unk: 0
