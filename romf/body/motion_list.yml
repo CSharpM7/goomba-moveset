@@ -3086,8 +3086,8 @@ list:
     game_script: game_finaldash
     flags:
       turn: false
-      loop: true
-      move: false
+      loop: false
+      move: true
       fix_trans: false
       fix_rot: false
       fix_scale: false
@@ -3168,7 +3168,7 @@ list:
     flags:
       turn: false
       loop: false
-      move: false
+      move: true
       fix_trans: false
       fix_rot: false
       fix_scale: false
@@ -3384,7 +3384,7 @@ list:
     flags:
       turn: false
       loop: false
-      move: false
+      move: true
       fix_trans: false
       fix_rot: false
       fix_scale: false
