@@ -34,7 +34,7 @@ unsafe extern "C" fn game_finaldash(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 32.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("head"), 15.0, 274, 132, 0, 63, 50.0, 0.0, 6.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, f32::NAN, 0.0, 50, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_NONE);
+        macros::ATTACK(agent, 0, 0, Hash40::new("head"), 15.0, 274, 132, 0, 63, 50.0, 0.0, 6.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, f32::NAN, 0.0, 50, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_NONE);
     }
 }
 
@@ -45,6 +45,14 @@ unsafe extern "C" fn effect_finaldash(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn sound_finaldash(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_common_throw_01"));
+    }
+    frame(agent.lua_state_agent, 30.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_common_throw_03"));
+    }
 }
 
 unsafe extern "C" fn expression_finaldash(agent: &mut L2CAgentBase) {
@@ -74,8 +82,8 @@ unsafe extern "C" fn game_finaldashend(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn effect_finaldashend(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        macros::LANDING_EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 2, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
-        macros::LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 2, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 2, 0, 0, 0, 4.8, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 2, 0, 0, 0, 4.1, 0, 0, 0, 0, 0, 0, false);
     }
     frame(agent.lua_state_agent, 30.0);
     if macros::is_excute(agent) {
@@ -84,6 +92,13 @@ unsafe extern "C" fn effect_finaldashend(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn sound_finaldashend(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_final04"));
+    }
+    frame(agent.lua_state_agent, 40.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_final06"));
+    }
 }
 
 unsafe extern "C" fn expression_finaldashend(agent: &mut L2CAgentBase) {

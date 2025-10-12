@@ -40,7 +40,6 @@ pub unsafe extern "C" fn tower_frame(fighter: &mut L2CFighterCommon) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    println!("PLEASE");
 	agent.status(Main, 0, tower_main);
 	//agent.on_start(tower_main);
     //agent.on_line(Main, tower_frame);

@@ -5,7 +5,9 @@ const FALL_SPEED_Y: f32 = -20.0;
 pub unsafe extern "C" fn final_common_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     let next_status = fighter.global_table[STATUS_KIND].get_i32();
     let final_statuses = [*FIGHTER_PIKACHU_STATUS_KIND_FINAL_DASH,*FIGHTER_PIKACHU_STATUS_KIND_FINAL_DASH_END,*FIGHTER_PIKACHU_STATUS_KIND_FINAL_END];
-    if !(final_statuses.contains(&next_status)) {
+    if !(final_statuses.contains(&next_status))
+    //|| true
+    {
         ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
         smash_script::notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1e0aba2d68));
         AttackModule::clear_all(fighter.module_accessor);

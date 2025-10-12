@@ -19,17 +19,9 @@ unsafe extern "C" fn game_final(agent: &mut L2CAgentBase) {
             CAM_ZOOM_IN_arg5(agent, 3.0, 0.0, 2.2, 0.0, 0.0);
             macros::FT_START_CUTIN(agent);
         }
-        /*
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 361, 70, 30, 0, 5.5, 0.0, 0.0, 5.0, Some(0.0), Some(0.0), Some(-5.0), 0.2, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 361, 70, 30, 0, 5.5, 0.0, 10.0, 5.0, Some(0.0), Some(10.0), Some(-5.0), 0.2, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-        AttackModule::set_final_finish_cut_in(agent.module_accessor, 0, true, false, -1.0, false);
-        AttackModule::set_final_finish_cut_in(agent.module_accessor, 1, true, false, -1.0, false); 
-        */
     }
     frame(agent.lua_state_agent, 42.0);
     if macros::is_excute(agent) {
-        //macros::ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 50, 100, 75, 0, 5.5, 0.0, 0.0, 5.0, Some(0.0), Some(0.0), Some(-5.0), 0.2, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-        //macros::ATTACK(agent, 1, 0, Hash40::new("top"), 1.0, 20, 100, 40, 0, 5.5, 0.0, 10.0, 5.0, Some(0.0), Some(10.0), Some(-5.0), 0.2, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
         AttackModule::set_no_dead_all(agent.module_accessor, true, false);
     }
     frame(agent.lua_state_agent, 50.0);
@@ -56,10 +48,9 @@ unsafe extern "C" fn effect_final(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn sound_final(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 11.0);
+    frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
-        //macros::PLAY_SE(agent, Hash40::new("vc_pichu_final01"));
-        //macros::PLAY_SE(agent, Hash40::new("se_pichu_final05"));
+        macros::PLAY_SE(agent, Hash40::new("se_pichu_final02"));
     }
 }
 
