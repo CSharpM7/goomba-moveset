@@ -89,8 +89,8 @@ pub fn install(agent: &mut smashline::Agent) {
     agent.acmd("game_win1", game_entryr, Priority::High);
     agent.acmd("game_win2", game_entryr, Priority::High);
     agent.acmd("game_win3", game_entryr, Priority::High);
-    */
     let agent = &mut smashline::Agent::new("fighter")
     .on_line(Main, common_frame)
     .install(); 
+    */
 }

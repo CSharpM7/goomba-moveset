@@ -24,14 +24,15 @@ pub unsafe extern "C" fn final_common_flags(fighter: &mut L2CFighterCommon,is_fi
 pub unsafe extern "C" fn final_common_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     let next_status = fighter.global_table[STATUS_KIND].get_i32();
     let final_statuses = [*FIGHTER_PIKACHU_STATUS_KIND_FINAL_HIT,*FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK_FINISH,*FIGHTER_PIKACHU_STATUS_KIND_FINAL_END];
-    if !(final_statuses.contains(&next_status))
-    || true
+    let is_still_final = (final_statuses.contains(&next_status));
+    if !is_still_final
     {
         final_common_flags(fighter,false);
         WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_CHECK_DEAD_OFFSET_Y);
         ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
         smash_script::notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1e0aba2d68));
         AttackModule::clear_all(fighter.module_accessor);
+        if !is_still_final {CameraModule::reset_all(fighter.module_accessor);}
     }
     0.into()
 }
@@ -152,11 +153,10 @@ unsafe extern "C" fn final_raycast(fighter: &mut L2CFighterCommon,x:f32) -> bool
 unsafe extern "C" fn final_set_target_x(fighter: &mut L2CFighterCommon) {
     let mut target_x = PostureModule::pos_x(fighter.module_accessor);
     let ray_start_x = (dead_range(fighter.lua_state_agent).y + dead_range(fighter.lua_state_agent).x);
-    println!("Middle blast: {ray_start_x}");
     WorkModule::set_float(fighter.module_accessor, ray_start_x, *FIGHTER_PIKACHU_STATUS_FINAL_WORK_FLOAT_HIT_POS_X);
-    let ray_start_y = get_blastzone_top(fighter.lua_state_agent)-50.0;
+    let ray_start_y = get_blastzone_top(fighter.lua_state_agent);
     WorkModule::set_float(fighter.module_accessor, ray_start_y, *FIGHTER_PIKACHU_STATUS_FINAL_WORK_FLOAT_HIT_POS_Y);
-    println!("Top blast: {ray_start_y}");
+    //println!("Top blast: {ray_start_y}");
     let max_tries = 10;
     let step = 10;
 
@@ -164,7 +164,6 @@ unsafe extern "C" fn final_set_target_x(fighter: &mut L2CFighterCommon) {
         for i in 0..max_tries*2 {
             let i_as_x = if i < max_tries {i*step} else {(i-(max_tries*2))*step};
             let test_x = ray_start_x + (i_as_x as f32);
-            println!("Test at {test_x}");
             if final_raycast(fighter,test_x) {
                 target_x = test_x as f32;
                 break;
@@ -173,13 +172,19 @@ unsafe extern "C" fn final_set_target_x(fighter: &mut L2CFighterCommon) {
     }
     WorkModule::set_float(fighter.module_accessor, target_x, *FIGHTER_PIKACHU_STATUS_FINAL_WORK_FLOAT_HIT_POS_X);
     let new_x = WorkModule::get_float(fighter.module_accessor, *FIGHTER_PIKACHU_STATUS_FINAL_WORK_FLOAT_HIT_POS_X);
-    println!("Set to : {new_x}");
+    //println!("Set to : {new_x}");
 }
 
 unsafe extern "C" fn final_dash_init(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PIKACHU_STATUS_FINAL_FLAG_ATTACK_HIT);
     WorkModule::set_int(fighter.module_accessor, 30,*FIGHTER_PIKACHU_STATUS_FINAL_WORK_INT_VORTEX_TIME_COUNT);
-    final_set_target_x(fighter);
+
+    let pos_x = PostureModule::pos_y(fighter.module_accessor);
+    WorkModule::set_float(fighter.module_accessor, pos_x,*FIGHTER_PIKACHU_STATUS_FINAL_WORK_FLOAT_HIT_POS_X);
+    let pos_y = PostureModule::pos_y(fighter.module_accessor);
+    WorkModule::set_float(fighter.module_accessor, pos_y+30.0,FIGHTER_GOOMBA_FINAL_FLOAT_START_Y);
+
+    //final_set_target_x(fighter);
     0.into()
 }
 
@@ -191,9 +196,6 @@ unsafe extern "C" fn final_dash_main(fighter: &mut L2CFighterCommon) -> L2CValue
     if fighter.global_table[STATUS_KIND].get_i32() == *FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK {
         final_dash_set_motion_mul(fighter);
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("final_dash"), 0.0, 1.0, false, 0.0, false, false);
-    }
-    else {
-        println!("Attack status");
     }
     if fighter.global_table[IS_STOP].get_bool() {
         //uhh
@@ -216,27 +218,28 @@ unsafe extern "C" fn final_dash_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 }
 
 unsafe extern "C" fn final_fall_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    /*
-    if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK {
-        println!("Needs x");
-        final_hit_init(fighter);
-    } 
-    */
-    
     final_common_flags(fighter,true);
     ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
 
     let new_x = WorkModule::get_float(fighter.module_accessor, *FIGHTER_PIKACHU_STATUS_FINAL_WORK_FLOAT_HIT_POS_X);
     let pos_y = PostureModule::pos_y(fighter.module_accessor);
     let new_pos = Vector3f::new(new_x,pos_y,0.0);
-    PostureModule::set_pos(fighter.module_accessor, &new_pos);
+    //PostureModule::set_pos(fighter.module_accessor, &new_pos);
 
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new("final_fall"), 0.0, 1.0, false, 0.0, false, false);
-    GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+    let mot = Hash40::new("final_fall");
+    let end_frame = MotionModule::end_frame_from_hash(fighter.module_accessor, mot);
+    MotionModule::change_motion(fighter.module_accessor, mot, 0.0, 1.0, false, 0.0, false, false);
+    MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, end_frame, true, true, false);
+    //GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
 
 	fighter.sub_shift_status_main(L2CValue::Ptr( final_fall_main_loop as *const () as _)) 
 }
 unsafe extern "C" fn final_fall_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let target_y = WorkModule::get_float(fighter.module_accessor,FIGHTER_GOOMBA_FINAL_FLOAT_START_Y);
+    let pos_y = PostureModule::pos_y(fighter.module_accessor);
+    if pos_y <= target_y {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+    }
     if MotionModule::is_end(fighter.module_accessor) {
         if KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_AIR_STOP {
             final_common_flags(fighter,false);
@@ -252,7 +255,7 @@ unsafe extern "C" fn final_fall_main_loop(fighter: &mut L2CFighterCommon) -> L2C
                 set_speed,
                 fighter,
                 FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
-                sum
+                sum.min(FALL_SPEED_Y)
             );
             sv_kinetic_energy!(
                 set_accel,
@@ -313,6 +316,13 @@ unsafe extern "C" fn final_dash_exec(fighter: &mut L2CFighterCommon) -> L2CValue
 }
 
 unsafe extern "C" fn final_dash_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+    if (&param_3["object_category_"]).get_i32() != *BATTLE_OBJECT_CATEGORY_FIGHTER {
+        return 0.into();
+    }
+    if (&param_3["kind_"]).get_i32() != *COLLISION_KIND_HIT {
+        return 0.into();
+    }
+    
     let start_num_hit = WorkModule::get_int(fighter.module_accessor, *FIGHTER_PIKACHU_STATUS_FINAL_WORK_INT_ATTACK_HIT_NUM);
     let to_return = smashline::original_status(CheckAttack, fighter, *FIGHTER_PIKACHU_STATUS_KIND_FINAL_DASH)(fighter,param_2,param_3);
     
@@ -320,14 +330,12 @@ unsafe extern "C" fn final_dash_attack(fighter: &mut L2CFighterCommon, param_2: 
     if current_num_hit == start_num_hit {
         return to_return;
     }
-    
     let object_id = (&param_3["object_id_"]).get_u32();
     let opponent_boma = sv_battle_object::module_accessor(object_id);
     LinkModule::link(opponent_boma, *FIGHTER_LINK_NO_FINAL, fighter.battle_object_id);
-
+    
     //StatusModule::set_status_kind_interrupt(opponent_boma, *FIGHTER_STATUS_KIND_IKE_FINAL_DAMAGE_FLY);
     StatusModule::change_status_request(opponent_boma, *FIGHTER_STATUS_KIND_PIKACHU_FINAL_DAMAGE_FLY,false);
-    println!("Time to fly");
     return to_return;
 }
 

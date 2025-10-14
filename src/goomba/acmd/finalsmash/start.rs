@@ -36,7 +36,7 @@ unsafe extern "C" fn effect_final(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("goomba_magic_bright2"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.5, false);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("goomba_magic_bright2"), Hash40::new("throw"), 0, 10, 0, 0, 0, 0, 1.7, false);
     }
     frame(agent.lua_state_agent, 54.0);
     if macros::is_excute(agent) {

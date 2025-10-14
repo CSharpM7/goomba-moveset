@@ -26,7 +26,6 @@ use crate::singleslot::MOD_SLOTS;
 pub fn install_hook() {
     println!("[smashline_kuribo::kuribo] Installing Hook");
     let mut hookstatus = false;
-	//vtable::install();
     #[cfg(feature = "hookstatus")] {
         println!("[smashline_kuribo::kuribo] Installing Status Scripts in Hook");
         hookstatus=true;
