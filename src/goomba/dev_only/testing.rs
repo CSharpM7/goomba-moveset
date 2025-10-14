@@ -46,12 +46,17 @@ unsafe extern "C" fn appeal_main_loop(fighter: &mut L2CFighterCommon) -> L2CValu
 }
 
 pub unsafe extern "C" fn common_frame(fighter: &mut L2CFighterCommon) {
-    if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND {
-        let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        if speed_x.abs() > 0.5 {
-            println!("Speed X: {speed_x}");
+    let status = StatusModule::status_kind(fighter.module_accessor);
+    if status == *FIGHTER_STATUS_KIND_PIKACHU_FINAL_DAMAGE_FLY {
+        println!("pika damage");
+        if LinkModule::is_link(fighter.module_accessor, *FIGHTER_LINK_NO_FINAL) {
+            let parent = LinkModule::get_parent_object_id(fighter.module_accessor, *FIGHTER_LINK_NO_FINAL) as u32;
+            let parent_boma = sv_battle_object::module_accessor(parent);
+            let target_x = WorkModule::get_float(parent_boma, *FIGHTER_PIKACHU_STATUS_FINAL_WORK_FLOAT_HIT_POS_X);
+            println!("Parent Target: {target_x}");
         }
     }
+
 }
 
 unsafe extern "C" fn game_entryr(agent: &mut L2CAgentBase) {
@@ -78,14 +83,14 @@ unsafe extern "C" fn game_entryr(agent: &mut L2CAgentBase) {
 
 pub fn install(agent: &mut smashline::Agent) {
     //agent.status(Main, *FIGHTER_STATUS_KIND_APPEAL, appeal_main);
+    /*
     agent.acmd("game_entryr", game_entryr, Priority::High);
     agent.acmd("game_entryl", game_entryr, Priority::High);
     agent.acmd("game_win1", game_entryr, Priority::High);
     agent.acmd("game_win2", game_entryr, Priority::High);
     agent.acmd("game_win3", game_entryr, Priority::High);
-    /*
+    */
     let agent = &mut smashline::Agent::new("fighter")
     .on_line(Main, common_frame)
     .install(); 
-    */
 }

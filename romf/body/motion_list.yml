@@ -3082,6 +3082,33 @@ list:
       xlu_end: 0
       cancel_frame: 36
       no_stop_intp: false
+  final:
+    game_script: game_final
+    flags:
+      turn: false
+      loop: false
+      move: false
+      fix_trans: false
+      fix_rot: false
+      fix_scale: false
+      unk_40: false
+      unk_80: true
+      unk_100: false
+      unk_200: false
+      unk_400: false
+    blend_frames: 0
+    animations:
+      - name: d04final.nuanmb
+        unk: 0
+    scripts:
+      - expression_final
+      - sound_final
+      - effect_final
+    extra:
+      xlu_start: 0
+      xlu_end: 0
+      cancel_frame: 0
+      no_stop_intp: false
   final_dash:
     game_script: game_finaldash
     flags:
@@ -3104,6 +3131,33 @@ list:
       - expression_finaldash
       - sound_finaldash
       - effect_finaldash
+    extra:
+      xlu_start: 0
+      xlu_end: 0
+      cancel_frame: 0
+      no_stop_intp: false
+  final_fall:
+    game_script: game_finalfall
+    flags:
+      turn: false
+      loop: false
+      move: true
+      fix_trans: false
+      fix_rot: false
+      fix_scale: false
+      unk_40: false
+      unk_80: true
+      unk_100: false
+      unk_200: false
+      unk_400: false
+    blend_frames: 0
+    animations:
+      - name: d04finalfall.nuanmb
+        unk: 0
+    scripts:
+      - expression_finalfall
+      - sound_finalfall
+      - effect_finalfall
     extra:
       xlu_start: 0
       xlu_end: 0
@@ -3134,37 +3188,10 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 78
-      no_stop_intp: false
-  final:
-    game_script: game_final
-    flags:
-      turn: false
-      loop: false
-      move: false
-      fix_trans: false
-      fix_rot: false
-      fix_scale: false
-      unk_40: false
-      unk_80: true
-      unk_100: false
-      unk_200: false
-      unk_400: false
-    blend_frames: 0
-    animations:
-      - name: d04final.nuanmb
-        unk: 0
-    scripts:
-      - expression_final
-      - sound_final
-      - effect_final
-    extra:
-      xlu_start: 0
-      xlu_end: 0
       cancel_frame: 0
       no_stop_intp: false
-  final2:
-    game_script: game_final2
+  final_end:
+    game_script: game_finalend
     flags:
       turn: false
       loop: false
@@ -3182,175 +3209,13 @@ list:
       - name: d04final2.nuanmb
         unk: 0
     scripts:
-      - expression_final2
-      - sound_final2
-      - effect_final2
+      - expression_finalend
+      - sound_finalend
+      - effect_finalend
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 38
-      no_stop_intp: false
-  final_hit:
-    game_script: game_finalhit
-    flags:
-      turn: false
-      loop: false
-      move: false
-      fix_trans: false
-      fix_rot: false
-      fix_scale: false
-      unk_40: false
-      unk_80: true
-      unk_100: false
-      unk_200: false
-      unk_400: false
-    blend_frames: 0
-    animations:
-      - name: d04finaldash.nuanmb
-        unk: 0
-    scripts:
-      - expression_finalhit
-      - sound_finalhit
-      - effect_finalhit
-    extra:
-      xlu_start: 0
-      xlu_end: 0
-      cancel_frame: 0
-      no_stop_intp: false
-  final_attack:
-    game_script: game_finalattack
-    flags:
-      turn: false
-      loop: false
-      move: false
-      fix_trans: false
-      fix_rot: false
-      fix_scale: false
-      unk_40: false
-      unk_80: true
-      unk_100: false
-      unk_200: false
-      unk_400: false
-    blend_frames: 0
-    animations:
-      - name: d04finaldash.nuanmb
-        unk: 0
-    scripts:
-      - expression_finalattack
-      - sound_finalattack
-      - effect_finalattack
-    extra:
-      xlu_start: 0
-      xlu_end: 0
-      cancel_frame: 0
-      no_stop_intp: false
-  final_attack_2:
-    game_script: game_finalattack2
-    flags:
-      turn: false
-      loop: false
-      move: false
-      fix_trans: false
-      fix_rot: false
-      fix_scale: false
-      unk_40: false
-      unk_80: true
-      unk_100: false
-      unk_200: false
-      unk_400: false
-    blend_frames: 0
-    animations:
-      - name: d04finaldash.nuanmb
-        unk: 0
-    scripts:
-      - expression_finalattack2
-      - sound_finalattack2
-      - effect_finalattack2
-    extra:
-      xlu_start: 0
-      xlu_end: 0
-      cancel_frame: 0
-      no_stop_intp: false
-  final_attack_finish:
-    game_script: game_finalattackfinish
-    flags:
-      turn: false
-      loop: false
-      move: false
-      fix_trans: false
-      fix_rot: false
-      fix_scale: false
-      unk_40: false
-      unk_80: true
-      unk_100: false
-      unk_200: false
-      unk_400: false
-    blend_frames: 0
-    animations:
-      - name: d04finaldash.nuanmb
-        unk: 0
-    scripts:
-      - expression_finalattackfinish
-      - sound_finalattackfinish
-      - effect_finalattackfinish
-    extra:
-      xlu_start: 0
-      xlu_end: 0
-      cancel_frame: 0
-      no_stop_intp: false
-  final_return:
-    game_script: game_finalreturn
-    flags:
-      turn: false
-      loop: false
-      move: false
-      fix_trans: false
-      fix_rot: false
-      fix_scale: false
-      unk_40: false
-      unk_80: true
-      unk_100: false
-      unk_200: false
-      unk_400: false
-    blend_frames: 0
-    animations:
-      - name: d04finaldash.nuanmb
-        unk: 0
-    scripts:
-      - expression_finalreturn
-      - sound_finalreturn
-      - effect_finalreturn
-    extra:
-      xlu_start: 0
-      xlu_end: 0
-      cancel_frame: 0
-      no_stop_intp: false
-  final_air_dash_end:
-    game_script: game_finalairdashend
-    flags:
-      turn: false
-      loop: false
-      move: true
-      fix_trans: false
-      fix_rot: false
-      fix_scale: false
-      unk_40: false
-      unk_80: true
-      unk_100: false
-      unk_200: false
-      unk_400: false
-    blend_frames: 0
-    animations:
-      - name: d04finalairdashend.nuanmb
-        unk: 0
-    scripts:
-      - expression_finalairdashend
-      - sound_finalairdashend
-      - effect_finalairdashend
-    extra:
-      xlu_start: 0
-      xlu_end: 0
-      cancel_frame: 55
+      cancel_frame: 26
       no_stop_intp: false
   final_air:
     game_script: game_finalair
@@ -3379,8 +3244,8 @@ list:
       xlu_end: 0
       cancel_frame: 0
       no_stop_intp: false
-  final_air2:
-    game_script: game_finalair2
+  final_air_end:
+    game_script: game_finalairend
     flags:
       turn: false
       loop: false
@@ -3398,9 +3263,9 @@ list:
       - name: d04finalair2.nuanmb
         unk: 0
     scripts:
-      - expression_finalair2
-      - sound_finalair2
-      - effect_finalair2
+      - expression_finalairend
+      - sound_finalairend
+      - effect_finalairend
     extra:
       xlu_start: 0
       xlu_end: 0

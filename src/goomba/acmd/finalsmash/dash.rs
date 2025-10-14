@@ -28,14 +28,6 @@ unsafe extern "C" fn game_finaldash(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_FINAL_FLAG_CANCEL_COLOR);
     }
-    frame(agent.lua_state_agent, 22.0);
-    if macros::is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-    }
-    frame(agent.lua_state_agent, 32.0);
-    if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("head"), 15.0, 274, 132, 0, 63, 50.0, 0.0, 6.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, f32::NAN, 0.0, 50, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_NONE);
-    }
 }
 
 unsafe extern "C" fn effect_finaldash(agent: &mut L2CAgentBase) {
@@ -49,10 +41,6 @@ unsafe extern "C" fn sound_finaldash(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_common_throw_01"));
     }
-    frame(agent.lua_state_agent, 30.0);
-    if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_common_throw_03"));
-    }
 }
 
 unsafe extern "C" fn expression_finaldash(agent: &mut L2CAgentBase) {
@@ -64,11 +52,36 @@ unsafe extern "C" fn expression_finaldash(agent: &mut L2CAgentBase) {
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_bounce"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
+
+unsafe extern "C" fn game_finalfall(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        AttackModule::clear_all(agent.module_accessor);
+        macros::ATTACK(agent, 0, 0, Hash40::new("head"), 15.0, 274, 132, 0, 63, 50.0, 0.0, 6.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, f32::NAN, 0.0, 50, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_NONE);
+    }
+}
+
+unsafe extern "C" fn effect_finalfall(agent: &mut L2CAgentBase) {
+}
+
+unsafe extern "C" fn sound_finalfall(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_common_throw_03"));
+    }
+}
+
+unsafe extern "C" fn expression_finalfall(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BACKSHIELD_INVISIBLE);
+        ItemModule::set_attach_item_visibility(agent.module_accessor, false,0);
+    }
+}
+
 unsafe extern "C" fn game_finaldashend(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::WHOLE_HIT(agent, *HIT_STATUS_XLU);
         AttackModule::clear_all(agent.module_accessor);
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 65, 113, 0, 90, 14.0, 0.0, 12.0, -30.0, Some(0.0), Some(12.0), Some(30.0), 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, f32::NAN, 0.0, 50, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_NONE);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 65, 113, 0, 75, 14.0, 0.0, 12.0, -35.0, Some(0.0), Some(12.0), Some(35.0), 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, f32::NAN, 0.0, 50, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_NONE);
     }
     frame(agent.lua_state_agent, 5.0);
     if macros::is_excute(agent) {
@@ -120,13 +133,14 @@ pub fn install(agent: &mut Agent) {
 	agent.acmd("effect_finaldash", effect_finaldash, Priority::Default);
 	agent.acmd("sound_finaldash", sound_finaldash, Priority::Default);
 	agent.acmd("expression_finaldash", expression_finaldash, Priority::Default);
+    
+	agent.acmd("game_finalfall", game_finalfall, Priority::Default);
+	agent.acmd("effect_finalfall", effect_finalfall, Priority::Default);
+	agent.acmd("sound_finalfall", sound_finalfall, Priority::Default);
+	agent.acmd("expression_finalfall", expression_finalfall, Priority::Default);
 
 	agent.acmd("game_finaldashend", game_finaldashend, Priority::Default);
-	agent.acmd("game_finalairdashend", game_finaldashend, Priority::Default);
 	agent.acmd("effect_finaldashend", effect_finaldashend, Priority::Default);
-	agent.acmd("effect_finalairdashend", effect_finaldashend, Priority::Default);
 	agent.acmd("sound_finaldashend", sound_finaldashend, Priority::Default);
-	agent.acmd("sound_finalairdashend", sound_finaldashend, Priority::Default);
 	agent.acmd("expression_finaldashend", expression_finaldashend, Priority::Default);
-	agent.acmd("expression_finalairdashend", expression_finaldashend, Priority::Default);
 }
