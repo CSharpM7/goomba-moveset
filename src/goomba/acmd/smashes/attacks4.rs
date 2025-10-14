@@ -119,16 +119,20 @@ unsafe extern "C" fn effect_attacks4charge(agent: &mut L2CAgentBase) {
 */
 
 unsafe extern "C" fn game_attacks4s2(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        let lolipop = get_article_boma(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
+        LinkModule::set_model_constraint_flag(lolipop, (*CONSTRAINT_FLAG_MTX | *CONSTRAINT_FLAG_NO_FLIP
+        | *CONSTRAINT_FLAG_OFFSET_ROT | *CONSTRAINT_FLAG_OFFSET_TRANSLATE) as u32);
+    }
     frame(agent.lua_state_agent, 12.0);
-    FT_MOTION_RATE_RANGE(agent,12.0,38.0,30.0);
+    FT_MOTION_RATE_RANGE(agent,12.0,38.0,45.0);
     frame(agent.lua_state_agent, 38.0);
     FT_MOTION_RATE(agent,1.0);
     frame(agent.lua_state_agent, 41.0);
     if macros::is_excute(agent) {
         ArticleModule::remove_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        //let lolipop = get_article_boma(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
-        //ModelModule::set_mesh_visibility(lolipop, Hash40::new("lollitop"), false);
-        macros::FT_ADD_DAMAGE(agent, -1.5);
+        let heal = DamageModule::damage(agent.module_accessor, 0).min(1.5);
+        macros::FT_ADD_DAMAGE(agent, -heal);
     }
     frame(agent.lua_state_agent, 73.0);
     if macros::is_excute(agent) {

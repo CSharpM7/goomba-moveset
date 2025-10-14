@@ -5,7 +5,8 @@ pub const BRAKE_X_INIT: f32 = 0.001;
 pub const FRIENDLY_FIRE_COOLDOWN: i32 = 30;
 pub const GRAVITY: f32 = 0.2;
 pub const SPEED_X: f32 = 1.875;
-pub const OTTOTTO_CHECK_MUL: f32 = 1.5;
+pub const OTTOTTO_CHECK_MUL: f32 = 1.25;
+pub const OTTOTTO_CHECK_ADD: f32 = 1.0;
 pub const TIMEOUT_COOLDOWN: i32 = 15;
 
 pub unsafe extern "C" fn redshell_haved_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
@@ -23,6 +24,7 @@ pub unsafe extern "C" fn redshell_haved_pre(weapon: &mut L2CWeaponCommon) -> L2C
     );
     0.into()
 }
+
 pub unsafe extern "C" fn redshell_haved_main(weapon: &mut smashline::L2CWeaponCommon) -> L2CValue {
     let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
     let mut has_link = LinkModule::is_link(weapon.module_accessor,*WEAPON_LINK_NO_CONSTRAINT);
@@ -237,11 +239,16 @@ unsafe extern "C" fn redshell_set_angle(weapon: &mut smashline::L2CWeaponCommon)
 }
 
 unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCommon) {
+    let speed = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    if speed.abs() > 0.0 {
+        PostureModule::set_lr(weapon.module_accessor, speed.signum())
+    }
+
     let situation = StatusModule::situation_kind(weapon.module_accessor);
     if situation != *SITUATION_KIND_GROUND {return;}
     let lr = PostureModule::lr(weapon.module_accessor);
     let speed_x = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let ottotto_check = (OTTOTTO_CHECK_MUL*speed_x.abs()) + SPEED_X;
+    let ottotto_check = (OTTOTTO_CHECK_MUL*speed_x.abs()) + OTTOTTO_CHECK_ADD;
     //let near_check = speed_x.abs() + 5.0;
     let mut is_ottotto = false;
     let ottotto_cooled = true//WorkModule::count_down_int(weapon.module_accessor, REDSHELL_INSTANCE_INT_OTTOTTO_COUNTDOWN, 0)
@@ -252,7 +259,6 @@ unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCo
         if GroundModule::is_ottotto(weapon.module_accessor, ottotto_check) {
             is_ottotto = true;
             WorkModule::set_int(weapon.module_accessor, 2, REDSHELL_INSTANCE_INT_OTTOTTO_COUNTDOWN);
-            //let is_near = GroundModule::is_near_cliff(weapon.module_accessor, lr, near_check);
         }
     }
 

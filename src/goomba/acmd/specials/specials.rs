@@ -9,17 +9,16 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent,1.0,11.0,4.0);
     frame(agent.lua_state_agent, 11.0);
     FT_MOTION_RATE_RANGE(agent,11.0,16.0,3.0);
-    frame(agent.lua_state_agent, 14.0);
+    frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HOP);
         WorkModule::off_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
-    }
-    frame(agent.lua_state_agent, 17.0);
-    FT_MOTION_RATE(agent,1.0);
-    if macros::is_excute(agent) {
+
         shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, hash40("top"), 7.0, 0.0, 5.5, 3.5, 0.0, 5.5, 9.7, 
         1.4 /* Speed/Damage */, 1.5 /* Speed/Damage */, 50 /* Threshold */, false, 1.0 /* Life Mult */, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
     }
+    frame(agent.lua_state_agent, 16.0);
+    FT_MOTION_RATE(agent,1.0);
     frame(agent.lua_state_agent, 18.0);
     if macros::is_excute(agent) {
         macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 100, 100, 80, 0, 7.0, 0.0, 5.5, 8.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.3, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_turn"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
