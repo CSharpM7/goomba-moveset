@@ -5,11 +5,14 @@
 #![allow(
     non_snake_case,
     unused,
-    static_mut_refs
+    static_mut_refs,
+    improper_ctypes
 )]
 #![deny(
     deprecated
 )]
+#![feature(simd_ffi)]
+
 #[macro_use]
 extern crate lazy_static;
 

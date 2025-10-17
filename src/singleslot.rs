@@ -449,10 +449,10 @@ fn csk_database(chara_hash: u64) {
     let skill_kinds = ["down_1","neutral_1","neutral_1","side_1","up_1","final_1"];
     let id_base = 2800-1 as u32;
     let id_specials = 2803;
-    let id_normals = 2808;
-    let id_final = 2813;
+    let id_normals = 2809;
+    let id_last = 2813;
 
-    for id in id_base..(id_final+1) {
+    for id in id_base..(id_last+1) {
         //let id = (base_id + i as u32) as u32;
         let is_misc = [2799,2802].contains(&id);
         let is_story = id < id_specials;

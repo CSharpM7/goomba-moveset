@@ -1,4 +1,20 @@
-use crate::imports::imports_acmd::*;
+use crate::imports::imports_agent::*;
+
+extern "C" {
+    #[link_name = "\u{1}_ZN3app15sv_fighter_util21get_kirifuda_positionEP9lua_Statei"]
+    pub fn get_kirifuda_position(lua_state: u64,arg2: i32) -> skyline::nn::util::Vector3f; 
+}
+pub unsafe extern "C" fn set_kirifuda_pos(fighter: &mut L2CFighterCommon) {
+    let fuda = get_kirifuda_position(fighter.lua_state_agent, *STAGE_KIRIFUDA_KIND_IKE_1);
+    let fuda_x = fuda.value[0];
+    let fuda_y = fuda.value[1];
+    let pos_x = PostureModule::pos_x(fighter.module_accessor);
+    let pos_y = PostureModule::pos_y(fighter.module_accessor);
+    //println!("Init X: {fuda_x} Y: {fuda_y}");
+
+    WorkModule::set_float(fighter.module_accessor, fuda_x, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X);
+    WorkModule::set_float(fighter.module_accessor, fuda_y, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y);
+}
 
 unsafe extern "C" fn reset_meshes(fighter: &mut L2CFighterCommon,status_next: i32) {
     let is_smash = [*FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_next);
@@ -85,6 +101,7 @@ unsafe extern "C" fn on_rebirth(fighter: &mut L2CFighterCommon) {
 unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     on_rebirth(fighter);
     set_hurtbox(fighter);
+    set_kirifuda_pos(fighter);
 
 	fighter.global_table[STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));
 	fighter.global_table[CHECK_SPECIAL_N_UNIQ].assign(&L2CValue::Ptr(should_use_special_n as *const () as _));
