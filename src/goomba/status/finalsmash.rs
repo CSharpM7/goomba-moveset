@@ -63,8 +63,14 @@ pub unsafe extern "C" fn final_common_end(fighter: &mut L2CFighterCommon) -> L2C
         *FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK_FINISH,*FIGHTER_PIKACHU_STATUS_KIND_FINAL_END
         ];
     let is_still_final = (final_statuses.contains(&next_status));
+    let mut dev_override = false;
+    
+    #[cfg(feature = "dev")] {
+        dev_override = true;
+    }
+
     if !is_still_final
-    || true
+    || dev_override
     {
         final_common_flags(fighter,false);
         WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_CHECK_DEAD_OFFSET_Y);

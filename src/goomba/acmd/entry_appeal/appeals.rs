@@ -5,8 +5,8 @@ unsafe extern "C" fn game_appealsr(agent: &mut L2CAgentBase) {
         ArticleModule::remove_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
 
         ArticleModule::generate_article(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, false, -1);
-        let book = get_article_boma(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
-        accessories::init_book(book);
+        //let book = get_article_boma(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
+        //accessories::init_book(book);
     }
     frame(agent.lua_state_agent, 100.0);
     if macros::is_excute(agent) {

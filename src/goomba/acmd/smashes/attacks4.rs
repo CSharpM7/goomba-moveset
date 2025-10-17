@@ -6,7 +6,7 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
 
         ArticleModule::generate_article(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, false, -1);
         let lolipop = get_article_boma(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
-        accessories::init_lolipop(lolipop);
+        //accessories::init_lolipop(lolipop);
         ArticleModule::set_rate(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, 0.0);
     }
     frame(agent.lua_state_agent, 9.0);
@@ -120,9 +120,8 @@ unsafe extern "C" fn effect_attacks4charge(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn game_attacks4s2(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        let lolipop = get_article_boma(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
-        LinkModule::set_model_constraint_flag(lolipop, (*CONSTRAINT_FLAG_MTX | *CONSTRAINT_FLAG_NO_FLIP
-        | *CONSTRAINT_FLAG_OFFSET_ROT | *CONSTRAINT_FLAG_OFFSET_TRANSLATE) as u32);
+        ArticleModule::remove_exist(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::generate_article(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, false, -1);
     }
     frame(agent.lua_state_agent, 12.0);
     FT_MOTION_RATE_RANGE(agent,12.0,38.0,45.0);

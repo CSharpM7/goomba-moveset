@@ -18,10 +18,42 @@ pub unsafe extern "C" fn accessories_haved_pre(weapon: &mut L2CWeaponCommon) -> 
     0.into()
 }
 pub unsafe extern "C" fn accessories_haved_main(weapon: &mut smashline::L2CWeaponCommon) -> L2CValue {
+    super::init_common(weapon.module_accessor);
+    
+    let owner = &mut *sv_battle_object::module_accessor(
+        (WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32
+    );
+    let owner_status = StatusModule::status_kind(owner);
+    if owner_status == *FIGHTER_STATUS_KIND_ENTRY {
+        //println!("Block");
+        super::init_block(weapon.module_accessor);
+        WorkModule::set_int(weapon.module_accessor, ACCESSORIES_TYPE_BLOCK, ACCESSORIES_INSTANCE_INT_TYPE);
+    }
+    else if [*FIGHTER_STATUS_KIND_ATTACK_S4,*FIGHTER_STATUS_KIND_ATTACK_S4_HOLD,*FIGHTER_STATUS_KIND_ATTACK_S4_START].contains(&owner_status) {
+        WorkModule::set_int(weapon.module_accessor, ACCESSORIES_TYPE_CANDY, ACCESSORIES_INSTANCE_INT_TYPE);
+        super::init_lolipop(weapon.module_accessor);
+        if ComboModule::count(owner) == 1 {
+            //println!("HUH");
+        }
+    }
+    else if [*FIGHTER_STATUS_KIND_SPECIAL_LW,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND,
+    FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT].contains(&owner_status) {
+        WorkModule::set_int(weapon.module_accessor, ACCESSORIES_TYPE_BOOT, ACCESSORIES_INSTANCE_INT_TYPE);
+        super::init_shoe(weapon.module_accessor);
+    }
+    else if owner_status == *FIGHTER_STATUS_KIND_APPEAL {
+        WorkModule::set_int(weapon.module_accessor, ACCESSORIES_TYPE_BOOK, ACCESSORIES_INSTANCE_INT_TYPE);
+        super::init_book(weapon.module_accessor);
+    }
     weapon.fastshift(L2CValue::Ptr(accessories_haved_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn accessories_haved_main_loop(weapon: &mut smashline::L2CWeaponCommon) -> smashline::L2CValue {
+    let model = WorkModule::get_int(weapon.module_accessor, ACCESSORIES_INSTANCE_INT_TYPE);
+    if model != ACCESSORIES_TYPE_BLOCK {
+        ModelModule::set_mesh_visibility(weapon.module_accessor, Hash40::new("break"), false);
+        ModelModule::set_mesh_visibility(weapon.module_accessor, Hash40::new("whole"), false);
+    }
     0.into()
 }
 

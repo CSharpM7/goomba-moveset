@@ -7,8 +7,8 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
         macros::HIT_NODE(agent, Hash40::new("toel"), *HIT_STATUS_XLU);
 
         ArticleModule::generate_article(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, false, -1);
-        let shoe = get_article_boma(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
-        accessories::init_shoe(shoe);
+        //let shoe = get_article_boma(agent.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
+        //accessories::init_shoe(shoe);
     }
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {

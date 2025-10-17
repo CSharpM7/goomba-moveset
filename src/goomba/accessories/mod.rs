@@ -50,14 +50,15 @@ unsafe fn init_common(module_accessor: *mut BattleObjectModuleAccessor) {
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("break"), false);
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("whole"), false);
 }
+
 pub unsafe fn init_lolipop(module_accessor: *mut BattleObjectModuleAccessor) {
     init_common(module_accessor);
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("lollipop"), true);
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("lollitop"), true);
-    
+    let no_flip = if ComboModule::count(module_accessor) == 1 {*CONSTRAINT_FLAG_NO_FLIP} else {0};
     let parent_bone = Hash40::new("haver");
     LinkModule::set_model_constraint_pos_ort(module_accessor,*WEAPON_LINK_NO_CONSTRAINT,Hash40::new("food"),parent_bone,
-    (*CONSTRAINT_FLAG_MTX
+    (*CONSTRAINT_FLAG_MTX | no_flip
          | *CONSTRAINT_FLAG_OFFSET_ROT | *CONSTRAINT_FLAG_OFFSET_TRANSLATE) as u32,true);
     MotionModule::change_motion(module_accessor, Hash40::new("null"), 0.0, 0.0, false, 0.0, false, false);
 }

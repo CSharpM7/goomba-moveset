@@ -81,6 +81,12 @@ pub const ACCESSORIES_KIND: smash::lib::LuaConst = smash::lib::lua_const::WEAPON
 pub const ACCESSORIES_STATUS_KIND_HAVED: i32 = 0x0;
 pub const ACCESSORIES_STATUS_KIND_EJECTED: i32 = 0x1;
 pub const ACCESSORIES_INSTANCE_FLOAT_LIFE: i32 = 0x6;
+pub const ACCESSORIES_INSTANCE_INT_TYPE: i32 = 0x1000000A;
+pub const ACCESSORIES_TYPE_NONE: i32 = 0;
+pub const ACCESSORIES_TYPE_BLOCK: i32 = 1;
+pub const ACCESSORIES_TYPE_BOOT: i32 = 2;
+pub const ACCESSORIES_TYPE_BOOK: i32 = 3;
+pub const ACCESSORIES_TYPE_CANDY: i32 = 4;
 
 pub static mut FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL: i32 = 0x0;
 pub const REDSHELL_KIND: smash::lib::LuaConst = smash::lib::lua_const::WEAPON_KIND_YOSHI_TAMAGO;

@@ -4,12 +4,13 @@ unsafe extern "C" fn entry_init(fighter: &mut L2CFighterCommon) -> L2CValue {
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_PIKACHU_GENERATE_ARTICLE_MONSTERBALL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
 
     ArticleModule::generate_article(fighter.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, false, -1);
-    let block = get_article_boma(fighter.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
-    accessories::init_block(block);
+    //let block = get_article_boma(fighter.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
+    //accessories::init_block(block);
     0.into()
 }
 
 unsafe extern "C" fn entry_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_PIKACHU_GENERATE_ARTICLE_MONSTERBALL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ArticleModule::remove_exist(fighter.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     fighter.status_end_Entry()
 }

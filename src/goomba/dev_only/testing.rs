@@ -53,7 +53,7 @@ unsafe extern "C" fn game_entryr(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.status(Main, *FIGHTER_STATUS_KIND_APPEAL, appeal_main);
+    //agent.status(Main, *FIGHTER_STATUS_KIND_APPEAL, appeal_main);
     /*
     agent.acmd("game_entryr", game_entryr, Priority::High);
     agent.acmd("game_entryl", game_entryr, Priority::High);
@@ -61,6 +61,7 @@ pub fn install(agent: &mut smashline::Agent) {
     agent.acmd("game_win2", game_entryr, Priority::High);
     agent.acmd("game_win3", game_entryr, Priority::High);
     */
+    
     let agent = &mut smashline::Agent::new("fighter")
     .on_line(Main, common_frame)
     .install(); 
