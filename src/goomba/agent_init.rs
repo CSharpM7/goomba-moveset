@@ -5,15 +5,20 @@ extern "C" {
     pub fn get_kirifuda_position(lua_state: u64,arg2: i32) -> skyline::nn::util::Vector3f; 
 }
 pub unsafe extern "C" fn set_kirifuda_pos(fighter: &mut L2CFighterCommon) {
-    let fuda = get_kirifuda_position(fighter.lua_state_agent, *STAGE_KIRIFUDA_KIND_IKE_1);
-    let fuda_x = fuda.value[0];
-    let fuda_y = fuda.value[1];
-    let pos_x = PostureModule::pos_x(fighter.module_accessor);
-    let pos_y = PostureModule::pos_y(fighter.module_accessor);
-    //println!("Init X: {fuda_x} Y: {fuda_y}");
+    let fuda_1 = get_kirifuda_position(fighter.lua_state_agent, *STAGE_KIRIFUDA_KIND_IKE_1);
+    let fuda_x1 = fuda_1.value[0];
+    let fuda_y1 = fuda_1.value[1];
+    //println!("Fuda1 X: {fuda_x1} Y: {fuda_y1}");
 
-    WorkModule::set_float(fighter.module_accessor, fuda_x, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X);
-    WorkModule::set_float(fighter.module_accessor, fuda_y, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y);
+    let fuda_2 = get_kirifuda_position(fighter.lua_state_agent, *STAGE_KIRIFUDA_KIND_IKE_2);
+    let fuda_x2 = fuda_2.value[0];
+    let fuda_y2 = fuda_2.value[1];
+    //println!("Fuda2 X: {fuda_x2} Y: {fuda_y2}");
+
+    WorkModule::set_float(fighter.module_accessor, fuda_x1, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X1);
+    WorkModule::set_float(fighter.module_accessor, fuda_y1, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y1);
+    WorkModule::set_float(fighter.module_accessor, fuda_x2, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X2);
+    WorkModule::set_float(fighter.module_accessor, fuda_y2, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y2);
 }
 
 unsafe extern "C" fn reset_meshes(fighter: &mut L2CFighterCommon,status_next: i32) {

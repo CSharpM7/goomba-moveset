@@ -1,29 +1,45 @@
 use crate::imports::imports_acmd::*;
 
 unsafe extern "C" fn effect_win3(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 45.0);
+    frame(agent.lua_state_agent, 31.0);
     if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_steam3"), Hash40::new("head"), 2, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 90, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 48.0);
+    frame(agent.lua_state_agent, 55.0);
     if macros::is_excute(agent) {
-        macros::LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 4, 0, 4, 0, 90, 0, 0.6, 0, 0, 0, 0, 0, 0, true);
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 90, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 72.0);
+    frame(agent.lua_state_agent, 111.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_steam3"), false, true);
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 90, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
     }
 }
 
 unsafe extern "C" fn sound_win3(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 48.0);
+    frame(agent.lua_state_agent, 11.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_pichu_landing04_win03"));
-        macros::STOP_SE(agent, Hash40::new("se_pichu_special_n01_win03"));
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("vc_pichu_win02"));
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("se_pichu_jump03_win02"));
     }
-    frame(agent.lua_state_agent, 104.0);
+    frame(agent.lua_state_agent, 30.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_pichu_rise_win03"));
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("se_pichu_landing01_win02"));
+    }
+    frame(agent.lua_state_agent, 38.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("se_pichu_jump03_win02"));
+    }
+    frame(agent.lua_state_agent, 54.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("se_pichu_landing01_win02"));
+    }
+    frame(agent.lua_state_agent, 66.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("se_pichu_jump01_win02"));
+    }
+    frame(agent.lua_state_agent, 110.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("se_pichu_landing04_win02"));
     }
 }
 

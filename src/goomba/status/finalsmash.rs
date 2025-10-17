@@ -8,7 +8,7 @@ unsafe fn get_blastzone_top(lua_state_agent: u64) -> f32 {
     return dead_range(lua_state_agent).z;
 }
 
-const ANIMATION_HEIGHT: f32 = 270.0;
+const ANIMATION_HEIGHT: f32 = 271.0;
 const FALL_SPEED_Y: f32 = -8.0; //-6.0
 const TARGET_MOVE_SPEED: f32 = 3.0;
 const FALL_DELAY: i32 = 30;
@@ -175,12 +175,13 @@ pub unsafe extern "C" fn final_dash_pre(fighter: &mut L2CFighterCommon) -> L2CVa
 unsafe extern "C" fn final_dash_set_motion_mul(fighter: &mut L2CFighterCommon) {
     let top_blastzone = get_blastzone_top(fighter.lua_state_agent);
     let current_y = PostureModule::pos_y(fighter.module_accessor);
-    let mul = (top_blastzone-current_y) / ANIMATION_HEIGHT;
+    let distance_to_blast = (top_blastzone-current_y).max(0.1);
+    let mul = (distance_to_blast) / (ANIMATION_HEIGHT*0.75);
+    //println!("Top: {top_blastzone} Current: {current_y} Dist: {distance_to_blast} Mul: {mul}");
     sv_kinetic_energy!(
         set_speed_mul,
         fighter,
         FIGHTER_KINETIC_ENERGY_ID_MOTION,
-        1.0,
         mul.max(1.0)
     );
 }
@@ -201,7 +202,7 @@ unsafe extern "C" fn final_raycast(fighter: &mut L2CFighterCommon,x:f32) -> bool
 unsafe extern "C" fn final_set_target_pos_by_rays(fighter: &mut L2CFighterCommon) {
     let mut target_x = PostureModule::pos_x(fighter.module_accessor);
     let ray_start_x = (dead_range(fighter.lua_state_agent).y + dead_range(fighter.lua_state_agent).x);
-    WorkModule::set_float(fighter.module_accessor, ray_start_x, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X);
+    WorkModule::set_float(fighter.module_accessor, ray_start_x, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X1);
     let ray_start_y = get_blastzone_top(fighter.lua_state_agent);
     WorkModule::set_float(fighter.module_accessor, ray_start_y, FIGHTER_GOOMBA_FINAL_FLOAT_BLASTZONE_Y);
     //println!("Top blast: {ray_start_y}");
@@ -218,12 +219,15 @@ unsafe extern "C" fn final_set_target_pos_by_rays(fighter: &mut L2CFighterCommon
             }
         }
     }
-    WorkModule::set_float(fighter.module_accessor, target_x, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X);
-    let new_x = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X);
+    WorkModule::set_float(fighter.module_accessor, target_x, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X1);
+    let new_x = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X1);
     //println!("Set to : {new_x}");
 }
 
 unsafe extern "C" fn final_dash_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let blast_top = get_blastzone_top(fighter.lua_state_agent);
+    WorkModule::set_float(fighter.module_accessor, blast_top, FIGHTER_GOOMBA_FINAL_FLOAT_BLASTZONE_Y);
+
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PIKACHU_STATUS_FINAL_FLAG_ATTACK_HIT);
     WorkModule::set_int(fighter.module_accessor, 30,*FIGHTER_PIKACHU_STATUS_FINAL_WORK_INT_VORTEX_TIME_COUNT);
     WorkModule::set_int64(fighter.module_accessor, *BATTLE_OBJECT_ID_INVALID as i64,FIGHTER_GOOMBA_FINAL_INT_TARGET_ID);
@@ -232,13 +236,30 @@ unsafe extern "C" fn final_dash_init(fighter: &mut L2CFighterCommon) -> L2CValue
     let pos_y = PostureModule::pos_y(fighter.module_accessor);
     WorkModule::set_float(fighter.module_accessor, pos_y+30.0,FIGHTER_GOOMBA_FINAL_FLOAT_START_Y);
     
-    let fuda_x = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X);
-    let fuda_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y);
+    let fuda_x1 = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X1);
+    let fuda_y1 = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y1);
+    let distance_1 = sv_math::vec2_distance(fuda_x1, fuda_y1, pos_x, pos_y);
 
-    let distance = sv_math::vec2_distance(fuda_x, fuda_y, pos_x, pos_y);
+    let fuda_x2 = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X2);
+    let mut fuda_y2 = fuda_y1;
+    let mut distance_2 = distance_1;
+    let mut kirifuda = 1;
+    if fuda_x2 != fuda_x1 {
+        fuda_y2 = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y2);
+        distance_2 = sv_math::vec2_distance(fuda_x2, fuda_y2, pos_x, pos_y);
+        kirifuda = if distance_1 <= distance_2 {1} else {2};
+        //println!("Fuda y2: {fuda_y2} Is {distance_1} > {distance_2}?");
+    }
+    WorkModule::set_int(fighter.module_accessor, kirifuda,FIGHTER_GOOMBA_FINAL_INT_KIRIFUDA);
+    
+    WorkModule::set_float(fighter.module_accessor, if kirifuda == 1 {fuda_x1} else {fuda_x2},FIGHTER_GOOMBA_FINAL_FLOAT_KIRAFUDA_X);
+    WorkModule::set_float(fighter.module_accessor, if kirifuda == 1 {fuda_y1} else {fuda_y2},FIGHTER_GOOMBA_FINAL_FLOAT_KIRAFUDA_Y);
+
+    let distance = if kirifuda == 1 {distance_1} else {distance_2};
     let speed = distance/40.0;
-    println!("X: {fuda_x} Y: {fuda_y} Distance: {distance} Speed: {speed}");
     WorkModule::set_float(fighter.module_accessor, speed,FIGHTER_GOOMBA_FINAL_FLOAT_MOVE_SPEED);
+    
+    //println!("X: {fuda_x} Y: {fuda_y} Distance: {distance} Speed: {speed}");
 
     0.into()
 }
@@ -259,31 +280,79 @@ unsafe extern "C" fn final_dash_main(fighter: &mut L2CFighterCommon) -> L2CValue
 
 	fighter.sub_shift_status_main(L2CValue::Ptr( final_dash_main_loop as *const () as _)) 
 }
+unsafe extern "C" fn final_dash_wait_for_target(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let target = WorkModule::get_int64(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_INT_TARGET_ID) as u32;
+    if !sv_battle_object::is_active(target) {
+        WorkModule::dec_int(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_INT_NEXT_STATUS_COUNTDOWN);
+        return 0.into();
+    }
+    let target_boma = sv_battle_object::module_accessor(target);
+    let target_status = StatusModule::status_kind(target_boma);
+    if target_status == *FIGHTER_STATUS_KIND_DEAD {
+        WorkModule::dec_int(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_INT_NEXT_STATUS_COUNTDOWN);
+        return 0.into();
+    }
+    if WorkModule::get_int(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_INT_NEXT_STATUS_COUNTDOWN) == FALL_DELAY {
+        let target_pos = *PostureModule::pos(target_boma);
+        let fuda_x = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_KIRAFUDA_X);
+        let fuda_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_KIRAFUDA_Y);
+        if sv_math::vec2_distance(target_pos.x, target_pos.y, fuda_x, fuda_y) <= 10.0 {
+            WorkModule::dec_int(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_INT_NEXT_STATUS_COUNTDOWN);
+            return 0.into();
+        }
+    }
+    return 0.into();
+}
+
 unsafe extern "C" fn final_dash_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if !MotionModule::is_end(fighter.module_accessor) {
+        return 0.into();
+    }
+
     if MotionModule::is_end(fighter.module_accessor) {
-        //WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_IS_FINAL);
-        //fighter.change_status(FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK_2.into(), false.into());
-        let target = WorkModule::get_int64(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_INT_TARGET_ID) as u32;
-        if !sv_battle_object::is_active(target) {
-            fighter.change_status(FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK_2.into(), false.into());
-            return 1.into();
+        if KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_AIR_STOP {
+            let sum = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+            KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+            
+            KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            sv_kinetic_energy!(
+                set_speed,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+                sum
+            );
+            sv_kinetic_energy!(
+                set_accel,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+                0.0
+            );
+            sv_kinetic_energy!(
+                set_limit_speed,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+                -1.0
+            );
+            sv_kinetic_energy!(
+                set_stable_speed,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+                -1.0
+            );
         }
-        let target_boma = sv_battle_object::module_accessor(target);
-        let target_status = StatusModule::status_kind(target_boma);
-        if target_status == *FIGHTER_STATUS_KIND_DEAD {
-            fighter.change_status(FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK_2.into(), false.into());
-            return 1.into();
+    }
+    // WAIT FOR TARGET IF THEY EXIST //
+    if WorkModule::get_int(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_INT_NEXT_STATUS_COUNTDOWN) == FALL_DELAY {
+        let pos_y = PostureModule::pos_y(fighter.module_accessor);
+        let blast_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_BLASTZONE_Y);
+        if pos_y > blast_y {
+            return final_dash_wait_for_target(fighter);
         }
-        if WorkModule::get_int(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_INT_NEXT_STATUS_COUNTDOWN) == FALL_DELAY {
-            let target_pos = *PostureModule::pos(target_boma);
-            let fuda_x = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X);
-            let fuda_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y);
-            if sv_math::vec2_distance(target_pos.x, target_pos.y, fuda_x, fuda_y) <= 10.0 {
-                WorkModule::dec_int(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_INT_NEXT_STATUS_COUNTDOWN);
-                return 0.into();
-            }
-        }
-        else if WorkModule::count_down_int(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_INT_NEXT_STATUS_COUNTDOWN,0) {
+    }
+    else {
+        if WorkModule::count_down_int(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_INT_NEXT_STATUS_COUNTDOWN,0) {
             fighter.change_status(FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK_2.into(), false.into());
             return 1.into();
         }
@@ -316,8 +385,8 @@ unsafe extern "C" fn final_dash_attack(fighter: &mut L2CFighterCommon, param_2: 
     //StatusModule::set_status_kind_interrupt(opponent_boma, *FIGHTER_STATUS_KIND_IKE_FINAL_DAMAGE_FLY);
     StatusModule::change_status_request(opponent_boma, *FIGHTER_STATUS_KIND_IKE_FINAL_DAMAGE_FLY,false);
     
-    let pos_x = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X);
-    let pos_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y);
+    let pos_x = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_KIRAFUDA_X);
+    let pos_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_KIRAFUDA_Y);
     let move_speed = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_MOVE_SPEED);
     WorkModule::set_float(opponent_boma,pos_x, *FIGHTER_STATUS_FINAL_WORK_FLOAT_TARGET_POS_X);
     WorkModule::set_float(opponent_boma,pos_y, *FIGHTER_STATUS_FINAL_WORK_FLOAT_TARGET_POS_Y);
@@ -342,8 +411,8 @@ unsafe extern "C" fn final_fall_main(fighter: &mut L2CFighterCommon) -> L2CValue
 
     //WorkModule::set_float(fighter.module_accessor, FALL_SPEED_Y.abs(),FIGHTER_GOOMBA_FINAL_FLOAT_MOVE_SPEED);
     //WorkModule::set_float(fighter.module_accessor, FALL_SPEED_Y.abs(), *FIGHTER_IKE_STATUS_FINAL_WORK_FLOAT_MOVE_SPD_Y);
-    let new_x = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X);
-    let new_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y);
+    let new_x = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_KIRAFUDA_X);
+    let new_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_KIRAFUDA_Y);
     let pos_y = PostureModule::pos_y(fighter.module_accessor);
     let blast_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_BLASTZONE_Y);
     let new_pos = Vector3f::new(new_x,new_y+50.0,0.0);
@@ -389,7 +458,7 @@ unsafe extern "C" fn final_fall_main(fighter: &mut L2CFighterCommon) -> L2CValue
 	fighter.sub_shift_status_main(L2CValue::Ptr( final_fall_main_loop as *const () as _)) 
 }
 unsafe extern "C" fn final_fall_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let target_y = WorkModule::get_float(fighter.module_accessor,FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y);
+    let target_y = WorkModule::get_float(fighter.module_accessor,FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y1);
     let start_y = WorkModule::get_float(fighter.module_accessor,FIGHTER_GOOMBA_FINAL_FLOAT_START_Y);
     let pos_y = PostureModule::pos_y(fighter.module_accessor);
     if pos_y <= target_y-10.0 {
@@ -556,6 +625,7 @@ unsafe extern "C" fn final_landing_main_loop(fighter: &mut L2CFighterCommon) -> 
         MotionModule::change_motion(fighter.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
 
         ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
+        smash_script::notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1e0aba2d68));
         WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLAG_IS_END_PHASE);
         return fighter.sub_shift_status_main(L2CValue::Ptr( final_landing_end_loop as *const () as _)) ;
     }
@@ -611,7 +681,10 @@ unsafe extern "C" fn final_landing_attack(fighter: &mut L2CFighterCommon, param_
         return 0.into();
     }
     StatusModule::change_status_request(opponent_boma, *FIGHTER_STATUS_KIND_FOX_FINAL_TARGET_END,false);
-    PostureModule::add_pos(opponent_boma, &Vector3f::new(0.0, 8.0, 0.0));
+    let opponent_pos = *PostureModule::pos(opponent_boma);
+    let my_pos = *PostureModule::pos(fighter.module_accessor);
+    let new_y = (my_pos.y+1.0).max(opponent_pos.y);
+    PostureModule::set_pos(opponent_boma, &Vector3f::new(opponent_pos.x, new_y, opponent_pos.z));
     //LinkModule::unlink(opponent_boma, *FIGHTER_LINK_NO_FINAL);
     return 0.into();
 }
@@ -639,5 +712,5 @@ pub fn install(agent: &mut smashline::Agent) {
 	agent.status(Main, *FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK_FINISH, final_landing_main);
 	agent.status(End, *FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK_FINISH, final_landing_end);
 	agent.status(Exit, *FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK_FINISH, empty_status);
-    //agent.status(CheckAttack, *FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK_FINISH, final_landing_attack);
+    agent.status(CheckAttack, *FIGHTER_PIKACHU_STATUS_KIND_FINAL_ATTACK_FINISH, final_landing_attack);
 }
