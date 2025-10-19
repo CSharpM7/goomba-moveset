@@ -126,7 +126,7 @@ unsafe extern "C" fn speciallw_pound_main(fighter: &mut L2CFighterCommon) -> L2C
         let end_frame = FIGHTER_GOOMBA_SPECIAL_LW_SPIKE_FRAME;//MotionModule::end_frame(fighter.module_accessor);
         MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, end_frame, true, true, false);
         WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_LANDING_ENABLE);
-        WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE);
+        WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_ENABLE_BOUNCE);
     }
     
     if fighter.global_table[IS_STOP].get_bool() {
@@ -141,7 +141,7 @@ unsafe extern "C" fn speciallw_pound_main_loop(fighter: &mut L2CFighterCommon) -
     }
     if MotionModule::is_end(fighter.module_accessor) {
         WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FALL);
-        WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE);
+        WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_ENABLE_BOUNCE);
     }
     let count = fighter.global_table[STATUS_FRAME].get_i32();//WorkModule::get_int(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_INT_COUNT);
     let pass_frame = 5;
@@ -205,9 +205,9 @@ unsafe extern "C" fn speciallw_pound_attack(fighter: &mut L2CFighterCommon, para
     else {
         can_bounce = true;
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_ENABLE_BOUNCE) 
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_ENABLE_BOUNCE) 
     && can_bounce {
-        let sfx = if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_WEAK_SFX) 
+        let sfx = if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_WEAK_SFX) 
         {Hash40::new("se_pichu_special_s01_charge")} else {Hash40::new("se_common_kick_hit_l")};
         SoundModule::play_se(fighter.module_accessor, sfx, true, false, false, false, enSEType(0));
 
