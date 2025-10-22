@@ -42,7 +42,7 @@ unsafe extern "C" fn specials_gravity(fighter: &mut L2CFighterCommon) {
     if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR {
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
-        let air_accel_y_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y_stable"), 0);
+        let air_speed_y_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_y_stable"), 0);
         let air_accel_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_mul"), 0);
         let air_speed_x_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_x_stable"), 0);
         let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
@@ -62,7 +62,7 @@ unsafe extern "C" fn specials_gravity(fighter: &mut L2CFighterCommon) {
                 set_limit_speed,
                 fighter,
                 FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
-                air_accel_y_stable
+                air_speed_y_stable
             );
         }
         else {
@@ -76,7 +76,7 @@ unsafe extern "C" fn specials_gravity(fighter: &mut L2CFighterCommon) {
                 set_limit_speed,
                 fighter,
                 FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
-                air_accel_y_stable * HOP_GRAVITY_LIMIT_FACTOR
+                air_speed_y_stable * HOP_GRAVITY_LIMIT_FACTOR
             );
         }
         sv_kinetic_energy!(

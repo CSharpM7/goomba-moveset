@@ -143,8 +143,8 @@ unsafe extern "C" fn speciallw_pound_main_loop(fighter: &mut L2CFighterCommon) -
         WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_FALL);
         WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_FLAG_ENABLE_BOUNCE);
     }
-    let count = fighter.global_table[STATUS_FRAME].get_i32();//WorkModule::get_int(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_INT_COUNT);
-    let pass_frame = 5;
+    let count = fighter.global_table[STATUS_FRAME].get_f32();//WorkModule::get_int(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_LW_INT_COUNT);
+    let pass_frame = 5.0;
     if count > pass_frame {
         if !fighter.sub_fighter_do_control_passable().get_bool() {
             GroundModule::set_passable_check(fighter.module_accessor, false);
