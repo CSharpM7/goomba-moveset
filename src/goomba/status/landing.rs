@@ -13,8 +13,8 @@ pub unsafe extern "C" fn landing_air_main(fighter: &mut smashline::L2CFighterCom
         _ => hash40("landing_heavy")
     };
     let landing_frame = match mot {
-        0xc3a4e2597 => 7.0,//n
-        0xc3495ada5 => 9.0,//f
+        0xc3a4e2597 => 9.0,//n
+        0xc3495ada5 => 13.0,//f
         0xc33f869bc => 16.0,//b
         0xdde67d935 => 11.0,//hi
         0xd40042152 => 23.0,//lw
@@ -23,6 +23,7 @@ pub unsafe extern "C" fn landing_air_main(fighter: &mut smashline::L2CFighterCom
     if landing_frame != 0.0 {
         motion_rate = fighter.sub_get_landing_motion_rate(landing_motion.into(),landing_frame.into()).get_f32();
     }
+    
     //println!("Landing lag: {landing_frame} Motion Rate: {motion_rate}");
     MotionModule::set_rate(fighter.module_accessor,motion_rate.max(1.0));
     return original;
