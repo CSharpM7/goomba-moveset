@@ -1,5 +1,48 @@
 use crate::imports::imports_acmd::*;
 
+unsafe extern "C" fn effect_win1(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 31.0);
+    if macros::is_excute(agent) {
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 90, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(agent.lua_state_agent, 55.0);
+    if macros::is_excute(agent) {
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 90, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(agent.lua_state_agent, 111.0);
+    if macros::is_excute(agent) {
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 90, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
+    }
+}
+
+unsafe extern "C" fn sound_win1(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 11.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("vc_pichu_win02"));
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("se_pichu_jump03_win02"));
+    }
+    frame(agent.lua_state_agent, 30.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("se_pichu_landing01_win02"));
+    }
+    frame(agent.lua_state_agent, 38.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("se_pichu_jump03_win02"));
+    }
+    frame(agent.lua_state_agent, 54.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("se_pichu_landing01_win02"));
+    }
+    frame(agent.lua_state_agent, 66.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("se_pichu_jump01_win02"));
+    }
+    frame(agent.lua_state_agent, 110.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("se_pichu_landing04_win02"));
+    }
+}
+
 pub fn install(agent: &mut smashline::Agent) {
 	agent.acmd("effect_win1", effect_win1, Priority::Default);
 	agent.acmd("sound_win1", sound_win1, Priority::Default);
