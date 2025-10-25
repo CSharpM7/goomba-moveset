@@ -42,7 +42,7 @@ panic = "abort"
 lto = true
 
 [features]
-dev = []
+dev = ["the_csk_collection_api"]
 hookstatus = []
 default = ["param_config","the_csk_collection_api","smash-bgm-property","hash40",]
 #"toml","serde","serde_derive","skyline-web"]

@@ -9,6 +9,9 @@ mod frame;
 #[cfg(not(feature = "devhook"))]
 mod dev_only;
 
+//#[cfg(not(feature = "dev"))]
+//mod vtable;
+
 mod status;
 pub mod accessories;
 pub mod redshell;
@@ -26,21 +29,28 @@ use crate::singleslot::MOD_SLOTS;
 pub fn install_hook() {
     println!("[smashline_kuribo::kuribo] Installing Hook");
     let mut hookstatus = false;
+
+    let agent = &mut smashline::Agent::new("pichu");
+    let slots = (*MOD_SLOTS.read().unwrap()).to_vec();
+    agent.set_costume(slots);
+
     #[cfg(feature = "hookstatus")] {
         println!("[smashline_kuribo::kuribo] Installing Status Scripts in Hook");
         hookstatus=true;
         
-        let agent = &mut smashline::Agent::new("pichu");
-        let slots = (*MOD_SLOTS.read().unwrap()).to_vec();
-        agent.set_costume(slots);
 
         agent_init::install(agent);
         status::install(agent);
-        agent.install();
     }
+    //#[cfg(not(feature = "dev"))] 
+    //vtable::install();
+
+    agent.install();
     accessories::install_hook(hookstatus);
     redshell::install_hook(hookstatus);
     tower::install_hook(hookstatus);
+
+    
     println!("[smashline_kuribo::kuribo] ");
 }
 #[cfg(not(feature = "devhook"))]

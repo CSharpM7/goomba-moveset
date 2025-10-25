@@ -52,6 +52,15 @@ unsafe extern "C" fn game_entryr(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent,1.0);
 }
 
+pub unsafe extern "C" fn dev_frame(fighter: &mut L2CFighterCommon) {
+    let status = StatusModule::status_kind(fighter.module_accessor);
+    let status_frame = fighter.global_table[STATUS_FRAME].get_f32();
+    if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+        println!("Status: {status}");
+    }
+    AttackModule::set_power_mul_status(fighter.module_accessor,10.0);
+}
+
 pub fn install(agent: &mut smashline::Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_APPEAL, appeal_main);
     /*
@@ -61,8 +70,9 @@ pub fn install(agent: &mut smashline::Agent) {
     agent.acmd("game_win2", game_entryr, Priority::High);
     agent.acmd("game_win3", game_entryr, Priority::High);
     */
+    agent.on_line(Main, dev_frame);
     
-    let agent = &mut smashline::Agent::new("fighter")
+    smashline::Agent::new("fighter")
     .on_line(Main, common_frame)
     .install(); 
 }
