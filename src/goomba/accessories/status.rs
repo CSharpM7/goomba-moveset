@@ -18,8 +18,6 @@ pub unsafe extern "C" fn accessories_haved_pre(weapon: &mut L2CWeaponCommon) -> 
     0.into()
 }
 pub unsafe extern "C" fn accessories_haved_main(weapon: &mut smashline::L2CWeaponCommon) -> L2CValue {
-    super::init_common(weapon.module_accessor);
-    
     let owner = &mut *sv_battle_object::module_accessor(
         (WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32
     );
@@ -44,6 +42,9 @@ pub unsafe extern "C" fn accessories_haved_main(weapon: &mut smashline::L2CWeapo
     else if owner_status == *FIGHTER_STATUS_KIND_APPEAL {
         WorkModule::set_int(weapon.module_accessor, ACCESSORIES_TYPE_BOOK, ACCESSORIES_INSTANCE_INT_TYPE);
         super::init_book(weapon.module_accessor);
+    }
+    else {
+        super::init_common(weapon.module_accessor);
     }
     weapon.fastshift(L2CValue::Ptr(accessories_haved_main_loop as *const () as _))
 }
