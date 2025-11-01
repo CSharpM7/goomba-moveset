@@ -1,14 +1,17 @@
 use crate::imports::imports_acmd::*;
 
 unsafe extern "C" fn game_attack11(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 1.0);
+    FT_MOTION_RATE_RANGE(agent,1.0,5.0,3.0);
     frame(agent.lua_state_agent, 5.0);
+    FT_MOTION_RATE(agent,1.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 9.0, 361, 78, 0, 48, 5.5, 0.0, 5.0, 4.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 6, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.5, 361, 78, 0, 48, 6.0, 0.0, 5.5, 5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
         AttackModule::set_attack_height_all(agent.module_accessor, AttackHeight(*ATTACK_HEIGHT_LOW), false);
-        macros::ATK_SET_SHIELD_SETOFF_MUL_arg3(agent, 0, 1, 0.6);
-
+        macros::ATK_SET_SHIELD_SETOFF_MUL_arg3(agent, 0, 1, 0.85);
     }
     wait(agent.lua_state_agent, 2.0);
+    FT_MOTION_RATE(agent,0.8);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
     }

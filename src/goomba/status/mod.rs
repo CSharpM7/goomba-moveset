@@ -11,5 +11,5 @@ pub fn install(agent: &mut smashline::Agent) {
 	specials::install(agent);
 	finalsmash::install(agent);
 	landing::install(agent);
-    entry_appeal::install(agent);
+    entry_appeal::install(agent); 
 }

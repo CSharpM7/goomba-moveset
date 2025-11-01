@@ -9,8 +9,8 @@ mod frame;
 #[cfg(not(feature = "devhook"))]
 mod dev_only;
 
-//#[cfg(not(feature = "dev"))]
-//mod vtable;
+#[cfg(not(feature = "dev"))]
+mod vtable;
 
 mod status;
 pub mod accessories;
@@ -42,8 +42,8 @@ pub fn install_hook() {
         agent_init::install(agent);
         status::install(agent);
     }
-    //#[cfg(not(feature = "dev"))] 
-    //vtable::install();
+    #[cfg(not(feature = "dev"))] 
+    vtable::install();
 
     agent.install();
     accessories::install_hook(hookstatus);

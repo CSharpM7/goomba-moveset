@@ -4,29 +4,39 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         //notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SUPERLEAF_VISIBLE);
+        WorkModule::set_float(agent.module_accessor, 16.0,FIGHTER_GOOMBA_SPECIAL_S_FLOAT_REFLECT_FRAME);
     }
     frame(agent.lua_state_agent, 1.0);
-    FT_MOTION_RATE_RANGE(agent,1.0,11.0,4.0);
-    frame(agent.lua_state_agent, 11.0);
-    FT_MOTION_RATE_RANGE(agent,11.0,16.0,3.0);
+    FT_MOTION_RATE_RANGE(agent,1.0,13.0,4.0);
+    frame(agent.lua_state_agent, 13.0);
+    FT_MOTION_RATE(agent,1.0);
     frame(agent.lua_state_agent, 15.0);
+    if macros::is_excute(agent) {
+        macros::SEARCH(agent, 0, 0, Hash40::new("top"), 8.0, 0.0, 5.5, 3.5, Some(0.0), Some(5.5), Some(11.5), *COLLISION_KIND_MASK_ATTACK, *HIT_STATUS_MASK_NORMAL, 60, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false);
+    }
+    frame(agent.lua_state_agent, 17.0);
+    FT_MOTION_RATE(agent,1.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HOP);
         WorkModule::off_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
 
-        shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, hash40("top"), 7.0, 0.0, 5.5, 3.5, 0.0, 5.5, 9.7, 
-        1.4 /* Speed/Damage */, 1.5 /* Speed/Damage */, 50 /* Threshold */, false, 1.0 /* Life Mult */, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
+        let threshold = if WorkModule::is_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_GOOMBALL) 
+        {GOOMBALL_REFLECTOR_THRESHOLD} else {50};
+
+        shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, hash40("top"), 7.0, 0.0, 5.5, 3.5, 0.0, 5.5, 10.2, 
+        1.375 /* Damage */, 1.25 /* Speed */, threshold /* Threshold */, false, 1.0 /* Life Mult */, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
+        macros::SEARCH(agent, 0, 0, Hash40::new("top"), 8.0, 0.0, 5.5, 3.5, Some(0.0), Some(5.5), Some(13.0), *COLLISION_KIND_MASK_ATTACK, *HIT_STATUS_MASK_NORMAL, 60, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false);
     }
-    frame(agent.lua_state_agent, 16.0);
-    FT_MOTION_RATE(agent,1.0);
     frame(agent.lua_state_agent, 18.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 100, 100, 80, 0, 7.0, 0.0, 5.5, 8.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.3, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_turn"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 100, 100, 80, 0, 6.5, 0.0, 5.5, 3.5, Some(0.0), Some(5.5), Some(10.7), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.3, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_turn"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HARISEN, *ATTACK_REGION_TAIL);
+        AttackModule::set_optional_hit_sound(agent.module_accessor, 0, Hash40::new("se_pichu_special_n02"));
         AttackModule::set_add_reaction_frame_revised(agent.module_accessor, 0, 4.0, false);
     }
     wait(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
+        search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
         shield!(agent, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, 0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
     }
     frame(agent.lua_state_agent, 27.0);
@@ -87,7 +97,10 @@ unsafe extern "C" fn sound_specialsend(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 19.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_pichu_swing_m"));
+        if WorkModule::is_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_SFX) {
+            WorkModule::off_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_SFX);
+            SoundModule::play_se(agent.module_accessor, Hash40::new("se_pichu_special_n02"), true, false, false, false, enSEType(0));
+        }
     }
 }
 

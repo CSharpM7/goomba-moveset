@@ -99,6 +99,7 @@ unsafe extern "C" fn specials_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::set_flag(fighter.module_accessor, has_hop, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HAS_HOP);
     WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
     WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_SFX);
+    WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_GOOMBALL);
 
     let mut speed_x = 0.5*KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let prev_status = StatusModule::prev_status_kind(fighter.module_accessor, 0);
@@ -178,6 +179,22 @@ unsafe extern "C" fn specials_main_loop(fighter: &mut L2CFighterCommon) -> L2CVa
 }
 
 pub unsafe extern "C" fn specials_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_SFX) {
+        WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_SFX);
+        SoundModule::play_se(fighter.module_accessor, Hash40::new("se_pichu_special_n02"), true, false, false, false, enSEType(0));
+    }
+    let frame = MotionModule::frame(fighter.module_accessor);
+    if 11.0 < frame && frame < 27.0 {
+        let threshold = if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_GOOMBALL) 
+        {GOOMBALL_REFLECTOR_THRESHOLD} else {50};
+        ReflectorModule::set_attack_limit(fighter.module_accessor, threshold as f32, 0);
+    }
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_GOOMBALL) {
+        if WorkModule::count_down_int(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_INT_GOOMBALL_COUNTER, 0) {
+            ReflectorModule::set_attack_limit(fighter.module_accessor, 50.0 as f32, 0);
+            WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_GOOMBALL);
+        }
+    }
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HOP) {
         if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SPECIAL_S_DISABLE_HOP) {
             WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HOP);

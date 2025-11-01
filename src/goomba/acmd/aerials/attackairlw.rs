@@ -1,7 +1,7 @@
 use crate::imports::imports_acmd::*;
 
 const ANGLE: f32 = 65.0;
-const SPEED: f32 = 3.2;
+const SPEED: f32 = 3.5;
 
 unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
@@ -18,20 +18,20 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
-        let speed_x = ANGLE.cos()*-SPEED;
-        let speed_y = ANGLE.sin()*-SPEED;
+        let speed_x = ANGLE.to_radians().cos()*SPEED;
+        let speed_y = ANGLE.to_radians().sin()*-SPEED;
 
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
         macros::SET_SPEED_EX(agent, speed_x, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN); //0.9, -4. Speed = 4.1
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
     }
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 12.5, 285, 90, 0, 20, 4.0, 0.0, 1.0, 0.5, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 12.5, 65, 75, 0, 67, 5.2, 0.0, 2.4, 0.1, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 12.5, 285, 90, 0, 20, 5.0, 0.0, 1.0, 0.5, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 12.5, 65, 75, 0, 67, 6.2, 0.0, 2.4, 0.1, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
     wait(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 65, 75, 0, 67, 4.2, 0.0, 2.4, 0.1, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 65, 75, 0, 67, 5.2, 0.0, 2.4, 0.1, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         AttackModule::clear(agent.module_accessor, 0, false);
     }
     frame(agent.lua_state_agent, 20.0);
@@ -100,7 +100,7 @@ unsafe extern "C" fn effect_attackairlw(agent: &mut L2CAgentBase) {
         macros::EFFECT(agent, Hash40::new("goomba_wing_flying"), Hash40::new("top"), 0, 3, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent,1.25);
         //air lw
-        macros::EFFECT_FOLLOW(agent, Hash40::new("goomba_air_lw"), Hash40::new("top"), 0, -8, 6, -180.0+ANGLE, 0, 0, 1.1, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("goomba_air_lw"), Hash40::new("top"), 0, -5, 3, -180.0+ANGLE, 0, 0, 1.1, true);
     }
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
@@ -171,11 +171,19 @@ unsafe extern "C" fn expression_attackairlw2(agent: &mut L2CAgentBase) {
         }
     }
 }
-
+unsafe extern "C" fn game_landingairlw(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 48, 50, 0, 77, 4.5, 0.0, 5.0, 4.25, Some(0.0), Some(5.0), Some(-4.25), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+    }
+    frame(agent.lua_state_agent, 2.0);
+    if macros::is_excute(agent) {
+        AttackModule::clear_all(agent.module_accessor);
+    }
+}
 unsafe extern "C" fn effect_landingairlw(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        //macros::EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         
         macros::EFFECT(agent, Hash40::new("goomba_wing_scatter"), Hash40::new("top"), 0, 5, -5, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
     }
@@ -208,9 +216,8 @@ pub fn install(agent: &mut smashline::Agent) {
 	agent.acmd("sound_attackairlw2", empty_acmd, Priority::Default);
 	agent.acmd("expression_attackairlw2", expression_attackairlw2, Priority::Default);
 
-	agent.acmd("game_landingairlw", empty_acmd, Priority::Default);
+	agent.acmd("game_landingairlw", game_landingairlw, Priority::Default);
 	agent.acmd("effect_landingairlw", effect_landingairlw, Priority::Default);
 	agent.acmd("sound_landingairlw", sound_landingairlw, Priority::Default);
 	agent.acmd("expression_landingairlw", expression_landingairlw, Priority::Default);
-
 }

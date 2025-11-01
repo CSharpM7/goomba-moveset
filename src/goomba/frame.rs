@@ -3,9 +3,10 @@ use crate::imports::imports_agent::*;
 unsafe fn ssm_scale(boma: &mut BattleObjectModuleAccessor) {
     if ModelModule::scale(boma) == WorkModule::get_param_float(boma, hash40("scale"), 0) {
         //0.92
-        ModelModule::set_scale(boma, 1.0);
-        AttackModule::set_attack_scale(boma, 1.0, true);
-        GrabModule::set_size_mul(boma, 1.0);
+        let goomba_size = 1.1;
+        ModelModule::set_scale(boma, goomba_size);
+        AttackModule::set_attack_scale(boma, goomba_size, true);
+        GrabModule::set_size_mul(boma, goomba_size);
     }; 
 }
 

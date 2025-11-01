@@ -135,7 +135,7 @@ unsafe extern "C" fn attackair_lw_swoop_loop(fighter: &mut L2CFighterCommon) -> 
             0.0
         );
         //Do I really gotta do all this?
-        let ACCEL_MUL = 0.625;
+        let ACCEL_MUL = 0.75;
         let MAX_MUL = 1.0;
         let air_accel_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_mul"), 0);
         let air_accel_x_add = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_add"), 0);

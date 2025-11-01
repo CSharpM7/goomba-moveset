@@ -60,7 +60,6 @@ pub unsafe extern "C" fn dev_frame(fighter: &mut L2CFighterCommon) {
     if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
         println!("Status: {status}");
     }
-    AttackModule::set_power_mul_status(fighter.module_accessor,10.0);
 }
 
 pub fn install(agent: &mut smashline::Agent) {

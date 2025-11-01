@@ -9,7 +9,7 @@ unsafe fn get_blastzone_top(lua_state_agent: u64) -> f32 {
 }
 
 const ANIMATION_HEIGHT: f32 = 271.0;
-const FALL_SPEED_Y: f32 = -8.0; //-6.0
+const FALL_SPEED_Y: f32 = -14.0; //-6.0
 const TARGET_MOVE_SPEED: f32 = 3.0;
 const FALL_DELAY: i32 = 30;
 
@@ -30,6 +30,7 @@ pub unsafe extern "C" fn final_release_the_captured_inner(opponent: *mut BattleO
         LinkModule::unlink(opponent, *FIGHTER_LINK_NO_FINAL);
     }
 }
+
 pub unsafe extern "C" fn final_release_the_captured(fighter: &mut L2CFighterCommon,is_final_fall: bool) {
     for entry_id in 0..8 {
         // get the active battle object id and add it to the list
@@ -412,10 +413,11 @@ unsafe extern "C" fn final_fall_main(fighter: &mut L2CFighterCommon) -> L2CValue
     //WorkModule::set_float(fighter.module_accessor, FALL_SPEED_Y.abs(),FIGHTER_GOOMBA_FINAL_FLOAT_MOVE_SPEED);
     //WorkModule::set_float(fighter.module_accessor, FALL_SPEED_Y.abs(), *FIGHTER_IKE_STATUS_FINAL_WORK_FLOAT_MOVE_SPD_Y);
     let new_x = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_KIRAFUDA_X);
-    let new_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_KIRAFUDA_Y);
-    let pos_y = PostureModule::pos_y(fighter.module_accessor);
+    let kirafuda = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_KIRAFUDA_Y);
+    let blast_y = get_blastzone_top(fighter.lua_state_agent)+10.0;
+    let new_y = (kirafuda+50.0).max(blast_y);
     let blast_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_FLOAT_BLASTZONE_Y);
-    let new_pos = Vector3f::new(new_x,new_y+50.0,0.0);
+    let new_pos = Vector3f::new(new_x,new_y,0.0);
     PostureModule::set_pos(fighter.module_accessor, &new_pos);
 
     let mot = Hash40::new("final_fall");

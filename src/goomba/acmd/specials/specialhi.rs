@@ -50,7 +50,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
         let kbg = if agent.is_grounded() {100} else {115};
 
         macros::HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_INVINCIBLE);
-        macros::ATTACK(agent, 0, 1, Hash40::new("top"), 1.5, (87-attack_angle_adjust) as u64, kbg, 160, 0, 4.75, 0.0, 4.75, -4.5, Some(0.0), Some(4.75), Some(6.0), 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+        macros::ATTACK(agent, 0, 1, Hash40::new("top"), 1.5, (87-attack_angle_adjust) as u64, kbg, 160, 0, 4.75, 0.0, 4.75, -5.5, Some(0.0), Some(4.75), Some(7.0), 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         AttackModule::set_no_damage_fly_smoke_all(agent.module_accessor, true, false);
     }
     wait(agent.lua_state_agent, 1.0);

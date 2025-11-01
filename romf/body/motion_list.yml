@@ -1835,7 +1835,7 @@ list:
     extra:
       xlu_start: 0
       xlu_end: 0
-      cancel_frame: 21
+      cancel_frame: 16
       no_stop_intp: true
   attack_dash:
     game_script: game_attackdash
