@@ -10,6 +10,9 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent,1.0,13.0,4.0);
     frame(agent.lua_state_agent, 13.0);
     FT_MOTION_RATE(agent,1.0);
+    if macros::is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HOP);
+    }
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
         macros::SEARCH(agent, 0, 0, Hash40::new("top"), 8.0, 0.0, 5.5, 3.5, Some(0.0), Some(5.5), Some(11.5), *COLLISION_KIND_MASK_ATTACK, *HIT_STATUS_MASK_NORMAL, 60, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false);
@@ -17,8 +20,7 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 17.0);
     FT_MOTION_RATE(agent,1.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HOP);
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
+        WorkModule::off_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_USE_NORMAL_GRAVITY);
 
         let threshold = if WorkModule::is_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_GOOMBALL) 
         {GOOMBALL_REFLECTOR_THRESHOLD} else {50};
@@ -49,7 +51,7 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 49.0);
     FT_MOTION_RATE_RANGE(agent,49.0,67.0,7.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
+        WorkModule::on_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_USE_NORMAL_GRAVITY);
     }
     frame(agent.lua_state_agent, 67.0);
     FT_MOTION_RATE(agent,1.0);

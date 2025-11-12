@@ -31,7 +31,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     }
     wait(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 65, 75, 0, 67, 5.2, 0.0, 2.4, 0.1, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 65, 75, 0, 67, 4.75, 0.0, 2.6, 0.1, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         AttackModule::clear(agent.module_accessor, 0, false);
     }
     frame(agent.lua_state_agent, 20.0);

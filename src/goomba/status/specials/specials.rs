@@ -1,7 +1,7 @@
 use crate::imports::imports_status::*;
 use super::*;
 
-pub const HOP_SPEED_Y: f32 = 0.5;
+pub const HOP_SPEED_Y: f32 = 1.25;
 pub const HOP_GRAVITY_CHANGE_THRESHOLD: f32 = 0.625;
 pub const HOP_GRAVITY_ACCEL_FACTOR: f32 = 0.75;
 pub const HOP_GRAVITY_LIMIT_FACTOR: f32 = 0.5;
@@ -48,7 +48,7 @@ unsafe extern "C" fn specials_gravity(fighter: &mut L2CFighterCommon) {
         let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
 
         let normal_gravity_hop = !WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HAS_HOP)
-        || WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
+        && WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_USE_NORMAL_GRAVITY);
 
         let normal_gravity_speed = speed_y > HOP_GRAVITY_CHANGE_THRESHOLD;
         if normal_gravity_hop || normal_gravity_speed {
@@ -97,7 +97,7 @@ unsafe extern "C" fn specials_gravity(fighter: &mut L2CFighterCommon) {
 unsafe extern "C" fn specials_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let has_hop = !WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_INSTANCE_FLAG_SPECIAL_S_DISABLE_HOP);
     WorkModule::set_flag(fighter.module_accessor, has_hop, FIGHTER_GOOMBA_SPECIAL_S_FLAG_HAS_HOP);
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_GRAVITY);
+    WorkModule::on_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_USE_NORMAL_GRAVITY);
     WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_SFX);
     WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_GOOMBALL);
 
