@@ -53,9 +53,8 @@ unsafe fn on_search_goomba(fighter: &mut Fighter, log: u64) -> u64 {
         }
 
         let motion_frame = MotionModule::frame(module_accessor);
-        let reflect_frame = WorkModule::get_float(module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLOAT_REFLECT_FRAME);
-        if motion_frame < reflect_frame {
-            MotionModule::set_frame_sync_anim_cmd(module_accessor, reflect_frame, true, true, false);
+        if motion_frame < (GOOMBALL_REFLECT_FRAME as f32) {
+            MotionModule::set_frame_sync_anim_cmd(module_accessor, GOOMBALL_REFLECT_FRAME as f32, true, true, false);
         }
 
         return RETURN_1;
