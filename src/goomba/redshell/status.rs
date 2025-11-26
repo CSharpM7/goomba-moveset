@@ -236,6 +236,7 @@ unsafe extern "C" fn redshell_set_angle(weapon: &mut smashline::L2CWeaponCommon)
     let rot_x = PostureModule::rot_x(weapon.module_accessor, 0);
     let rot_y = PostureModule::rot_y(weapon.module_accessor, 0);
     PostureModule::set_rot(weapon.module_accessor, &Vector3f::new(rot_x,0.0,rot_z), 0);
+    WorkModule::set_float(weapon.module_accessor, rot_x, REDSHELL_INSTANCE_FLOAT_ANGLE);
 }
 
 unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCommon) {
@@ -384,8 +385,8 @@ unsafe extern "C" fn redshell_fly_exec(weapon: &mut smashline::L2CWeaponCommon) 
     WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     let eff = WorkModule::get_int(weapon.module_accessor, REDSHELL_INSTANCE_INT_EFF);
     if eff != *BATTLE_OBJECT_ID_INVALID {
-        let rot_z = PostureModule::rot_z(weapon.module_accessor,0);
-        EffectModule::set_rot(weapon.module_accessor, eff as u32, &Vector3f::new(rot_z, 0.0, 0.0));
+        let rot_x = PostureModule::rot_x(weapon.module_accessor,0);
+        EffectModule::set_rot(weapon.module_accessor, eff as u32, &Vector3f::new(rot_x, 0.0, 0.0));
     }
 
     0.into()

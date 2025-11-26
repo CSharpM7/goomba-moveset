@@ -22,6 +22,9 @@ unsafe extern "C" fn effect_fly(agent: &mut L2CAgentBase) {
                 macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("have"), 0, -3, 0, 0, 0, 0, 0.5, false, *EF_FLIP_NONE);
                 let handle = EffectModule::get_last_handle(agent.module_accessor);
                 WorkModule::set_int(agent.module_accessor, handle as i32, REDSHELL_INSTANCE_INT_EFF);
+                
+                let rot_x = PostureModule::rot_x(agent.module_accessor,0);
+                EffectModule::set_rot(agent.module_accessor, handle as u32, &Vector3f::new(rot_x, 0.0, 0.0));
             }
         }
         wait(agent.lua_state_agent, 10.0);

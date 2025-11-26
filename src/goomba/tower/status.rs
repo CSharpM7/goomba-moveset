@@ -23,7 +23,6 @@ pub unsafe extern "C" fn tower_main(weapon: &mut smashline::L2CWeaponCommon) -> 
 
     let num_goombas = ArticleModule::get_num(owner, *FIGHTER_PICHU_GENERATE_ARTICLE_MONSTERBALL);
     let is_first = num_goombas==1;
-    println!("Current goombas: {num_goombas}");
 
     let anim = if is_first {Hash40::new("goomba1_win2")} else {Hash40::new("goomba2_win2")};
     let frame = if is_first {0.0} else {0.0};
