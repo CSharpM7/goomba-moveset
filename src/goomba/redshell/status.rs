@@ -271,6 +271,7 @@ unsafe extern "C" fn redshell_check_for_turn(weapon: &mut smashline::L2CWeaponCo
         redshell_start_friendly_fire(weapon);
     }
 }
+
 //UNUSED
 unsafe extern "C" fn redshell_check_for_rebound(weapon: &mut smashline::L2CWeaponCommon) {
     let situation = StatusModule::situation_kind(weapon.module_accessor);

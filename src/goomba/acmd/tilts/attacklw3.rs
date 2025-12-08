@@ -40,7 +40,7 @@ unsafe extern "C" fn sound_attacklw3(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn expression_attacklw3(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_R, 2);
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 6);
     }
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
@@ -52,7 +52,7 @@ unsafe extern "C" fn expression_attacklw3(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_NONE, 10);
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 2);
     }
 }
 

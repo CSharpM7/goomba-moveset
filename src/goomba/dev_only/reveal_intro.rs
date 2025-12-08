@@ -35,6 +35,23 @@ pub unsafe fn set_status_all(fighter: &mut L2CFighterCommon, new_status: i32) {
 
         StatusModule::change_status_request(boma, new_status, true);
         ControlModule::add_clatter_time(boma, 90000.0, 0);
+
+        if new_status == *FIGHTER_STATUS_KIND_FURAFURA_STAND {
+            //req furafura on height
+            let eff_y = WorkModule::get_param_float(boma, hash40("height"), 0);
+            let pos = *PostureModule::pos(boma);
+            EffectModule::req(
+                boma,
+                Hash40::new("sys_piyopiyo"),
+                &Vector3f{x:pos.x,y:pos.y+eff_y,z:pos.z},
+                &Vector3f{x:0.0,y:0.0,z:0.0},
+                1.0,
+                0,
+                -1,
+                false,
+                0
+            );
+        }
     }
 }
 

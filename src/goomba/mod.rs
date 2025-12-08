@@ -53,6 +53,7 @@ pub fn install_hook() {
     
     println!("[smashline_kuribo::kuribo] ");
 }
+
 #[cfg(not(feature = "devhook"))]
 pub fn install() {
     println!("[smashline_kuribo::kuribo] Installing Under Slots:");
@@ -62,8 +63,12 @@ pub fn install() {
     let slots = (*MOD_SLOTS.read().unwrap()).to_vec();
     agent.set_costume(slots);
     
+    /*
     #[cfg(feature = "dev")]
     dev_only::install(agent);
+    #[cfg(feature = "dev")]
+    return;
+    */
 
     acmd::install(agent);
     frame::install(agent);
