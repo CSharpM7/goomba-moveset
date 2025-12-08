@@ -20,7 +20,6 @@ smash_singletons = { git = "https://github.com/WuBoytH/smash_singletons.git" }
 smash_rs = { git = "https://github.com/blu-dev/smash-rs", package = "smash" }
 
 sharpsmashlinesuite = { path = "../../SharpSmashlineSuite"}
-wubor_utils = { path = "../../Wubor-Utils", optional = true }
 
 lazy_static = "1.4.0"
 param_config = { git = "https://github.com/csharpm7/lib_paramconfig.git", optional = true }
@@ -44,7 +43,7 @@ lto = true
 [features]
 dev = ["the_csk_collection_api"]
 hookstatus = []
-default = ["param_config","the_csk_collection_api","smash-bgm-property","hash40","wubor_utils"]
+default = ["param_config","the_csk_collection_api","smash-bgm-property","hash40"]
 #"toml","serde","serde_derive","skyline-web"]
-devhook = ["param_config","the_csk_collection_api","smash-bgm-property","hash40","wubor_utils"]
+devhook = ["param_config","the_csk_collection_api","smash-bgm-property","hash40"]
 #"toml","serde","serde_derive","skyline-web"]
