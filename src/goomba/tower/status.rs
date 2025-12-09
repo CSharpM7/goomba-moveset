@@ -99,12 +99,6 @@ unsafe extern "C" fn tower_main_loop(weapon: &mut smashline::L2CWeaponCommon) ->
     0.into()
 }
 
-pub unsafe extern "C" fn tower_frame(fighter: &mut L2CFighterCommon) {
-    println!("!");
-}
-
 pub fn install(agent: &mut smashline::Agent) {
 	agent.status(Main, 0, tower_main);
-	//agent.on_start(tower_main);
-    //agent.on_line(Main, tower_frame);
 }

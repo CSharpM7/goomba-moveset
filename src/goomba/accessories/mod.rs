@@ -6,7 +6,7 @@ use crate::vars::*;
 pub fn install_hook(hookstatus: bool) {
     unsafe {
         FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES += FIGHTER_GOOMBA_GENERATE_ARTICLE_LAST +
-            smashline::clone_weapon("peach", *ACCESSORIES_KIND, 
+            smashline::clone_weapon(ACCESSORIES_ORIGIN, *ACCESSORIES_KIND, 
         "pichu", "accessories",false);
         println!("[smashline_kuribo::kuribo] (HOOK) Accessories assigned to {}",FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
     }

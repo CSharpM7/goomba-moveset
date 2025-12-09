@@ -2,8 +2,8 @@ mod tilts;
 mod smashes;
 mod aerials;
 mod throws;
-mod specials;
 mod finalsmash;
+mod specials;
 
 mod movement;
 mod entry_appeal;
@@ -14,8 +14,8 @@ pub fn install(agent: &mut smashline::Agent) {
     smashes::install(agent);
     aerials::install(agent);
     throws::install(agent);
-    specials::install(agent);
     finalsmash::install(agent);
+    specials::install(agent);
 
     movement::install(agent);
     entry_appeal::install(agent);

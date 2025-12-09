@@ -23,16 +23,12 @@ pub unsafe extern "C" fn accessories_haved_main(weapon: &mut smashline::L2CWeapo
     );
     let owner_status = StatusModule::status_kind(owner);
     if owner_status == *FIGHTER_STATUS_KIND_ENTRY {
-        //println!("Block");
         super::init_block(weapon.module_accessor);
         WorkModule::set_int(weapon.module_accessor, ACCESSORIES_TYPE_BLOCK, ACCESSORIES_INSTANCE_INT_TYPE);
     }
     else if [*FIGHTER_STATUS_KIND_ATTACK_S4,*FIGHTER_STATUS_KIND_ATTACK_S4_HOLD,*FIGHTER_STATUS_KIND_ATTACK_S4_START].contains(&owner_status) {
         WorkModule::set_int(weapon.module_accessor, ACCESSORIES_TYPE_CANDY, ACCESSORIES_INSTANCE_INT_TYPE);
         super::init_lolipop(weapon.module_accessor);
-        if ComboModule::count(owner) == 1 {
-            //println!("HUH");
-        }
     }
     else if [*FIGHTER_STATUS_KIND_SPECIAL_LW,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_POUND,
     FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_LANDING,FIGHTER_GOOMBA_STATUS_KIND_SPECIAL_LW_HIT].contains(&owner_status) {
@@ -165,7 +161,6 @@ unsafe extern "C" fn accessories_ejected_main_loop(weapon: &mut smashline::L2CWe
     }
     WorkModule::add_float(weapon.module_accessor, -1.0, ACCESSORIES_INSTANCE_FLOAT_LIFE);
     let count = WorkModule::get_float(weapon.module_accessor,ACCESSORIES_INSTANCE_FLOAT_LIFE);
-    //println!("Life: {count}");
     if count <= 0.0 {
         die = true;
     }

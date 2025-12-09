@@ -74,6 +74,7 @@ pub const FIGHTER_GOOMBA_GENERATE_ARTICLE_SHIP: i32 = 0x5;
 pub const FIGHTER_GOOMBA_GENERATE_ARTICLE_LAST: i32 = 0x6;
 
 pub static mut FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES: i32 = 0x0;
+pub const ACCESSORIES_ORIGIN: &str = "peach";
 pub const ACCESSORIES_KIND: smash::lib::LuaConst = smash::lib::lua_const::WEAPON_KIND_PEACH_KINOPIO;
 pub const ACCESSORIES_STATUS_KIND_HAVED: i32 = 0x0;
 pub const ACCESSORIES_STATUS_KIND_EJECTED: i32 = 0x1;
@@ -86,10 +87,12 @@ pub const ACCESSORIES_TYPE_BOOK: i32 = 3;
 pub const ACCESSORIES_TYPE_CANDY: i32 = 4;
 
 pub static mut FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL: i32 = 0x0;
-pub const REDSHELL_KIND: smash::lib::LuaConst = smash::lib::lua_const::WEAPON_KIND_YOSHI_TAMAGO;
-pub const REDSHELL_STATUS_KIND_HAVED: i32 = 0x4;
-pub const REDSHELL_STATUS_KIND_SHOOT: i32 = 0x1;
-pub const REDSHELL_STATUS_KIND_FURAFURA: i32 = 0x5;
+pub const REDSHELL_ORIGIN: &str = "buddy";
+pub const REDSHELL_KIND: smash::lib::LuaConst = smash::lib::lua_const::WEAPON_KIND_BUDDY_PAD;
+pub const REDSHELL_STATUS_KIND_HAVED: i32 = 0x0;
+pub const REDSHELL_STATUS_KIND_SHOOT: i32 = 0x2;
+pub const REDSHELL_STATUS_KIND_SPAT: i32 = 0x3;
+pub const REDSHELL_STATUS_KIND_FURAFURA: i32 = 0x4;
 
 pub const REDSHELL_INSTANCE_FLOAT_ANGLE: i32 = 0x7;
 pub const REDSHELL_INSTANCE_FLOAT_BRAKE_X: i32 = 0x6;
