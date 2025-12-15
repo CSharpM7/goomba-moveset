@@ -1,0 +1,3 @@
+# Goomba Moveset
+
+Hi, **this is for educational purposes**. This does not contain any romfs, and this will not compile on your machine as it uses a few local-only libraries. If you know what you're doing you can work around this, but just assume for now you can't make a local version of Goomba. But hey, if you wanna see how movesets get single-slotted, or are interested in how a specific move works, here it is. There won't be many commented segments, so unfortunately if you're confused on how a specific block of code works, I can't help you. 
