@@ -23,8 +23,19 @@ pub unsafe extern "C" fn final_common_flags(fighter: &mut L2CFighterCommon,is_fi
     AreaModule::set_whole(fighter.module_accessor, !is_final);
 }
 
-pub unsafe extern "C" fn final_release_the_captured_inner(opponent: *mut BattleObjectModuleAccessor, new_status: i32) {
+pub unsafe extern "C" fn final_kill_effect(opponent: *mut BattleObjectModuleAccessor) {
     EffectModule::kill_kind(opponent, Hash40::new("goomba_magic_bright2"), false, false);
+    let opponent_kind = smash::app::utility::get_kind(&mut *opponent);
+
+    //Don't ask why, but magic persists on goomba and only goomba...
+    if opponent_kind == *FIGHTER_KIND_PICHU {
+        EffectModule::kill_all(opponent, 0, false, false);
+        EffectModule::kill_joint_id(opponent, Hash40::new("rot"), false, false);
+        EffectModule::kill_status_effect(opponent);
+    }
+}
+pub unsafe extern "C" fn final_release_the_captured_inner(opponent: *mut BattleObjectModuleAccessor, new_status: i32) {
+    final_kill_effect(opponent);
     StatusModule::change_status_request(opponent, *FIGHTER_STATUS_KIND_FALL, false);
     if LinkModule::is_link(opponent, *FIGHTER_LINK_NO_FINAL) {
         LinkModule::unlink(opponent, *FIGHTER_LINK_NO_FINAL);
@@ -42,6 +53,10 @@ pub unsafe extern "C" fn final_release_the_captured(fighter: &mut L2CFighterComm
         let object = unsafe { &mut *object };
     
         let opponent = sv_battle_object::module_accessor(id);
+        
+        //JUST in case kill magic regardless of state
+        final_kill_effect(opponent);
+
         let opponent_status = StatusModule::status_kind(opponent);
         if !([
             *FIGHTER_STATUS_KIND_IKE_FINAL_DAMAGE,
@@ -499,11 +514,12 @@ unsafe extern "C" fn final_fall_attack(fighter: &mut L2CFighterCommon, param_2: 
     }
     let object_id = (&param_3["object_id_"]).get_u32();
     let opponent_boma = sv_battle_object::module_accessor(object_id);
+
     if StatusModule::status_kind(opponent_boma) != *FIGHTER_STATUS_KIND_IKE_FINAL_DAMAGE_FLY {
         return 0.into();
     }
-    EffectModule::kill_kind(opponent_boma, Hash40::new("goomba_magic_bright2"), false, false);
-    StatusModule::change_status_request(opponent_boma, *FIGHTER_STATUS_KIND_IKE_FINAL_DAMAGE,false);
+
+    StatusModule::change_status_force(opponent_boma, *FIGHTER_STATUS_KIND_DAMAGE_FALL, false);
     //LinkModule::unlink(opponent_boma, *FIGHTER_LINK_NO_FINAL);
     return 0.into();
 }

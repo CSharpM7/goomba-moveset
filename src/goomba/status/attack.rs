@@ -21,19 +21,23 @@ unsafe extern "C" fn attacklw3_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 pub unsafe extern "C" fn attacks4_start_end(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
-    let param = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
-    fighter.sub_remove_exist_article_at_status_end(param.into(), FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES.into());
+    attacks4_common_exit(fighter);
     fighter.status_end_AttackS4Start()
 }
 pub unsafe extern "C" fn attacks4_hold_end(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
-    let param = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
-    fighter.sub_remove_exist_article_at_status_end(param.into(), FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES.into());
+    attacks4_common_exit(fighter);
     fighter.status_end_AttackS4Hold()
 }
 pub unsafe extern "C" fn attacks4_end(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
-    let param = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
-    fighter.sub_remove_exist_article_at_status_end(param.into(), FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES.into());
+    attacks4_common_exit(fighter);
     fighter.status_end_AttackS4()
+}
+pub unsafe extern "C" fn attacks4_common_exit(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
+    let status_interupt = fighter.global_table[STATUS_KIND].get_i32();
+    if ![*FIGHTER_STATUS_KIND_ATTACK_S4_HOLD,*FIGHTER_STATUS_KIND_ATTACK_S4].contains(&status_interupt) {
+        ArticleModule::remove_exist(fighter.module_accessor, FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    }
+    0.into()
 }
 
 //Why do i gotta do this
