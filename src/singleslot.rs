@@ -447,7 +447,7 @@ fn csk_database(chara_hash: u64) {
 
     //TIPS//
     let skill_kinds = ["down_1","neutral_1","neutral_1","side_1","up_1","final_1"];
-    let id_base = 2800-1 as u32;
+    let id_base = 2800 as u32;
     let id_specials = 2803;
     let id_normals = 2809;
     let id_last = 2813;
