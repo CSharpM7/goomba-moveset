@@ -6,13 +6,13 @@ extern "C" {
 }
 pub unsafe extern "C" fn set_kirifuda_pos(fighter: &mut L2CFighterCommon) {
     let fuda_1 = get_kirifuda_position(fighter.lua_state_agent, *STAGE_KIRIFUDA_KIND_IKE_1);
-    let fuda_x1 = fuda_1.value[0];
-    let fuda_y1 = fuda_1.value[1];
+    let fuda_x1 = fuda_1.x();
+    let fuda_y1 = fuda_1.y();
     //println!("Fuda1 X: {fuda_x1} Y: {fuda_y1}");
 
     let fuda_2 = get_kirifuda_position(fighter.lua_state_agent, *STAGE_KIRIFUDA_KIND_IKE_2);
-    let fuda_x2 = fuda_2.value[0];
-    let fuda_y2 = fuda_2.value[1];
+    let fuda_x2 = fuda_2.x();
+    let fuda_y2 = fuda_2.y();
     //println!("Fuda2 X: {fuda_x2} Y: {fuda_y2}");
 
     WorkModule::set_float(fighter.module_accessor, fuda_x1, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X1);

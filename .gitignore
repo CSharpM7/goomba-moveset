@@ -18,3 +18,4 @@ romf/Goomba.zip
 *.prc
 romf/config - Copy.json
 *.bin
+/.VSCodeCounter
