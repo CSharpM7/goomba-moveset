@@ -23,8 +23,8 @@ pub static mut EFFECT_COLORS: [(f32,f32,f32);256] = [DEFAULT_COLOR;256];
 
 unsafe fn get_slot_from_module_accesor(boma: &mut BattleObjectModuleAccessor) -> usize {
     let entry_id = sv_battle_object::entry_id((*boma).battle_object_id) as u32;
-    let info = app::lua_bind::FighterManager::get_fighter_information(singletons::FighterManager(), app::FighterEntryID(entry_id as i32));
-    let slot = app::lua_bind::FighterInformation::fighter_color(info) as usize;
+    let info =  smash::cpp::root::app::lua_bind::FighterManager::get_fighter_information(singletons::FighterManager(), smash::app::FighterEntryID(entry_id as i32));
+    let slot = smash::app::lua_bind::FighterInformation::fighter_color(info) as usize;
     return slot;
 }
 pub unsafe fn common_effect_color(agent: &mut L2CAgentBase) {
@@ -69,7 +69,7 @@ pub unsafe fn get_kuribo_color(module_accessor: *mut BattleObjectModuleAccessor)
 pub unsafe fn is_kuribo(module_accessor: *mut BattleObjectModuleAccessor) -> bool
 {
     let entry_id = sv_battle_object::entry_id((*module_accessor).battle_object_id) as u32;
-    let info = app::lua_bind::FighterManager::get_fighter_information(singletons::FighterManager(), app::FighterEntryID(entry_id as i32));
+    let info = smash::cpp::root::app::lua_bind::FighterManager::get_fighter_information(singletons::FighterManager(), app::FighterEntryID(entry_id as i32));
     let color = app::lua_bind::FighterInformation::fighter_color(info) as usize;
 
     #[cfg(feature = "dev")]

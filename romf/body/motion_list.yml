@@ -1998,7 +1998,7 @@ list:
       xlu_start: 0
       xlu_end: 0
       cancel_frame: 13
-      no_stop_intp: false
+      no_stop_intp: true
   attack_s4_s:
     game_script: game_attacks4
     flags:

@@ -3,11 +3,11 @@ use super::*;
 
 pub const HOP_SPEED_Y: f32 = 1.25;
 pub const HOP_GRAVITY_CHANGE_THRESHOLD: f32 = 0.625;
-pub const HOP_GRAVITY_ACCEL_FACTOR: f32 = 0.75;
+pub const HOP_GRAVITY_ACCEL_FACTOR: f32 = 0.625;
 pub const HOP_GRAVITY_LIMIT_FACTOR: f32 = 0.5;
 pub const HOP_CONTROL_ACCEL_FACTOR: f32 = 0.25;
 pub const HOP_CONTROL_LIMIT_FACTOR: f32 = 0.25;
-pub const BRAKE_FACTOR: f32 = 0.5;
+pub const BRAKE_FACTOR: f32 = 0.375;
 
 pub unsafe extern "C" fn specials_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(
