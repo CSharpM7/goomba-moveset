@@ -42,6 +42,10 @@ use crate::imports::imports_status::*;
 pub unsafe fn is_goomba_accessories(module_accessor: *mut BattleObjectModuleAccessor) -> bool {
     return true;//lua_bind::MotionModule::is_anim_resource(module_accessor, Hash40::new("win_2"));
 }
+
+//These functions apply the necessary mesh visibility states based on what "article"
+//goomba should be holding. Almost all of these utilize a constraint so that Goomba can
+//"hold" this article
 unsafe fn init_common(module_accessor: *mut BattleObjectModuleAccessor) {
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("lollipop"), false);
     ModelModule::set_mesh_visibility(module_accessor, Hash40::new("lollitop"), false);

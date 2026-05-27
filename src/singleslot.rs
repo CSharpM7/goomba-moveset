@@ -27,6 +27,9 @@ unsafe fn get_slot_from_module_accesor(boma: &mut BattleObjectModuleAccessor) ->
     let slot = smash::app::lua_bind::FighterInformation::fighter_color(info) as usize;
     return slot;
 }
+/*
+change the color of Goomba's common arcs
+*/
 pub unsafe fn common_effect_color(agent: &mut L2CAgentBase) {
     use smash_script::{macros::*, *};
 
@@ -54,6 +57,9 @@ lazy_static! {
         default
     });
 }
+/*
+Gets costume of Goomba, where base Goomba = 0
+*/
 pub unsafe fn get_kuribo_color(module_accessor: *mut BattleObjectModuleAccessor) -> i32 {
     let slot = get_slot_from_module_accesor(&mut *module_accessor);
 
@@ -131,6 +137,9 @@ fn install_by_finding_markers() {
                     if lowest_color == -1 {
                         lowest_color = x as _ ;
                     }
+
+                    //stuff related to Goomba reading the marker files
+                    //Didn't feel like making them tomls. I probably should have...
                     if marker_contents.len() <= 0 {continue;}
                     
                     let mut eff_color = (DEFAULT_COLOR.0,DEFAULT_COLOR.1,DEFAULT_COLOR.2);
@@ -193,7 +202,6 @@ fn install_continue() {
 fn params() {
     println!("[smashline_kuribo::singleslot]: Installing Goomba Params...");
     param_config::set_article_use_type(-(*WEAPON_KIND_PICHU_MONSTERBALL), *ARTICLE_USETYPE_FINAL);
-    //return;
 
     let slot = (*MOD_SLOTS.read().unwrap()).to_vec();
     let mut slots: Vec<i32> = Vec::with_capacity(slot.len());
@@ -221,8 +229,8 @@ fn params() {
 
     param_attributes.push((hash40("ground_brake"),0 as u64, 0.1 / 0.11));
     param_attributes.push((hash40("dash_speed"),0 as u64, 1.625 / 1.98));
-    param_attributes.push((hash40("run_accel_mul"),0 as u64, 0.08 / 0.14)); //0.07-0.12
-    param_attributes.push((hash40("run_accel_add"),0 as u64, 0.04 / 0.06)); //0.08-0.04
+    param_attributes.push((hash40("run_accel_mul"),0 as u64, 0.08 / 0.14));
+    param_attributes.push((hash40("run_accel_add"),0 as u64, 0.04 / 0.06));
     param_attributes.push((hash40("run_speed_max"),0 as u64, 1.735 / 1.892));
 
     param_attributes.push((hash40("jump_speed_x"),0 as u64, 0.9 / 0.8)); 
@@ -247,6 +255,7 @@ fn params() {
 
     param_attributes.push((hash40("weight"),0 as u64, 81.0 / 62.0));
 
+    //This is all handled in the landing status instead.
     //param_floats.push((hash40("landing_attack_air_frame_n"),0 as u64, 14.0));
     //param_floats.push((hash40("landing_attack_air_frame_f"),0 as u64, 10.0));
     //param_floats.push((hash40("landing_attack_air_frame_b"),0 as u64, 16.0));
@@ -255,8 +264,6 @@ fn params() {
 
     //param_floats.push((hash40("shield_radius"),0 as u64, 9.0));
     //param_floats.push((hash40("shield_break_y"),0 as u64, 47.0));
-
-    //param_attributes.push((hash40("cliff_jump_x_speed"),0 as u64, 0.6 / 0.6));
 
     param_ints.push((hash40("wall_jump_type"),0 as u64, 0));
     param_ints.push((hash40("squat_walk_type"),0 as u64, 0));
@@ -348,6 +355,7 @@ fn csk_database(chara_hash: u64) {
     let MAX_SLOT = *slots.iter().max().unwrap();
     let colors = (MAX_SLOT-LOWEST_SLOT+1) as u8;
     println!("[smashline_kuribo::ssm]: Creating CSK config {LOWEST_SLOT}-{MAX_SLOT}({colors})");
+
     //DATABASE ENTRY//
     let disp = 71; //Plant
     let skill_disp = 76; //Plant
@@ -447,13 +455,12 @@ fn csk_database(chara_hash: u64) {
 
     //TIPS//
     let skill_kinds = ["down_1","neutral_1","neutral_1","side_1","up_1","final_1"];
-    let id_base = 2800 as u32;
+    let id_base = 2800 as u32; //This is unique to Goomba, dont steal
     let id_specials = 2803;
     let id_normals = 2809;
     let id_last = 2813;
 
     for id in id_base..(id_last+1) {
-        //let id = (base_id + i as u32) as u32;
         let is_misc = [2799,2802].contains(&id);
         let is_story = id < id_specials;
         let is_special = id >= id_specials && id < id_normals && !is_misc;
@@ -462,8 +469,6 @@ fn csk_database(chara_hash: u64) {
         let level = if is_normal {"level_middle"} else {"level_beginner"};
         let topic = if is_story {"topic_story"} else if is_misc {""} else {"topic_technic"};
         let skill_kind = if is_special {skill_kinds[(id-id_specials) as usize]} else {""};
-
-        //println!("ID: {id} L: {} T: {} S: {}",level,topic,skill_kind);
 
         let order = id + 5050;
         the_csk_collection_api::add_tips_db_entry_info(

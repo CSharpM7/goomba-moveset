@@ -1,8 +1,8 @@
 use crate::imports::imports_agent::*;
 
+//Unique scale for Goomba
 unsafe fn ssm_scale(boma: &mut BattleObjectModuleAccessor) {
     if ModelModule::scale(boma) == WorkModule::get_param_float(boma, hash40("scale"), 0) {
-        //0.92
         let goomba_size = 1.0375;
         ModelModule::set_scale(boma, goomba_size);
         AttackModule::set_attack_scale(boma, goomba_size, true);
@@ -10,12 +10,12 @@ unsafe fn ssm_scale(boma: &mut BattleObjectModuleAccessor) {
     }; 
 }
 
+//Handle superleaf visiblity while also taking into account the superleaf item
 unsafe fn superleaf_visibility(boma: &mut BattleObjectModuleAccessor) {
     let has_superleaf_item = WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SUPERLEAF);
     let superleaf_expression = WorkModule::is_flag(boma, FIGHTER_GOOMBA_INSTANCE_FLAG_SUPERLEAF_VISIBLE);
     let is_visible_mesh = has_superleaf_item || superleaf_expression;
     let is_visible_item = !has_superleaf_item;
-   // println!("Item: {has_superleaf_item} Expression: {superleaf_expression}");
 
     ModelModule::set_mesh_visibility(boma, Hash40::new("superleaf_ear"), is_visible_mesh);
     ModelModule::set_mesh_visibility(boma, Hash40::new("superleaf_tail"), superleaf_expression);

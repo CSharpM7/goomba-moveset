@@ -1,5 +1,6 @@
 use crate::imports::imports_agent::*;
 
+//Find the kirafuda position that characters like Ike and Olimar use for their final smashes
 extern "C" {
     #[link_name = "\u{1}_ZN3app15sv_fighter_util21get_kirifuda_positionEP9lua_Statei"]
     pub fn get_kirifuda_position(lua_state: u64,arg2: i32) -> skyline::nn::util::Vector3f; 
@@ -21,14 +22,16 @@ pub unsafe extern "C" fn set_kirifuda_pos(fighter: &mut L2CFighterCommon) {
     WorkModule::set_float(fighter.module_accessor, fuda_y2, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y2);
 }
 
+//change the staff roll music if Goomba is in the staff roll stage
+//shoutout to CSK for this
 unsafe extern "C" fn handle_staffroll() {
     use app::stage::get_stage_id;
     if get_stage_id() == *StageID::Staffroll {
         the_csk_collection_api::play_bgm(hash40("ui_bgm_a85_smb3_chijyou"));
-        //a85_smb3_chijyou?
     }
 }
 
+//Attempt to remove accessories and vis meshes when transitioning statuses
 unsafe extern "C" fn reset_meshes(fighter: &mut L2CFighterCommon,status_next: i32) {
     let is_smash = [*FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_next);
     if !is_smash {
@@ -44,6 +47,7 @@ unsafe extern "C" fn reset_meshes(fighter: &mut L2CFighterCommon,status_next: i3
     }
 }
 
+//Restore Side Special Hop when grounded or dead
 unsafe extern "C" fn restore_specials(fighter: &mut L2CFighterCommon,status_next: i32) {
     let is_reborn = [*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_GIMMICK_SPRING_JUMP].contains(&status_next);
     let situation = StatusModule::situation_kind(fighter.module_accessor);
@@ -75,6 +79,7 @@ unsafe extern "C" fn should_use_special_n(fighter: &mut L2CFighterCommon) -> L2C
     return true.into();
 }
 
+//Create unique hurtbox data for Goomba while disabling extra joints that Pichu uses
 unsafe extern "C" fn set_hurtbox(fighter: &mut L2CFighterCommon) {
     let disabled_joints = [
         hash40("mimir1"),hash40("mimil1"),hash40("armr"),hash40("arml"),hash40("tail1")

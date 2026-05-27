@@ -6,7 +6,8 @@ const RETURN_ORIGINAL: u64 = 2;
 const PICHU_VTABLE_ON_SEARCH_OFFSET : usize = 0x68d880+0x20;
 const PICHU_VTABLE_ON_REFLECT_OFFSET : usize = 0x68d8d0+0x20;
 
-
+//Most of this is for either making RedShell have infinite life during Goomball
+//or to play the Reflect SFX on a successful reflect
 #[skyline::hook(offset = PICHU_VTABLE_ON_SEARCH_OFFSET)]
 unsafe extern "C" fn pichu_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let object = &mut fighter.battle_object;
