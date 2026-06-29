@@ -3,6 +3,8 @@ use crate::imports::imports_status::*;
 const DECIDE_DIRECTION_SETS_LR: bool = true;
 const JUMP_SPEED_MUL: f32 = 1.16;
 const STICK_MUL: f32 = 40.0;
+const FALL_ACCEL_X_MUL: f32 = 0.375;
+const FALL_MAX_X_MUL: f32 = 1.0;
 
 pub unsafe extern "C" fn specialhi_start_init(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
     0.into()
@@ -27,11 +29,11 @@ unsafe extern "C" fn specialhi_start_main_loop(fighter: &mut L2CFighterCommon) -
 
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_REVERSE_LR) 
     && !DECIDE_DIRECTION_SETS_LR {
+        //Flip if stick is in a different direction
         WorkModule::off_flag(fighter.module_accessor, FIGHTER_GOOMBA_SPECIAL_HI_FLAG_REVERSE_LR);
         let stick_x = fighter.global_table[STICK_X].get_f32().abs();
         let lr_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("status_start_turn_stick_x"));
         if lr_stick_x <= stick_x {
-        //if stick_x * lr < 0.0 && stick_x.abs() >= threshold {
             PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
             PostureModule::update_rot_y_lr(fighter.module_accessor);
         }
@@ -240,33 +242,31 @@ unsafe extern "C" fn specialhi_exec(fighter: &mut L2CFighterCommon) -> L2CValue 
             0.0
         );
         //Do I really gotta do all this?
-        let ACCEL_MUL = 0.375;
-        let MAX_MUL = 1.0;
         let air_accel_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_mul"), 0);
         let air_accel_x_add = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_add"), 0);
         let air_speed_x_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_x_stable"), 0);
         sv_kinetic_energy!(
             controller_set_accel_x_mul,
             fighter,
-            air_accel_x_mul * ACCEL_MUL
+            air_accel_x_mul * FALL_ACCEL_X_MUL
         );
         sv_kinetic_energy!(
             controller_set_accel_x_add,
             fighter,
-            air_accel_x_add * ACCEL_MUL
+            air_accel_x_add * FALL_ACCEL_X_MUL
         );
         sv_kinetic_energy!(
             set_limit_speed,
             fighter,
             FIGHTER_KINETIC_ENERGY_ID_CONTROL,
-            air_speed_x_stable * MAX_MUL,
+            air_speed_x_stable * FALL_MAX_X_MUL,
             0.0
         );
         sv_kinetic_energy!(
             set_stable_speed,
             fighter,
             FIGHTER_KINETIC_ENERGY_ID_CONTROL,
-            air_speed_x_stable * MAX_MUL,
+            air_speed_x_stable * FALL_MAX_X_MUL,
             0.0
         );
     }

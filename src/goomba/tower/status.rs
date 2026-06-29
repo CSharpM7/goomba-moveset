@@ -52,10 +52,8 @@ unsafe extern "C" fn tower_main_loop(weapon: &mut smashline::L2CWeaponCommon) ->
             0, -1, false, 0
         ) as u32;
         EffectModule::detach(weapon.module_accessor, eff, -1);
-
         SoundModule::play_se_no3d(owner, Hash40::new("se_pichu_special_s01"), false, false);
-        //SoundModule::play_se(owner, Hash40::new("se_pichu_special_n01_win03"), true, false, false, false, enSEType(0));
-    }
+     
     else if step == TOWER_STEP_CLOUD {
         let mut pos = VECTOR_ZERO;
         let joint_offset = ModelModule::joint_global_position(weapon.module_accessor, Hash40::new("head"), &mut pos,false); 
@@ -68,11 +66,8 @@ unsafe extern "C" fn tower_main_loop(weapon: &mut smashline::L2CWeaponCommon) ->
             0, -1, false, 0
         ) as u32;
         EffectModule::detach(weapon.module_accessor, eff, -1);
-
         SoundModule::play_se_no3d(owner, Hash40::new("se_pichu_special_n01_win03"), false, false);
-        //SoundModule::play_se(owner, Hash40::new("se_pichu_special_n01_win03"), true, false, false, false, enSEType(0));
     }
-
     else if step == TOWER_STEP_COIN {
         let mut pos = VECTOR_ZERO;
         let joint_offset = ModelModule::joint_global_position(weapon.module_accessor, Hash40::new("head"), &mut pos,false); 
@@ -85,10 +80,7 @@ unsafe extern "C" fn tower_main_loop(weapon: &mut smashline::L2CWeaponCommon) ->
             0, -1, false, 0
         ) as u32;
         EffectModule::detach(weapon.module_accessor, eff, -1);
-
         SoundModule::play_se_no3d(owner, Hash40::new("se_common_coin"), false, false);
-        //SoundModule::play_se(owner, Hash40::new("se_common_coin"), true, false, false, false, enSEType(0));
-
         smash_script::notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
     }
     

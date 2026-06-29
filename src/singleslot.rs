@@ -17,6 +17,12 @@ use std::{
     iter::FromIterator,
 };
 
+/*
+CUSTOM TRAILS
+Don't copy this, you likely wont be using this system apart from maybe 
+pieces of `common_effect_color` to set trail effects for your character
+*/
+
 const DEFAULT_COLOR: (f32,f32,f32) = (2.8f32,0.5f32,0.1f32);
 const DEFAULT_COLOR_ODD: (f32,f32,f32) = (0.5f32,2.8f32,0.1f32);
 pub static mut EFFECT_COLORS: [(f32,f32,f32);256] = [DEFAULT_COLOR;256];
@@ -43,6 +49,9 @@ pub unsafe fn common_effect_color(agent: &mut L2CAgentBase) {
     macros::LAST_EFFECT_SET_COLOR(agent, effect_color.0,effect_color.1,effect_color.2);
 }
 
+/*
+Set default slots for dev plugin instead
+*/
 const DEFAULT_SLOTS: [usize;8] = [120,121,122,123,124,125,126,127];
 lazy_static! {
     pub static ref MOD_SLOTS: RwLock<Vec<usize>> = RwLock::new({
@@ -54,6 +63,8 @@ lazy_static! {
         default
     });
 }
+
+//Gets alt # relative to Goomba's base slot (ie if slot is 121, then this returns 1)
 pub unsafe fn get_kuribo_color(module_accessor: *mut BattleObjectModuleAccessor) -> i32 {
     let slot = get_slot_from_module_accesor(&mut *module_accessor);
 
@@ -66,6 +77,7 @@ pub unsafe fn get_kuribo_color(module_accessor: *mut BattleObjectModuleAccessor)
     return (slot-slot_base) as i32;
 }
 
+//Only used for vtables, assumes fighter kind is Pichu
 pub unsafe fn is_kuribo(module_accessor: *mut BattleObjectModuleAccessor) -> bool
 {
     let entry_id = sv_battle_object::entry_id((*module_accessor).battle_object_id) as u32;
@@ -348,11 +360,14 @@ fn csk_database(chara_hash: u64) {
     let MAX_SLOT = *slots.iter().max().unwrap();
     let colors = (MAX_SLOT-LOWEST_SLOT+1) as u8;
     println!("[smashline_kuribo::ssm]: Creating CSK config {LOWEST_SLOT}-{MAX_SLOT}({colors})");
+
     //DATABASE ENTRY//
+    //Refer to CSK's tutorial for usage
     let disp = 71; //Plant
     let skill_disp = 76; //Plant
     let save_no = 20; //Save no for Pichu
     let kind_hash = smash::hash40("fighter_kind_pichu");
+    let ui_hash = smash::hash40("ui_chara_pichu");
     let narration = "vc_narration_characall_kuribo";
     the_csk_collection_api::add_chara_db_entry_info(
         the_csk_collection_api::CharacterDatabaseEntry {
@@ -409,7 +424,7 @@ fn csk_database(chara_hash: u64) {
                 (0x1BFB79118F /* Hash40 of characall_label_article_c05 */, the_csk_collection_api::Hash40Type::Optional(Some(0x2302D482A /* Hash40 of -1 */))), 
                 (0x1B62704035 /* Hash40 of characall_label_article_c06 */, the_csk_collection_api::Hash40Type::Optional(Some(0x2302D482A /* Hash40 of -1 */))), 
                 (0x1B157770A3 /* Hash40 of characall_label_article_c07 */, the_csk_collection_api::Hash40Type::Optional(Some(0x2302D482A /* Hash40 of -1 */))), 
-                (0x160ab9eb98, the_csk_collection_api::Hash40Type::Optional(Some(smash::hash40("ui_chara_pichu"))) /* Hash40 of ui_chara_pichu */),
+                (0x160ab9eb98, the_csk_collection_api::Hash40Type::Optional(Some(ui_hash)) /* Hash40 of ui_chara_pichu */),
                             ])), 
             extra_index_maps: the_csk_collection_api::UnsignedByteMap::Overwrite(HashMap::from([
                 (0x915C075DE /* Hash40 of c00_index */, the_csk_collection_api::UnsignedByteType::Optional(Some(0))), 
@@ -446,8 +461,9 @@ fn csk_database(chara_hash: u64) {
     the_csk_collection_api::add_narration_characall_entry(narration);
 
     //TIPS//
+    //2800 is unique to Goomba, use some other entry as your base for the ui_tips/message_tips
     let skill_kinds = ["down_1","neutral_1","neutral_1","side_1","up_1","final_1"];
-    let id_base = 2800 as u32;
+    let id_base = 2800 as u32; 
     let id_specials = 2803;
     let id_normals = 2809;
     let id_last = 2813;
@@ -501,6 +517,7 @@ fn csk_database(chara_hash: u64) {
 
 #[cfg(not(feature = "dev"))]
 fn csk_css(chara_hash: u64) {
+    //Refer to CSK's tutorial
     the_csk_collection_api::add_chara_layout_db_entry_info(
         the_csk_collection_api::CharacterLayoutDatabaseEntry{
             ui_layout_id: smash::hash40("ui_chara_kuribo_00"), 

@@ -1,5 +1,14 @@
 use crate::imports::imports_agent::*;
 
+//Change BGM for staff roll
+unsafe extern "C" fn handle_staffroll() {
+    use app::stage::get_stage_id;
+    if get_stage_id() == *StageID::Staffroll {
+        the_csk_collection_api::play_bgm(hash40("ui_bgm_a85_smb3_chijyou"));
+    }
+}
+
+//Get Kirifuda position for final smash, and save it for later
 extern "C" {
     #[link_name = "\u{1}_ZN3app15sv_fighter_util21get_kirifuda_positionEP9lua_Statei"]
     pub fn get_kirifuda_position(lua_state: u64,arg2: i32) -> skyline::nn::util::Vector3f; 
@@ -19,14 +28,6 @@ pub unsafe extern "C" fn set_kirifuda_pos(fighter: &mut L2CFighterCommon) {
     WorkModule::set_float(fighter.module_accessor, fuda_y1, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y1);
     WorkModule::set_float(fighter.module_accessor, fuda_x2, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_X2);
     WorkModule::set_float(fighter.module_accessor, fuda_y2, FIGHTER_GOOMBA_INSTANCE_FLOAT_KIRIFUDA_Y2);
-}
-
-unsafe extern "C" fn handle_staffroll() {
-    use app::stage::get_stage_id;
-    if get_stage_id() == *StageID::Staffroll {
-        the_csk_collection_api::play_bgm(hash40("ui_bgm_a85_smb3_chijyou"));
-        //a85_smb3_chijyou?
-    }
 }
 
 unsafe extern "C" fn reset_meshes(fighter: &mut L2CFighterCommon,status_next: i32) {
@@ -68,10 +69,6 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
     reset_meshes(fighter,status_next);
     restore_specials(fighter,status_next);
     
-    return true.into();
-}
-
-unsafe extern "C" fn should_use_special_n(fighter: &mut L2CFighterCommon) -> L2CValue {
     return true.into();
 }
 
@@ -117,12 +114,10 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     set_kirifuda_pos(fighter);
 
 	fighter.global_table[STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));
-	fighter.global_table[CHECK_SPECIAL_N_UNIQ].assign(&L2CValue::Ptr(should_use_special_n as *const () as _));
 
-    
     let entry_id = sv_battle_object::entry_id((*fighter.module_accessor).battle_object_id) as u32;
     if entry_id == 0 {
-        handle_staffroll(); //FIGHTER_STATUS_KIND_DEMO?
+        handle_staffroll();
     }
 }
 

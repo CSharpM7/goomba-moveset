@@ -37,7 +37,6 @@ pub fn install_hook() {
     #[cfg(feature = "hookstatus")] {
         println!("[smashline_kuribo::kuribo] Installing Status Scripts in Hook");
         hookstatus=true;
-        
 
         agent_init::install(agent);
         status::install(agent);

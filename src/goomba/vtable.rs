@@ -6,6 +6,10 @@ const RETURN_ORIGINAL: u64 = 2;
 const PICHU_VTABLE_ON_SEARCH_OFFSET : usize = 0x68d880+0x20;
 const PICHU_VTABLE_ON_REFLECT_OFFSET : usize = 0x68d8d0+0x20;
 
+/*
+All of this is just to make Goomball limtless, and to make side special
+work a little bit more like Mario's. Nothing here is necessary
+*/
 
 #[skyline::hook(offset = PICHU_VTABLE_ON_SEARCH_OFFSET)]
 unsafe extern "C" fn pichu_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {

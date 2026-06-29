@@ -196,10 +196,6 @@ unsafe extern "C" fn speciallw_pound_attack(fighter: &mut L2CFighterCommon, para
     if (&param_3["object_category_"]).get_i32() == *BATTLE_OBJECT_CATEGORY_FIGHTER {
         if (&param_3["kind_"]).get_i32() == *COLLISION_KIND_HIT {
             can_bounce = true;
-            /* 
-            let object_id = (&param_3["object_id_"]).get_u32();
-            let opponent_boma = sv_battle_object::module_accessor(object_id);
-            */
         }
     }
     else {

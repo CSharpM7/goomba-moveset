@@ -18,7 +18,6 @@ extern crate lazy_static;
 mod goomba;
 mod imports;
 mod singleslot;
-//mod data;
 
 pub mod vars;
 
