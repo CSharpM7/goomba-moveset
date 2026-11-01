@@ -246,7 +246,7 @@ unsafe extern "C" fn final_dash_init(fighter: &mut L2CFighterCommon) -> L2CValue
 
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PIKACHU_STATUS_FINAL_FLAG_ATTACK_HIT);
     WorkModule::set_int(fighter.module_accessor, 30,*FIGHTER_PIKACHU_STATUS_FINAL_WORK_INT_VORTEX_TIME_COUNT);
-    WorkModule::set_int64(fighter.module_accessor, *BATTLE_OBJECT_ID_INVALID as i64,FIGHTER_GOOMBA_FINAL_INT_TARGET_ID);
+    WorkModule::set_int64(fighter.module_accessor, *BATTLE_OBJECT_ID_INVALID as u64,FIGHTER_GOOMBA_FINAL_INT_TARGET_ID);
 
     let pos_x = PostureModule::pos_x(fighter.module_accessor);
     let pos_y = PostureModule::pos_y(fighter.module_accessor);
@@ -393,7 +393,7 @@ unsafe extern "C" fn final_dash_attack(fighter: &mut L2CFighterCommon, param_2: 
     }
     let object_id = (&param_3["object_id_"]).get_u32();
     if WorkModule::get_int64(fighter.module_accessor, FIGHTER_GOOMBA_FINAL_INT_TARGET_ID) == *BATTLE_OBJECT_ID_INVALID as u64 {
-        WorkModule::set_int64(fighter.module_accessor, object_id as i64,FIGHTER_GOOMBA_FINAL_INT_TARGET_ID);
+        WorkModule::set_int64(fighter.module_accessor, object_id as u64,FIGHTER_GOOMBA_FINAL_INT_TARGET_ID);
     }
     let opponent_boma = sv_battle_object::module_accessor(object_id);
     LinkModule::link(opponent_boma, *FIGHTER_LINK_NO_FINAL, fighter.battle_object_id);

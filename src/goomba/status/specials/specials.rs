@@ -112,8 +112,8 @@ unsafe extern "C" fn specials_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     PostureModule::update_rot_y_lr(fighter.module_accessor);
     let mot_g = hash40("special_s_end");
     let mot_a = hash40("special_air_s_end");
-    WorkModule::set_int64(fighter.module_accessor, mot_g as i64,*FIGHTER_STATUS_WORK_ID_UTILITY_WORK_INT_MOT_KIND);
-    WorkModule::set_int64(fighter.module_accessor, mot_a as i64, *FIGHTER_STATUS_WORK_ID_UTILITY_WORK_INT_MOT_AIR_KIND);
+    WorkModule::set_int64(fighter.module_accessor, mot_g as u64,*FIGHTER_STATUS_WORK_ID_UTILITY_WORK_INT_MOT_KIND);
+    WorkModule::set_int64(fighter.module_accessor, mot_a as u64, *FIGHTER_STATUS_WORK_ID_UTILITY_WORK_INT_MOT_AIR_KIND);
     status_on_situation_update(fighter,false,*FIGHTER_KINETIC_TYPE_GROUND_STOP,*FIGHTER_KINETIC_TYPE_AIR_STOP,false);
     
     let reset_type = if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND 

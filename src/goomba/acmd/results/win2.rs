@@ -5,9 +5,12 @@ unsafe extern "C" fn game_win2(agent: &mut L2CAgentBase) {
         ModelModule::set_mesh_visibility(agent.module_accessor, Hash40::new("hat"), false);
 
         ArticleModule::generate_article(agent.module_accessor, *FIGHTER_PIKACHU_GENERATE_ARTICLE_MONSTERBALL, false, -1);
-        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_PIKACHU_GENERATE_ARTICLE_MONSTERBALL, false, -1);
         //let goomba_tower = get_article_boma(agent.module_accessor, *FIGHTER_PIKACHU_GENERATE_ARTICLE_MONSTERBALL);
         //tower::init(goomba_tower);
+    }
+    frame(agent.lua_state_agent, 2.0); 
+    if macros::is_excute(agent) {
+        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_PIKACHU_GENERATE_ARTICLE_MONSTERBALL, false, -1);
     }
     
     frame(agent.lua_state_agent, 43.0);

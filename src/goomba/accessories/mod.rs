@@ -5,9 +5,12 @@ use crate::vars::*;
 
 pub fn install_hook(hookstatus: bool) {
     unsafe {
-        FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES += FIGHTER_GOOMBA_GENERATE_ARTICLE_LAST +
-            smashline::clone_weapon(ACCESSORIES_ORIGIN, *ACCESSORIES_KIND, 
-        "pichu", "accessories",false);
+        let redshell = smashline::clone_weapon(
+            "pichu", "accessories", *ACCESSORIES_KIND,true
+        );
+
+        FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES = redshell.generate_id;
+        WEAPON_KIND_ACCESSORIES = redshell.weapon_id;
         println!("[smashline_kuribo::kuribo] (HOOK) Accessories assigned to {}",FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES);
     }
 

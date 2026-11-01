@@ -48,7 +48,6 @@ pub fn install_hook() {
     accessories::install_hook(hookstatus);
     redshell::install_hook(hookstatus);
     tower::install_hook(hookstatus);
-
     
     println!("[smashline_kuribo::kuribo] ");
 }
@@ -78,6 +77,7 @@ pub fn install() {
         agent_init::install(agent);
         status::install(agent);
     }
+    dev_only::install(agent);
     agent.install();
 
     accessories::install(hookstatus);

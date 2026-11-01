@@ -59,7 +59,6 @@ unsafe extern "C" fn sound_throwb(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn expression_throwb(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 4);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("body") as i64, hash40("body_normal") as i64);
     }
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {

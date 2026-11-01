@@ -13,6 +13,7 @@ pub unsafe extern "C" fn tower_main(weapon: &mut smashline::L2CWeaponCommon) -> 
     let owner = &mut *sv_battle_object::module_accessor(
         (WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32
     );
+    let owner_frame = MotionModule::frame(owner);
     let owner_scale = ModelModule::scale(owner);
     ModelModule::set_scale(weapon.module_accessor, owner_scale);
     if LinkModule::is_link(weapon.module_accessor,*WEAPON_LINK_NO_CONSTRAINT) {
@@ -20,12 +21,14 @@ pub unsafe extern "C" fn tower_main(weapon: &mut smashline::L2CWeaponCommon) -> 
         LinkModule::set_attribute(weapon.module_accessor, *WEAPON_LINK_NO_CONSTRAINT, LinkAttribute{_address: *LINK_ATTRIBUTE_REFERENCE_PARENT_SCALE as u8}, true);
         LinkModule::set_attribute(weapon.module_accessor, *WEAPON_LINK_NO_CONSTRAINT, LinkAttribute{_address: *LINK_ATTRIBUTE_REFERENCE_PARENT_MODEL_SCALE as u8}, true);
     }
-
     let num_goombas = ArticleModule::get_num(owner, *FIGHTER_PICHU_GENERATE_ARTICLE_MONSTERBALL);
-    let is_first = num_goombas==1;
+    let is_first = owner_frame < 1.0;
+    for i in 0..3 {
+        println!("Goomba is first: {is_first} Num goombas: {num_goombas}");
+    }
 
     let anim = if is_first {Hash40::new("goomba1_win2")} else {Hash40::new("goomba2_win2")};
-    let frame = if is_first {0.0} else {0.0};
+    let frame = owner_frame; //if is_first {0.0} else {0.0};
     MotionModule::change_motion(weapon.module_accessor, anim, frame, 1.0, false, 0.0, false, false);
     
     ModelModule::set_mesh_visibility(weapon.module_accessor, Hash40::new("hat"), !is_first);
@@ -53,7 +56,7 @@ unsafe extern "C" fn tower_main_loop(weapon: &mut smashline::L2CWeaponCommon) ->
         ) as u32;
         EffectModule::detach(weapon.module_accessor, eff, -1);
         SoundModule::play_se_no3d(owner, Hash40::new("se_pichu_special_s01"), false, false);
-     
+    }
     else if step == TOWER_STEP_CLOUD {
         let mut pos = VECTOR_ZERO;
         let joint_offset = ModelModule::joint_global_position(weapon.module_accessor, Hash40::new("head"), &mut pos,false); 

@@ -74,6 +74,7 @@ pub const FIGHTER_GOOMBA_GENERATE_ARTICLE_SHIP: i32 = 0x5;
 pub const FIGHTER_GOOMBA_GENERATE_ARTICLE_LAST: i32 = 0x6;
 
 pub static mut FIGHTER_GOOMBA_GENERATE_ARTICLE_ACCESSORIES: i32 = 0x0;
+pub static mut WEAPON_KIND_ACCESSORIES: i32 = 0x0;
 pub const ACCESSORIES_ORIGIN: &str = "peach";
 pub const ACCESSORIES_KIND: smash::lib::LuaConst = smash::lib::lua_const::WEAPON_KIND_PEACH_KINOPIO;
 pub const ACCESSORIES_STATUS_KIND_HAVED: i32 = 0x0;
@@ -87,6 +88,7 @@ pub const ACCESSORIES_TYPE_BOOK: i32 = 3;
 pub const ACCESSORIES_TYPE_CANDY: i32 = 4;
 
 pub static mut FIGHTER_GOOMBA_GENERATE_ARTICLE_REDSHELL: i32 = 0x0;
+pub static mut WEAPON_KIND_REDSHELL: i32 = 0x0;
 pub const REDSHELL_ORIGIN: &str = "buddy";
 pub const REDSHELL_KIND: smash::lib::LuaConst = smash::lib::lua_const::WEAPON_KIND_BUDDY_PAD;
 pub const REDSHELL_STATUS_KIND_HAVED: i32 = 0x0;

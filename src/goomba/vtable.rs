@@ -92,8 +92,14 @@ unsafe fn on_reflect_goomba(fighter: &mut Fighter, log: u64) -> u64 {
 }
 
 pub fn install() {
-    skyline::install_hooks!(
-        pichu_on_search,
-        pichu_on_reflect,
+    replace_fighter_vtable(
+        *FIGHTER_KIND_PICHU,
+        FighterVtableSlot::OnSearch,
+        on_search_goomba as *const () as usize 
+    );
+    replace_fighter_vtable(
+        *FIGHTER_KIND_PICHU,
+        FighterVtableSlot::Unk53,
+        on_search_goomba as *const () as usize
     );
 }
