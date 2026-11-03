@@ -41,7 +41,7 @@ pub fn install_hook() {
         agent_init::install(agent);
         status::install(agent);
     }
-    #[cfg(not(feature = "dev"))] 
+    //#[cfg(not(feature = "dev"))] 
     vtable::install();
 
     agent.install();

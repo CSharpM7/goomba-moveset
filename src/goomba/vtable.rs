@@ -11,19 +11,11 @@ All of this is just to make Goomball limtless, and to make side special
 work a little bit more like Mario's. Nothing here is necessary
 */
 
-#[skyline::hook(offset = PICHU_VTABLE_ON_SEARCH_OFFSET)]
-unsafe extern "C" fn pichu_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
-    let object = &mut fighter.battle_object;
-    let module_accessor = fighter.battle_object.module_accessor;
-    let kind = fighter.battle_object.kind as i32;
-    if kind == *FIGHTER_KIND_PICHU
-    && is_kuribo(module_accessor) 
-    {
-        let custom_result = on_search_goomba(fighter, log);
-        if custom_result != RETURN_ORIGINAL {return custom_result};
-    }
-    original!()(vtable, fighter, log)
-}
+#[skyline::from_offset(get_agent_virtual_function(*FIGHTER_KIND_PICHU,53,false,true))]
+fn pichu_on_reflect(vtable: u64, fighter: &mut Fighter, log: u64);
+
+#[skyline::from_offset(get_agent_virtual_function(*FIGHTER_KIND_PICHU,48,false,true))]
+fn pichu_on_search(vtable: u64, fighter: &mut Fighter, log: u64);
 
 unsafe fn search_goomball_check(fighter: &mut Fighter, log: u64) -> bool {
     let collision_log = *(log as *const u64).add(0x10 / 0x8);
@@ -46,7 +38,7 @@ unsafe fn search_goomball_check(fighter: &mut Fighter, log: u64) -> bool {
     return false;
 }
 
-unsafe fn on_search_goomba(fighter: &mut Fighter, log: u64) -> u64 {
+unsafe fn on_search_goomba(vtable: u64,fighter: &mut Fighter, log: u64) -> usize {
     let module_accessor = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(module_accessor);
     if status_kind == FIGHTER_STATUS_KIND_SPECIAL_S
@@ -60,25 +52,14 @@ unsafe fn on_search_goomba(fighter: &mut Fighter, log: u64) -> u64 {
             MotionModule::set_frame_sync_anim_cmd(module_accessor, GOOMBALL_REFLECT_FRAME as f32, true, true, false);
         }
 
-        return RETURN_1;
+        return 1;
     }
-    return RETURN_ORIGINAL;
-}
-#[skyline::hook(offset = PICHU_VTABLE_ON_REFLECT_OFFSET)]
-unsafe extern "C" fn pichu_on_reflect(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
-    let object = &mut fighter.battle_object;
-    let module_accessor = fighter.battle_object.module_accessor;
-    let kind = fighter.battle_object.kind as i32;
-    if kind == *FIGHTER_KIND_PICHU
-    && is_kuribo(module_accessor) 
-    {
-        let custom_result = on_reflect_goomba(fighter, log);
-        if custom_result != RETURN_ORIGINAL {return custom_result};
-    }
-    original!()(vtable, fighter, log)
+    get_original_fighter_vtable(*FIGHTER_KIND_PICHU,FighterVtableSlot::OnSearch)
+    //pichu_on_search(vtable,fighter,log)
 }
 
-unsafe fn on_reflect_goomba(fighter: &mut Fighter, log: u64) -> u64 {
+
+unsafe fn on_reflect_goomba(vtable: u64, fighter: &mut Fighter, log: u64) -> usize {
     let module_accessor = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(module_accessor);
     if status_kind == FIGHTER_STATUS_KIND_SPECIAL_S
@@ -88,7 +69,8 @@ unsafe fn on_reflect_goomba(fighter: &mut Fighter, log: u64) -> u64 {
             WorkModule::set_int(module_accessor, 1, FIGHTER_GOOMBA_SPECIAL_S_INT_GOOMBALL_COUNTER);
         }
     }
-    return RETURN_ORIGINAL;
+    get_original_fighter_vtable(*FIGHTER_KIND_PICHU,FighterVtableSlot::Unk53)
+    //pichu_on_reflect(vtable,fighter,log)
 }
 
 pub fn install() {
@@ -100,6 +82,6 @@ pub fn install() {
     replace_fighter_vtable(
         *FIGHTER_KIND_PICHU,
         FighterVtableSlot::Unk53,
-        on_search_goomba as *const () as usize
+        on_reflect_goomba as *const () as usize
     );
 }

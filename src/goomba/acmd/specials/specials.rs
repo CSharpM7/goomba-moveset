@@ -96,13 +96,6 @@ unsafe extern "C" fn sound_specialsend(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         sequence!(agent,hash40("kuribo"),hash40("vc_pichu_attack04"),hash40("vc_pichu_attack05"),hash40(""));
     }
-    frame(agent.lua_state_agent, 19.0);
-    if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_SFX) {
-            WorkModule::off_flag(agent.module_accessor, FIGHTER_GOOMBA_SPECIAL_S_FLAG_REFLECT_SFX);
-            SoundModule::play_se(agent.module_accessor, Hash40::new("se_pichu_special_n02"), true, false, false, false, enSEType(0));
-        }
-    }
 }
 
 unsafe extern "C" fn expression_specialsend(agent: &mut L2CAgentBase) {
