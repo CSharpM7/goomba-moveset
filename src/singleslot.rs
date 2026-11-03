@@ -143,7 +143,10 @@ fn install_by_finding_markers() {
                     if lowest_color == -1 {
                         lowest_color = x as _ ;
                     }
-                    if marker_contents.len() <= 0 {continue;}
+                    if marker_contents.len() <= 0 {
+                        println!("[smashline_kuribo::ssm] Default effect color for {x}: {}, {}, {}",DEFAULT_COLOR.0,DEFAULT_COLOR.1,DEFAULT_COLOR.2);
+                        continue;
+                    }
                     
                     let mut eff_color = (DEFAULT_COLOR.0,DEFAULT_COLOR.1,DEFAULT_COLOR.2);
                     let (r, g) = marker_contents.split_once(char::is_whitespace).unwrap();
@@ -194,8 +197,8 @@ fn install_by_finding_markers() {
 
 #[cfg(not(feature = "dev"))]
 fn install_continue() {
-    println!("[smashline_kuribo::ssm] Goomba slots: ");
-    print_slots();
+    //println!("[smashline_kuribo::ssm] Goomba slots: ");
+    //print_slots();
     params();
     csk();
     crate::install_after_mount();
