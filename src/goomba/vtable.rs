@@ -74,13 +74,17 @@ unsafe fn on_reflect_goomba(vtable: u64, fighter: &mut Fighter, log: u64) -> usi
 }
 
 pub fn install() {
-    replace_fighter_vtable(
+    let slots = (*MOD_SLOTS.read().unwrap()).to_vec();
+    let costume = Costume::from_vec(slots);
+    replace_fighter_vtable_costume(
         *FIGHTER_KIND_PICHU,
+        costume,
         FighterVtableSlot::OnSearch,
         on_search_goomba as *const () as usize 
     );
-    replace_fighter_vtable(
+    replace_fighter_vtable_costume(
         *FIGHTER_KIND_PICHU,
+        costume,
         FighterVtableSlot::Unk53,
         on_reflect_goomba as *const () as usize
     );
